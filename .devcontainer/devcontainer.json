@@ -1,0 +1,28 @@
+{
+    "name": "Devcontainer to use Git in Ubuntu",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".",
+        "args": {
+            "HOST_USERNAME": "${localEnv:HOST_USERNAME}",
+            "HOST_UID": "${localEnv:HOST_UID}",
+            "HOST_GID": "${localEnv:HOST_GID}",
+            "GIT_USER_NAME": "${localEnv:GIT_USER_NAME}",
+            "GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}"
+        }
+    },
+    "remoteUser": "${localEnv:HOST_USERNAME}",
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "postCreateCommand": "echo 'DEVCONTAINER_USER in container:' $USER && whoami && id"
+}
