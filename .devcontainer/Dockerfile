@@ -3,13 +3,14 @@ FROM ubuntu:22.04
 # Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies
+# Install dependencies, including Ansible
 RUN apt-get update && \
     apt-get install -y \
     git \
     curl \
     build-essential \
-    sudo && \
+    sudo \
+    ansible && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Arguments for user and Git configuration

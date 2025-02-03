@@ -30,5 +30,5 @@
             ]
         }
     },
-    "postCreateCommand": "echo 'DEVCONTAINER_USER in container:' $USER && whoami && id && ssh-add -l"
+    "postCreateCommand": "echo 'DEVCONTAINER_USER in container:' $USER && whoami && id && ssh-add -l && ansible --version"
 }
