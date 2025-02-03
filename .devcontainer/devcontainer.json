@@ -14,6 +14,12 @@
     "remoteUser": "${localEnv:HOST_USERNAME}",
     "workspaceFolder": "/workspace",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+    "mounts": [
+        "source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
+    ],
+    "remoteEnv": {
+        "SSH_AUTH_SOCK": "/ssh-agent"
+    },
     "customizations": {
         "vscode": {
             "settings": {
@@ -24,5 +30,5 @@
             ]
         }
     },
-    "postCreateCommand": "echo 'DEVCONTAINER_USER in container:' $USER && whoami && id"
+    "postCreateCommand": "echo 'DEVCONTAINER_USER in container:' $USER && whoami && id && ssh-add -l"
 }
