@@ -1,4 +1,4 @@
-# Project Development Environment Setup using Visual Studio Code and Devcontainers
+# Running Ansible in Visual Studio Code using devcontainers
 
 This repository is to be used as a starting point for other projects. The target is to have a setup that can be cloned and commited from the first time, with git working inside the devcontainer, and with correct access rights to not break if a commit is done in the local machine instead of VS Code.
 
@@ -16,7 +16,7 @@ This repository is to be used as a starting point for other projects. The target
 Clone the project repository to your local machine:
 
 ```bash
-git clone --depth 1 https://github.com/eduardoshanahan/devcontainers-git new-project-name
+git clone --depth 1 https://github.com/eduardoshanahan/devcontainers-ansible new-project-name
 cd new-project-name
 rm -rf .git/
 ```
