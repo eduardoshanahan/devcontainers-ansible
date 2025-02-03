@@ -21,6 +21,18 @@ cd new-project-name
 rm -rf .git/
 ```
 
+### Ensure you have an ssh key to connect to your remote server
+
+The server will need to have a public ssh key uploaded, and you will need the correcponding private key in your local machine.
+
+If you don't have a local key, you can create one with:
+
+```bash
+ssh-keygen -t ed25519 -a 100 -C "What am I going to do with this key" -f ~/.ssh~/bananas 
+```  
+
+and follow the instructions to have it applied in your server.
+
 ### Configure Environment Variables
 
 Copy the .env.example file to .env and update it with your details:
@@ -43,6 +55,17 @@ HOST_GID=1000 # Replace with your user's GID (run id -g to check)
 HOST_USERNAME="Your Name" # Replace with your user's name (run whoami to check)
 GIT_USER_NAME="Your Name" # Replace with your Git username
 GIT_USER_EMAIL="<your.email@example.com>" # Replace with your Git email
+SSH_KEY=bananas # Replace with the ssh key to access your remote server
+```
+
+### Configure the ssh keys to access your remote server
+
+Edit the script at .devcontainer/.env to include the correct ssh keys that you are going to use within this project. Make sure to include all the keys you need. Currently, it looks for a key called *bananas*.
+
+Make sure that SSH agent is running in your local machine. If it is not, you can start it with :
+
+```bash
+eval "$(ssh-agent -s)"
 ```
 
 ### Build and Launch the Dev Container
