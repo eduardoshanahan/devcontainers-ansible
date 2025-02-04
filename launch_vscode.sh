@@ -20,7 +20,6 @@ echo $HOST_UID
 echo $HOST_GID
 echo $GIT_USER_NAME
 echo $GIT_USER_EMAIL
-echo "SSH_KEY is set to: $SSH_KEY"
 ssh-add -l
 
 # Launch VS Code

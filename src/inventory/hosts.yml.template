@@ -1,0 +1,5 @@
+remoteservers:
+  hosts:
+    "bananas.com":
+      ansible_user: "bananas_username"
+      ansible_ssh_common_args: "-o ForwardAgent=yes"

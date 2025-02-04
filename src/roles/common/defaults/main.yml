@@ -1,0 +1,6 @@
+---
+# roles/common/defaults/main.yml
+# Default variables for the common role
+
+app_name: fastapi_app
+app_directory: "/opt/{{ app_name }}"

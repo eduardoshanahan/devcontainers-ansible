@@ -1,6 +1,11 @@
 {
-    "editor.tabSize": 4,
+    "editor.tabSize": 2,
     "editor.formatOnSave": true,
-    "terminal.integrated.shell.linux": "/bin/bash"
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "[json]": {
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "editor.wrappingIndent": "indent"
+    }
     // Add more settings as needed
 }

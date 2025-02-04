@@ -2,16 +2,32 @@ FROM ubuntu:22.04
 
 # Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
+# Install the locales package
+RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies, including Ansible
+# Generate the desired locale (e.g., en_IE.UTF-8)
+RUN locale-gen en_IE.UTF-8
+
+# Set the default locale
+ENV LANG en_IE.UTF-8
+ENV LANGUAGE en_IE:en
+ENV LC_ALL en_IE.UTF-8
+
+# Install other dependencies, including Ansible (via apt or pip as desired)
 RUN apt-get update && \
     apt-get install -y \
     git \
     curl \
     build-essential \
     sudo \
-    ansible && \
+    python3-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip (optional but recommended)
+RUN pip3 install --upgrade pip
+
+# Install a more recent version of Ansible via pip
+RUN pip3 install ansible
 
 # Arguments for user and Git configuration
 ARG HOST_USERNAME
