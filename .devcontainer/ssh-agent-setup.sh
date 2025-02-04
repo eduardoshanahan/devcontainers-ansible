@@ -19,20 +19,5 @@ if [[ $- == *i* ]]; then
             echo "export SSH_AGENT_PID=${SSH_AGENT_PID}" >> "$HOME/.ssh/agent_env"
         fi
     fi
-
-    # Check that SSH_KEY variable is set
-    if [ -z "$SSH_KEY" ]; then
-        echo "SSH_KEY variable is not set. Please set it in your .env file."
-    else
-        # Optionally, add your key if it isn’t already loaded.
-        if ! ssh-add -l 2>/dev/null | grep -q "$SSH_KEY"; then
-            if [ -f "$HOME/.ssh/$SSH_KEY" ]; then
-                echo "Adding SSH key: $SSH_KEY"
-                ssh-add "$HOME/.ssh/$SSH_KEY" >/dev/null 2>&1
-            else
-                echo "SSH key $HOME/.ssh/$SSH_KEY not found."
-            fi
-        fi
-    fi
 fi
 # --- End SSH Agent Setup ---
