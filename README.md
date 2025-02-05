@@ -149,11 +149,11 @@ git config --global user.email "<your.email@example.com>"
 
 Ensure Docker is running and you have the necessary permissions to use it. If you encounter Docker-related issues, refer to the Docker documentation: <https://docs.docker.com/>
 
-### SSH Key Permissions:
+### SSH Key Permissions
 
 Ensure that your SSH key (~/.ssh/bananas) has the correct permissions (typically chmod 600 ~/.ssh/bananas).
 
-### Firewall/Network:
+### Firewall/Network
 
 Verify that there are no firewall or network restrictions blocking SSH access to the server.
 
