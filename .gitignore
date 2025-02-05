@@ -9,3 +9,7 @@ tmp/
 
 # Ignore the real inventory file
 src/inventory/hosts.yml
+
+# Ignore Ansible locks
+
+*.lock
