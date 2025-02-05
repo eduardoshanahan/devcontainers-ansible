@@ -27,7 +27,7 @@ RUN apt-get update && \
 RUN pip3 install --upgrade pip
 
 # Install a more recent version of Ansible via pip
-RUN pip3 install ansible
+RUN pip3 install ansible ansible-lint
 
 # Arguments for user and Git configuration
 ARG HOST_USERNAME
