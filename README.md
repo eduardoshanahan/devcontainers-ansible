@@ -20,11 +20,160 @@ This repository contains a development environment setup for Ansible using VS Co
    ```bash
    cp .devcontainer/.env.example .devcontainer/.env
    ```
-   Edit `.devcontainer/.env` with your personal information.
+   Edit `.devcontainer/.env` with your personal information and Docker preferences.
 
 3. Launch VS Code:
    ```bash
    ./launch_vscode.sh
+   ```
+
+## Docker Configuration
+
+The development environment uses a Docker container with the following default settings (configurable in `.devcontainer/.env`):
+
+- Image Name: `ansible-dev`
+- Image Tag: `latest`
+- Container Name: `ansible-dev-env`
+
+You can customize these settings by editing the `.devcontainer/.env` file:
+```bash
+DOCKER_IMAGE_NAME=ansible-dev
+DOCKER_IMAGE_TAG=latest
+DOCKER_CONTAINER_NAME=ansible-dev-env
+```
+
+To rebuild the Docker image:
+```bash
+docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .devcontainer/
+```
+
+To run the container manually (though normally handled by VS Code):
+```bash
+docker run -it --name ${DOCKER_CONTAINER_NAME} ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+```
+
+## Git Workflow
+
+This project uses several tools to maintain high code quality and consistent Git practices:
+
+### Initial Setup
+
+1. Install pre-commit hooks:
+   ```bash
+   pip install -r requirements.txt
+   pre-commit install --install-hooks
+   pre-commit install --hook-type commit-msg
+   ```
+
+2. Configure Git:
+   ```bash
+   git config --local core.autocrlf input
+   git config --local core.eol lf
+   ```
+
+### Making Changes
+
+1. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. Make your changes and stage them:
+   ```bash
+   git add .
+   ```
+
+3. Commit using Commitizen:
+   ```bash
+   cz commit
+   ```
+   This will guide you through creating a standardized commit message.
+
+### Commit Message Format
+
+We use Conventional Commits with the following types:
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `perf`: Performance improvements
+- `test`: Adding or updating tests
+- `build`: Build system changes
+- `ci`: CI configuration changes
+- `chore`: Other changes
+
+Example:
+```
+feat(inventory): add support for dynamic AWS hosts
+
+Added AWS dynamic inventory plugin configuration and documentation.
+```
+
+### Pre-commit Checks
+
+The following checks run automatically before commits:
+- Code formatting (Black, Prettier)
+- YAML validation
+- Ansible lint
+- Security checks (GitLeaks)
+- Line ending validation
+- Merge conflict detection
+- Private key detection
+
+Run checks manually:
+```bash
+pre-commit run --all-files
+```
+
+### Version Management
+
+1. Generate changelog:
+   ```bash
+   git-changelog
+   ```
+
+2. Bump version:
+   ```bash
+   cz bump
+   ```
+
+### Git Best Practices
+
+1. Keep commits atomic and focused
+2. Write descriptive commit messages
+3. Reference issues in commits when applicable
+4. Keep branches up to date with main
+5. Delete branches after merging
+6. Use pull requests for code review
+
+### Git Hooks
+
+Pre-commit hooks check for:
+- Code formatting
+- Linting
+- Security issues
+- Commit message format
+- File formatting
+- Line endings
+
+### Troubleshooting
+
+1. If pre-commit hooks fail:
+   ```bash
+   pre-commit clean
+   pre-commit install --install-hooks
+   ```
+
+2. To skip hooks temporarily:
+   ```bash
+   git commit --no-verify
+   ```
+   (Use sparingly and only when necessary)
+
+3. To update hooks:
+   ```bash
+   pre-commit autoupdate
    ```
 
 ## Environment Variables
@@ -171,11 +320,7 @@ Common issues and solutions:
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit changes
-4. Push to the branch
-5. Create a Pull Request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
 
 ## License
 
