@@ -1,0 +1,38 @@
+---
+commitizen:
+  name: cz_conventional_commits
+  tag_format: v$version
+  version: 0.1.0
+  version_files:
+    - VERSION
+    - pyproject.toml:version
+  style:
+    - question:
+        type: list
+        message: Select the type of change you are committing
+        choices:
+          - feat: A new feature
+          - fix: A bug fix
+          - docs: Documentation only changes
+          - style: Changes that do not affect the meaning of the code
+          - refactor: A code change that neither fixes a bug nor adds a feature
+          - perf: A code change that improves performance
+          - test: Adding missing tests or correcting existing tests
+          - build: Changes that affect the build system or external dependencies
+          - ci: Changes to our CI configuration files and scripts
+          - chore: Other changes that do not modify src or test files
+    - scope:
+        type: input
+        message: What is the scope of this change? (e.g. component or file name)
+    - subject:
+        type: input
+        message: Write a short description of the change
+    - body:
+        type: input
+        message: Provide a longer description of the change
+    - breaking:
+        type: confirm
+        message: Are there any breaking changes?
+    - footer:
+        type: input
+        message: Footer (optional). BREAKING CHANGE/Closes/Fixes (e.g., Closes #123)

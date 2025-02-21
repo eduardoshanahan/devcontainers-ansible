@@ -1,10 +1,17 @@
 # Environment and local configuration
 .devcontainer/.env
+.devcontainer/.env.local
+.devcontainer/.env.*.local
 *.local
-.env
 .venv/
 venv/
 ENV/
+
+# Docker
+.env
+.env.local
+.env.*.local
+docker-compose.override.yml
 
 # Python
 __pycache__/
@@ -70,5 +77,3 @@ tmp/
 temp/
 .cache/
 .history/
-.env.local
-.env.*.local
