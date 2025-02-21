@@ -1,0 +1,23 @@
+---
+- name: Test Ansible Setup
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Print Python version
+      ansible.builtin.debug:
+        msg: "Python version: {{ ansible_python_version }}"
+
+    - name: Print Ansible version
+      ansible.builtin.debug:
+        msg: "{{ lookup('pipe', 'ansible --version') }}"
+
+    - name: Create test file
+      ansible.builtin.copy:
+        content: "Ansible is working!"
+        dest: /tmp/ansible-test.txt
+        mode: "0644"
+      register: file_result
+
+    - name: Show file creation result
+      ansible.builtin.debug:
+        msg: "File created: {{ file_result.dest }}"

@@ -1,183 +1,186 @@
-# Running Ansible in Visual Studio Code using devcontainers
+# Ansible Development Environment
 
-This repository is to be used as a starting point for other projects. The target is to have a setup that can be cloned and used from the first time, with ansible and git working inside the devcontainer, with correct access rights to not break if a commit is done in the local machine instead of VS Code, and with the ability to connect and run commands in the remote server.
+This repository contains a development environment setup for Ansible using VS Code and Dev Containers.
 
 ## Prerequisites
 
-- Ubuntu - I am running this in Ubuntu 24.10
-- Docker installed and running
-- Visual Studio Code installed
-- VS Code Remote - Containers extension installed
-- A remote server ready to work by ssh with a key deployed
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Docker](https://www.docker.com/products/docker-desktop)
+- [VS Code Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
 
-## Setup Instructions
+## Quick Start
 
-### Clone the Repository
+1. Clone this repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-name>
+   ```
 
-Clone the project repository to your local machine:
+2. Set up environment variables:
+   ```bash
+   cp .devcontainer/.env.example .devcontainer/.env
+   ```
+   Edit `.devcontainer/.env` with your personal information.
 
-```bash
-git clone --depth 1 https://github.com/eduardoshanahan/devcontainers-ansible new-project-name
-cd new-project-name
-rm -rf .git/
+3. Launch VS Code:
+   ```bash
+   ./launch_vscode.sh
+   ```
+
+## Environment Variables
+
+Required environment variables in `.devcontainer/.env`:
+
+- `HOST_USERNAME`: Your username
+- `HOST_UID`: Your user ID (usually 1000)
+- `HOST_GID`: Your group ID (usually 1000)
+- `GIT_USER_NAME`: Your Git username
+- `GIT_USER_EMAIL`: Your Git email
+
+Optional variables:
+- `SSH_AUTH_SOCK`: Path to SSH agent socket
+- `ANSIBLE_CONFIG`: Path to ansible.cfg
+- `ANSIBLE_VAULT_PASSWORD_FILE`: Path to vault password file
+
+## Directory Structure
+
+```
+.
+├── .devcontainer/          # Dev container configuration
+│   ├── .env.example       # Example environment variables
+│   ├── Dockerfile         # Container definition
+│   ├── devcontainer.json  # VS Code dev container config
+│   └── ssh-agent-setup.sh # SSH agent configuration
+├── .vscode/               # VS Code workspace settings
+├── src/                   # Source directory
+│   ├── inventory/        # Ansible inventory files
+│   ├── playbooks/        # Ansible playbooks
+│   ├── roles/            # Ansible roles
+│   └── ansible.cfg       # Ansible configuration
+├── tests/                # Test files
+├── requirements.txt      # Python dependencies
+└── requirements.yml      # Ansible collections and roles
 ```
 
-### Ensure you have an ssh key to connect to your remote server
+## Available Tasks
 
-The server will need to have a public ssh key uploaded, and you will need the corresponding private key in your local machine.
+Access tasks through VS Code:
+1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
+2. Type "Tasks: Run Task"
+3. Select from available tasks:
 
-If you don't have a local key, you can create one with:
+- Install Requirements: Install all Python and Ansible dependencies
+- Lint Ansible: Run ansible-lint on playbooks
+- Syntax Check: Verify playbook syntax
+- Create Vault File: Create new encrypted file
+- Edit Vault File: Edit existing encrypted file
+- Clean Cache: Remove temporary files
 
-```bash
-ssh-keygen -t ed25519 -a 100 -C "What am I going to do with this key" -f ~/.ssh~/bananas 
-```  
+## Features
 
-and follow the instructions to have it applied in your server.
+- Automated development environment setup
+- SSH agent forwarding
+- Git configuration
+- Integrated Ansible linting and validation
+- Python development tools
+- Consistent code formatting
+- Comprehensive VS Code extensions
+- Integrated task running
+- Vault integration
+- Inventory management
 
-You can test that the ssh key works by running:
+## Configuration
 
-```bash
-ssh -i ~/.ssh/bananas remoteuserbananas@bananas.com
-```
+### Ansible Configuration
 
-### Configure Environment Variables
+The `ansible.cfg` file includes:
+- Inventory settings
+- Performance optimizations
+- SSH configurations
+- Privilege escalation
+- Error handling
+- Vault settings
 
-Copy the .env.example file to .env and update it with your details:
+### VS Code Settings
 
-```bash
-cp .devcontainer/.env.example .devcontainer/.env
-```
+Includes configurations for:
+- Python development
+- Ansible development
+- YAML formatting
+- Git integration
+- Terminal settings
+- Editor preferences
 
-Edit the .env file:
+## Best Practices
 
-```bash
-code .devcontainer/.env
-```
+1. Never commit sensitive information
+2. Use ansible-vault for secrets
+3. Keep inventory files separate
+4. Follow Ansible best practices
+5. Use version control effectively
+6. Regular linting and testing
+7. Document your code
+8. Use meaningful commit messages
 
-Fill in the following details:
+## Development Workflow
 
-```dotenv
-HOST_UID=1000 # Replace with your user's UID (run id -u to check)
-HOST_GID=1000 # Replace with your user's GID (run id -g to check)
-HOST_USERNAME="Your Name" # Replace with your user's name (run whoami to check)
-GIT_USER_NAME="Your Name" # Replace with your Git username
-GIT_USER_EMAIL="<your.email@example.com>" # Replace with your Git email
-```
+1. Create feature branch
+2. Make changes
+3. Run linting (VS Code Task: "Lint Ansible")
+4. Run syntax check (VS Code Task: "Syntax Check")
+5. Commit changes
+6. Create pull request
 
-### Build and Launch the Dev Container
-
-Open the project in VS Code:
-
-Launch the Dev Container by running the provided script. This will ensure that all the environment variables are set correctly. Tis is important, because if they are empty VS Code will behave in strange ways (I saw the files missing, or root applied as the owner of the files created):
-
-```bash
-./launch_vscode.sh
-```
-
-### Verify the Setup
-
-#### SSH is working
-
-Make sure that SSH agent is running in your local machine. If it is not, you can start it with :
-
-```bash
-eval "$(ssh-agent -s)"
-```
-
-#### Ansible is working
-
-Test a connection with the remote server set in inventory/hosts.yml:
-
-```bash
-cd /src
-ansible remoteservers -m ping -i inventory/hosts.yml
-```
-
-#### Git configuration: repeated from devcontainers-git
-
-Once the Dev Container is running, verify the following:
-
-- User Permissions: The container should run as the same user as your host machine, avoiding permission issues.
-
-```bash
-whoami
-```
-
-- Git Configuration: Check that Git is configured correctly by running:
-
-```bash
-git config --global --list
-```
-
-Ensure the user.name and user.email match the values you provided in the .env file.
-
-## Work in the Dev Container
-
-You can now work on the project inside the Dev Container. All Git operations (commits, pushes, etc.) will use the configured Git user, ensuring consistency across environments.
-
-### Additional VS Code Settings
-
-The .devcontainer/settings.json file includes recommended settings for the project, such as:
-
-- Tab size: 2 spaces
-- Format on save
-- Default terminal shell: /bin/bash
-
-These settings are automatically applied when working in the Dev Container.
+To run tasks in VS Code:
+1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
+2. Type "Tasks: Run Task"
+3. Select the desired task
 
 ## Troubleshooting
 
-### Permission Issues
+Common issues and solutions:
 
-If you encounter permission issues, ensure that the HOST_UID and HOST_GID in the .env file match your host machine's user ID and group ID. You can check these values by running:
+1. SSH agent not working:
+   - Check SSH_AUTH_SOCK variable
+   - Ensure keys are added to agent
+   - Verify permissions
 
-```bash
-id -u # UID
-id -g # GID
-```
+2. Container fails to start:
+   - Verify Docker is running
+   - Check environment variables
+   - Check Docker logs
 
-### Git Configuration
+3. VS Code extensions not loading:
+   - Rebuild container
+   - Check extension marketplace availability
+   - Verify internet connection
 
-If Git is not configured correctly, you can manually set the Git user name and email inside the container:
+4. Ansible issues:
+   - Check inventory file
+   - Verify SSH access
+   - Check privilege escalation
+   - Review ansible.cfg
 
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "<your.email@example.com>"
-```
+## Security
 
-### Docker Issues
+- Use vault for sensitive data
+- Regular security updates
+- Proper file permissions
+- SSH key management
+- Secure inventory handling
 
-Ensure Docker is running and you have the necessary permissions to use it. If you encounter Docker-related issues, refer to the Docker documentation: <https://docs.docker.com/>
+## Contributing
 
-### SSH Key Permissions
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes
+4. Push to the branch
+5. Create a Pull Request
 
-Ensure that your SSH key (~/.ssh/bananas) has the correct permissions (typically chmod 600 ~/.ssh/bananas).
+## License
 
-### Firewall/Network
+[MIT License](LICENSE)
 
-Verify that there are no firewall or network restrictions blocking SSH access to the server.
+## Support
 
-## Project Structure
-
-```scss
-git-base/
-├── .devcontainer/
-│   ├── Dockerfile
-│   ├── devcontainer.json
-│   ├── .env
-│   └── .env.example
-├── launch_vscode.sh
-├── src/
-│   └── ... (your source code)
-├── README.md
-└── ... (other project files)
-```
-
-- .devcontainer/
-  - Dockerfile: Defines the Docker image for the Dev Container.
-  - devcontainer.json: Configures the Dev Container for VS Code.
-  - settings.json: Recommended VS Code settings for the project.
-  - .env.example: Template for environment variables.
-  - .env: Environment variables (created by you).
-- launch_vscode.sh: Script to launch VS Code with the Dev Container.
-- src/: Directory for the project content itself
+For issues and feature requests, please create an issue in the repository.
