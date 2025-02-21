@@ -1,5 +1,0 @@
----
-# roles/common/meta/main.yml
-# Role metadata, including dependencies
-
-dependencies: []

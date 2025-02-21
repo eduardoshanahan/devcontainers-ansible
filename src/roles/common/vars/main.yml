@@ -1,6 +1,0 @@
----
-# roles/common/vars/main.yml
-# Variables for the common role that override defaults if necessary
-
-# For example:
-# fastapi_port: 8000

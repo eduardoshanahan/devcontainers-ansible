@@ -1,5 +1,6 @@
 # Custom Dictionary Words
 ansiblelint
+autofetch
 bierner
 codezombiech
 davidanson
@@ -13,9 +14,15 @@ githistory
 gruntfuggly
 mhutchie
 mushan
+mypy
 noninteractive
 NOPASSWD
+pylint
+pytest
+PYTHONDONTWRITEBYTECODE
+PYTHONUNBUFFERED
 Shanahan
+testinfra
 visualstudioexptteam
 vscodeintellicode
 wholroyd

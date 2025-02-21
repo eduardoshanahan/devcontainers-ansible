@@ -1,0 +1,72 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install Requirements",
+            "detail": "Install Python and Ansible requirements",
+            "type": "shell",
+            "command": "python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt && ansible-galaxy collection install -r requirements.yml && ansible-galaxy role install -r requirements.yml",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Lint Ansible",
+            "detail": "Run ansible-lint on playbooks",
+            "type": "shell",
+            "command": "ansible-lint",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Syntax Check",
+            "detail": "Check Ansible playbook syntax",
+            "type": "shell",
+            "command": "cd src && ansible-playbook --syntax-check test-playbook.yml",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Create Vault File",
+            "detail": "Create new encrypted file with ansible-vault",
+            "type": "shell",
+            "command": "read -p 'Enter file name: ' filename && ansible-vault create $filename",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Edit Vault File",
+            "detail": "Edit encrypted file with ansible-vault",
+            "type": "shell",
+            "command": "read -p 'Enter file name: ' filename && ansible-vault edit $filename",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Clean Cache",
+            "detail": "Clean Python and Ansible cache files",
+            "type": "shell",
+            "command": "find . -type f -name '*.pyc' -delete && find . -type d -name '__pycache__' -delete && find . -type f -name '*.retry' -delete",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

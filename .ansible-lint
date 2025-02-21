@@ -1,0 +1,24 @@
+---
+# Basic ansible-lint configuration
+exclude_paths:
+  - .cache/
+  - .git/
+  - .venv/
+  - .devcontainer/
+
+# Enable all rules by default
+enable_list:
+  - all
+
+# Offline mode for container usage
+offline: true
+
+# Use YAML callback for better readability
+use_default_rules: true
+verbosity: 1
+
+# Skip these rules
+skip_list:
+  - no-handler # Allow tasks without handlers
+  - fqcn-builtins # Allow short module names
+  - yaml # Skip YAML formatting checks
