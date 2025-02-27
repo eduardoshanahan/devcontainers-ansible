@@ -4,27 +4,30 @@ This repository contains a development environment setup for Ansible using VS Co
 
 ## Prerequisites
 
-- [Visual Studio Code](https://code.visualstudio.com/)
+- [Visual Studio Code](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/)
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [VS Code Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
 
 ## Quick Start
 
 1. Clone this repository:
+
    ```bash
    git clone <repository-url>
    cd <repository-name>
    ```
 
 2. Set up environment variables:
+
    ```bash
    cp .devcontainer/.env.example .devcontainer/.env
    ```
-   Edit `.devcontainer/.env` with your personal information and Docker preferences.
 
-3. Launch VS Code:
+   Edit `.devcontainer/.env` with your personal information, Docker preferences, and editor choice (VS Code or Cursor).
+
+3. Launch the development environment:
    ```bash
-   ./launch_vscode.sh
+   ./launch.sh
    ```
 
 ## Docker Configuration
@@ -36,6 +39,7 @@ The development environment uses a Docker container with the following default s
 - Container Name: `ansible-dev-env`
 
 You can customize these settings by editing the `.devcontainer/.env` file:
+
 ```bash
 DOCKER_IMAGE_NAME=ansible-dev
 DOCKER_IMAGE_TAG=latest
@@ -43,11 +47,13 @@ DOCKER_CONTAINER_NAME=ansible-dev-env
 ```
 
 To rebuild the Docker image:
+
 ```bash
 docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .devcontainer/
 ```
 
 To run the container manually (though normally handled by VS Code):
+
 ```bash
 docker run -it --name ${DOCKER_CONTAINER_NAME} ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
 ```
@@ -59,6 +65,7 @@ This project uses several tools to maintain high code quality and consistent Git
 ### Initial Setup
 
 1. Install pre-commit hooks:
+
    ```bash
    pip install -r requirements.txt
    pre-commit install --install-hooks
@@ -74,11 +81,13 @@ This project uses several tools to maintain high code quality and consistent Git
 ### Making Changes
 
 1. Create a new branch:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 2. Make your changes and stage them:
+
    ```bash
    git add .
    ```
@@ -92,6 +101,7 @@ This project uses several tools to maintain high code quality and consistent Git
 ### Commit Message Format
 
 We use Conventional Commits with the following types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -104,6 +114,7 @@ We use Conventional Commits with the following types:
 - `chore`: Other changes
 
 Example:
+
 ```
 feat(inventory): add support for dynamic AWS hosts
 
@@ -113,6 +124,7 @@ Added AWS dynamic inventory plugin configuration and documentation.
 ### Pre-commit Checks
 
 The following checks run automatically before commits:
+
 - Code formatting (Black, Prettier)
 - YAML validation
 - Ansible lint
@@ -122,6 +134,7 @@ The following checks run automatically before commits:
 - Private key detection
 
 Run checks manually:
+
 ```bash
 pre-commit run --all-files
 ```
@@ -129,6 +142,7 @@ pre-commit run --all-files
 ### Version Management
 
 1. Generate changelog:
+
    ```bash
    git-changelog
    ```
@@ -150,6 +164,7 @@ pre-commit run --all-files
 ### Git Hooks
 
 Pre-commit hooks check for:
+
 - Code formatting
 - Linting
 - Security issues
@@ -160,15 +175,18 @@ Pre-commit hooks check for:
 ### Troubleshooting
 
 1. If pre-commit hooks fail:
+
    ```bash
    pre-commit clean
    pre-commit install --install-hooks
    ```
 
 2. To skip hooks temporarily:
+
    ```bash
    git commit --no-verify
    ```
+
    (Use sparingly and only when necessary)
 
 3. To update hooks:
@@ -187,6 +205,7 @@ Required environment variables in `.devcontainer/.env`:
 - `GIT_USER_EMAIL`: Your Git email
 
 Optional variables:
+
 - `SSH_AUTH_SOCK`: Path to SSH agent socket
 - `ANSIBLE_CONFIG`: Path to ansible.cfg
 - `ANSIBLE_VAULT_PASSWORD_FILE`: Path to vault password file
@@ -214,6 +233,7 @@ Optional variables:
 ## Available Tasks
 
 Access tasks through VS Code:
+
 1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
 2. Type "Tasks: Run Task"
 3. Select from available tasks:
@@ -243,6 +263,7 @@ Access tasks through VS Code:
 ### Ansible Configuration
 
 The `ansible.cfg` file includes:
+
 - Inventory settings
 - Performance optimizations
 - SSH configurations
@@ -253,6 +274,7 @@ The `ansible.cfg` file includes:
 ### VS Code Settings
 
 Includes configurations for:
+
 - Python development
 - Ansible development
 - YAML formatting
@@ -281,6 +303,7 @@ Includes configurations for:
 6. Create pull request
 
 To run tasks in VS Code:
+
 1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
 2. Type "Tasks: Run Task"
 3. Select the desired task
@@ -290,16 +313,19 @@ To run tasks in VS Code:
 Common issues and solutions:
 
 1. SSH agent not working:
+
    - Check SSH_AUTH_SOCK variable
    - Ensure keys are added to agent
    - Verify permissions
 
 2. Container fails to start:
+
    - Verify Docker is running
    - Check environment variables
    - Check Docker logs
 
 3. VS Code extensions not loading:
+
    - Rebuild container
    - Check extension marketplace availability
    - Verify internet connection

@@ -64,6 +64,9 @@ inventory.yml
 *.swp
 *.swo
 *~
+.cursor/
+.cursor-log/
+.cursor-cache/
 
 # OS specific
 .DS_Store
