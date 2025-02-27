@@ -62,7 +62,11 @@ RUN python3 -m pip install --user --no-cache-dir \
     pylint==3.0.3 \
     flake8==7.0.0 \
     black==24.1.1 \
-    mypy==1.8.0
+    mypy==1.8.0 \
+    pre-commit==3.6.2 \
+    commitizen==3.15.0 \
+    gitlint==0.19.1 \
+    git-changelog==2.3.2
 
 # Create workspace directory and set permissions
 USER root

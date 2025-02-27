@@ -1,261 +1,243 @@
 {
-    "name": "Devcontainer to use Ansible in Ubuntu",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".",
-        "args": {
-            "HOST_USERNAME": "${localEnv:HOST_USERNAME}",
-            "HOST_UID": "${localEnv:HOST_UID}",
-            "HOST_GID": "${localEnv:HOST_GID}",
-            "GIT_USER_NAME": "${localEnv:GIT_USER_NAME}",
-            "GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}"
-        }
-    },
-    "remoteUser": "${localEnv:HOST_USERNAME}",
-    "workspaceFolder": "/workspace",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
-    "mounts": [
-        "source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
-    ],
-    "remoteEnv": {
-        "SSH_AUTH_SOCK": "/ssh-agent"
-    },
-    "securityOpt": [
-        "no-new-privileges"
-    ],
-    "capAdd": [
-        "SYS_PTRACE"
-    ],
-    "init": true,
-    "features": {
-        "ghcr.io/devcontainers/features/git:1": {},
-        "ghcr.io/devcontainers/features/python:1": {},
-        "ghcr.io/devcontainers/features/common-utils:2": {
-            "installZsh": false,
-            "configureZshAsDefaultShell": false,
-            "installOhMyZsh": false,
-            "upgradePackages": true
-        }
-    },
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "bash",
-                "terminal.integrated.profiles.linux": {
-                    "bash": {
-                        "path": "/bin/bash"
-                    }
-                },
-                "terminal.integrated.scrollback": 10000,
-                "python.analysis.typeCheckingMode": "basic",
-                "python.analysis.autoImportCompletions": true,
-                "python.analysis.indexing": true,
-                "[python]": {
-                    "editor.defaultFormatter": "ms-python.autopep8",
-                    "editor.formatOnSave": true,
-                    "editor.codeActionsOnSave": [
-                        "source.organizeImports"
-                    ],
-                    "editor.rulers": [
-                        88,
-                        100
-                    ]
-                },
-                "editor.formatOnSave": true,
-                "editor.rulers": [
-                    80,
-                    100
-                ],
-                "editor.renderWhitespace": "all",
-                "editor.insertSpaces": true,
-                "editor.tabSize": 2,
-                "editor.guides.indentation": true,
-                "editor.bracketPairColorization.enabled": true,
-                "editor.guides.bracketPairs": true,
-                "editor.wordWrap": "off",
-                "editor.minimap.enabled": false,
-                "files.trimTrailingWhitespace": true,
-                "files.insertFinalNewline": true,
-                "files.trimFinalNewlines": true,
-                "files.eol": "\n",
-                "search.exclude": {
-                    "**/.git": true,
-                    "**/*.pyc": true,
-                    "**/__pycache__": true,
-                    "**/.pytest_cache": true,
-                    "**/.mypy_cache": true,
-                    "**/.ansible": true
-                },
-                "search.useIgnoreFiles": true,
-                "search.useGlobalIgnoreFiles": true,
-                "yaml.format.enable": true,
-                "yaml.format.singleQuote": false,
-                "yaml.validate": true,
-                "yaml.hover": true,
-                "yaml.completion": true,
-                "yaml.schemas": {
-                    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json": [
-                        "**/tasks/*.yml",
-                        "**/handlers/*.yml"
-                    ],
-                    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/playbook.json": [
-                        "**/playbooks/*.yml",
-                        "**/site.yml"
-                    ],
-                    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/role.json": [
-                        "**/roles/*/meta/main.yml"
-                    ],
-                    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/inventory.json": [
-                        "**/inventory/*.yml"
-                    ]
-                },
-                "[yaml]": {
-                    "editor.insertSpaces": true,
-                    "editor.tabSize": 2,
-                    "editor.autoIndent": "keep",
-                    "editor.detectIndentation": false,
-                    "editor.defaultFormatter": "redhat.vscode-yaml",
-                    "editor.formatOnSave": true
-                },
-                "ansible.ansible.path": "/usr/local/bin/ansible",
-                "ansible.validation.lint.enabled": true,
-                "ansible.validation.lint.path": "/usr/local/bin/ansible-lint",
-                "ansible.python.interpreterPath": "/usr/bin/python3",
-                "ansible.executionEnvironment.enabled": false,
-                "ansible.validation.enabled": true,
-                "ansible.validation.validatePlaybook": true,
-                "[ansible]": {
-                    "editor.insertSpaces": true,
-                    "editor.tabSize": 2,
-                    "editor.detectIndentation": false,
-                    "editor.formatOnSave": true
-                },
-                "git.enableSmartCommit": true,
-                "git.autofetch": true,
-                "git.confirmSync": false,
-                "git.branchProtection": [
-                    "main",
-                    "master"
-                ],
-                "git.branchProtectionPrompt": "alwaysPrompt",
-                "git.fetchOnPull": true,
-                "git.pruneOnFetch": true,
-                "files.associations": {
-                    "*.yml": "yaml",
-                    "*.yaml": "yaml",
-                    "inventory": "ini",
-                    "**/inventory/*": "ini",
-                    "**/inventory/*.ini": "ini",
-                    "ansible.cfg": "ini",
-                    "**/group_vars/*": "yaml",
-                    "**/host_vars/*": "yaml",
-                    "**/defaults/*.yml": "yaml",
-                    "**/tasks/*.yml": "yaml",
-                    "**/handlers/*.yml": "yaml",
-                    "**/templates/*.j2": "jinja",
-                    "**/*.json.j2": "json"
-                },
-                "files.exclude": {
-                    "**/.git": true,
-                    "**/.svn": true,
-                    "**/.hg": true,
-                    "**/CVS": true,
-                    "**/.DS_Store": true,
-                    "**/*.pyc": true,
-                    "**/__pycache__": true,
-                    "**/.pytest_cache": true,
-                    "**/.mypy_cache": true
-                },
-                "git.inputValidation": true,
-                "git.detectSubmodules": true,
-                "git.allowForcePush": false,
-                "git.suggestSmartCommit": true,
-                "git.untrackedChanges": "separate",
-                "workbench.editor.enablePreview": false,
-                "workbench.editor.highlightModifiedTabs": true,
-                "workbench.colorCustomizations": {
-                    "editorError.foreground": "#ff0000",
-                    "editorWarning.foreground": "#ffa500",
-                    "editorInfo.foreground": "#00ff00"
-                },
-                "problems.showCurrentInStatus": true,
-                "problems.decorations.enabled": true,
-                "yaml.customTags": [
-                    "!vault",
-                    "!unsafe",
-                    "!reference"
-                ],
-                "yaml.format.printWidth": 120,
-                "yaml.format.proseWrap": "preserve",
-                "ansible.ansible.useFullyQualifiedCollectionNames": true,
-                "ansible.validation.lint.arguments": "-c .ansible-lint",
-                "ansible.completion.provideRedirectModules": true,
-                "ansible.completion.provideModuleOptionAliases": true,
-                "editor.cursorBlinking": "smooth",
-                "editor.cursorSmoothCaretAnimation": "on",
-                "editor.cursorStyle": "line",
-                "editor.multiCursorModifier": "alt",
-                "editor.cursorSurroundingLines": 8,
-                "editor.linkedEditing": true,
-                "editor.selectionHighlight": true,
-                "editor.occurrencesHighlight": "singleFile",
-                "editor.suggest.insertMode": "insert",
-                "editor.suggest.preview": true,
-                "editor.suggest.showStatusBar": true,
-                "editor.suggest.shareSuggestSelections": true,
-                "editor.columnSelection": false,
-                "editor.mouseWheelZoom": true,
-                "editor.smoothScrolling": true,
-                "editor.fastScrollSensitivity": 5,
-                "editor.dragAndDrop": true,
-                "editor.copyWithSyntaxHighlighting": true,
-                "shellformat.path": "/usr/bin/shfmt",
-                "shellformat.flag": "-i 2 -ci -bn",
-                "shellcheck.enable": true,
-                "shellcheck.useWorkspaceRootAsCwd": true,
-                "shellcheck.run": "onSave",
-                "terminal.integrated.persistentSessionReviveProcess": "never",
-                "terminal.integrated.enableVisualBell": false,
-                "accessibility.signals": {
-                    "terminalBell": false
-                },
-                "terminal.integrated.gpuAcceleration": "on",
-                "terminal.integrated.rightClickBehavior": "selectWord",
-                "workbench.startupEditor": "none",
-                "workbench.iconTheme": "file-icons",
-                "workbench.tree.indent": 16,
-                "workbench.tree.renderIndentGuides": "always",
-                "telemetry.telemetryLevel": "off",
-                "security.workspace.trust.enabled": true,
-                "security.workspace.trust.untrustedFiles": "prompt"
-            },
-            "extensions": [
-                "redhat.ansible",
-                "redhat.vscode-yaml",
-                "ms-azuretools.vscode-docker"
-            ]
-        }
-    },
-    "postCreateCommand": "git config --global core.editor 'code --wait' && git config --global init.defaultBranch main && echo 'DEVCONTAINER_USER in container:' $USER && whoami && id && ssh-add -l && ansible --version && python3 -m pip install --user --upgrade pip wheel setuptools && python3 -m pip check && ansible-galaxy collection list",
-    "postStartCommand": "",
-    "updateRemoteUserUID": true,
-    "containerUser": "${localEnv:HOST_USERNAME}",
-    "shutdownAction": "stopContainer",
-    "containerEnv": {
-        "PYTHONPATH": "/workspace",
-        "ANSIBLE_FORCE_COLOR": "1",
-        "ANSIBLE_HOST_KEY_CHECKING": "False",
-        "ANSIBLE_RETRY_FILES_ENABLED": "False",
-        "ANSIBLE_STDOUT_CALLBACK": "yaml",
-        "ANSIBLE_INVENTORY_UNPARSED_WARNING": "False",
-        "ANSIBLE_DEPRECATION_WARNINGS": "True",
-        "PYTHONDONTWRITEBYTECODE": "1",
-        "PYTHONUNBUFFERED": "1",
-        "LANG": "C.UTF-8",
-        "LC_ALL": "C.UTF-8",
-        "SHELL": "/bin/bash"
-    },
-    "waitFor": "onCreateCommand",
-    "initializeCommand": "mkdir -p ${localWorkspaceFolder}/.vscode-server/extensions",
-    "onCreateCommand": "ansible-galaxy collection install -r requirements.yml --ignore-errors || true"
+  "name": "Devcontainer to use Ansible in Ubuntu",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".",
+    "args": {
+      "HOST_USERNAME": "${localEnv:HOST_USERNAME}",
+      "HOST_UID": "${localEnv:HOST_UID}",
+      "HOST_GID": "${localEnv:HOST_GID}",
+      "GIT_USER_NAME": "${localEnv:GIT_USER_NAME}",
+      "GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}"
+    }
+  },
+  "remoteUser": "${localEnv:HOST_USERNAME}",
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "mounts": ["source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"],
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "/ssh-agent"
+  },
+  "securityOpt": ["no-new-privileges"],
+  "capAdd": ["SYS_PTRACE"],
+  "init": true,
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "configureZshAsDefaultShell": false,
+      "installOhMyZsh": false,
+      "upgradePackages": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        },
+        "terminal.integrated.scrollback": 10000,
+        "python.analysis.typeCheckingMode": "basic",
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.indexing": true,
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.autopep8",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": ["source.organizeImports"],
+          "editor.rulers": [88, 100]
+        },
+        "editor.formatOnSave": true,
+        "editor.rulers": [80, 100],
+        "editor.renderWhitespace": "all",
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.guides.indentation": true,
+        "editor.bracketPairColorization.enabled": true,
+        "editor.guides.bracketPairs": true,
+        "editor.wordWrap": "off",
+        "editor.minimap.enabled": false,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.eol": "\n",
+        "search.exclude": {
+          "**/.git": true,
+          "**/*.pyc": true,
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          "**/.mypy_cache": true,
+          "**/.ansible": true
+        },
+        "search.useIgnoreFiles": true,
+        "search.useGlobalIgnoreFiles": true,
+        "yaml.format.enable": true,
+        "yaml.format.singleQuote": false,
+        "yaml.validate": true,
+        "yaml.hover": true,
+        "yaml.completion": true,
+        "yaml.schemas": {
+          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json": [
+            "**/tasks/*.yml",
+            "**/handlers/*.yml"
+          ],
+          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/playbook.json": [
+            "**/playbooks/*.yml",
+            "**/site.yml"
+          ],
+          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/role.json": [
+            "**/roles/*/meta/main.yml"
+          ],
+          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/inventory.json": [
+            "**/inventory/*.yml"
+          ]
+        },
+        "[yaml]": {
+          "editor.insertSpaces": true,
+          "editor.tabSize": 2,
+          "editor.autoIndent": "keep",
+          "editor.detectIndentation": false,
+          "editor.defaultFormatter": "redhat.vscode-yaml",
+          "editor.formatOnSave": true
+        },
+        "ansible.ansible.path": "/usr/local/bin/ansible",
+        "ansible.validation.lint.enabled": true,
+        "ansible.validation.lint.path": "/usr/local/bin/ansible-lint",
+        "ansible.python.interpreterPath": "/usr/bin/python3",
+        "ansible.executionEnvironment.enabled": false,
+        "ansible.validation.enabled": true,
+        "ansible.validation.validatePlaybook": true,
+        "[ansible]": {
+          "editor.insertSpaces": true,
+          "editor.tabSize": 2,
+          "editor.detectIndentation": false,
+          "editor.formatOnSave": true
+        },
+        "git.enableSmartCommit": true,
+        "git.autofetch": true,
+        "git.confirmSync": false,
+        "git.fetchOnPull": true,
+        "git.pruneOnFetch": true,
+        "git.allowForcePush": true,
+        "git.suggestSmartCommit": true,
+        "git.untrackedChanges": "separate",
+        "files.associations": {
+          "*.yml": "yaml",
+          "*.yaml": "yaml",
+          "inventory": "ini",
+          "**/inventory/*": "ini",
+          "**/inventory/*.ini": "ini",
+          "ansible.cfg": "ini",
+          "**/group_vars/*": "yaml",
+          "**/host_vars/*": "yaml",
+          "**/defaults/*.yml": "yaml",
+          "**/tasks/*.yml": "yaml",
+          "**/handlers/*.yml": "yaml",
+          "**/templates/*.j2": "jinja",
+          "**/*.json.j2": "json"
+        },
+        "files.exclude": {
+          "**/.git": true,
+          "**/.svn": true,
+          "**/.hg": true,
+          "**/CVS": true,
+          "**/.DS_Store": true,
+          "**/*.pyc": true,
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          "**/.mypy_cache": true
+        },
+        "git.inputValidation": true,
+        "git.detectSubmodules": true,
+        "workbench.editor.enablePreview": false,
+        "workbench.editor.highlightModifiedTabs": true,
+        "workbench.colorCustomizations": {
+          "editorError.foreground": "#ff0000",
+          "editorWarning.foreground": "#ffa500",
+          "editorInfo.foreground": "#00ff00"
+        },
+        "problems.showCurrentInStatus": true,
+        "problems.decorations.enabled": true,
+        "yaml.customTags": ["!vault", "!unsafe", "!reference"],
+        "yaml.format.printWidth": 120,
+        "yaml.format.proseWrap": "preserve",
+        "ansible.ansible.useFullyQualifiedCollectionNames": true,
+        "ansible.validation.lint.arguments": "-c .ansible-lint",
+        "ansible.completion.provideRedirectModules": true,
+        "ansible.completion.provideModuleOptionAliases": true,
+        "editor.cursorBlinking": "smooth",
+        "editor.cursorSmoothCaretAnimation": "on",
+        "editor.cursorStyle": "line",
+        "editor.multiCursorModifier": "alt",
+        "editor.cursorSurroundingLines": 8,
+        "editor.linkedEditing": true,
+        "editor.selectionHighlight": true,
+        "editor.occurrencesHighlight": "singleFile",
+        "editor.suggest.insertMode": "insert",
+        "editor.suggest.preview": true,
+        "editor.suggest.showStatusBar": true,
+        "editor.suggest.shareSuggestSelections": true,
+        "editor.columnSelection": false,
+        "editor.mouseWheelZoom": true,
+        "editor.smoothScrolling": true,
+        "editor.fastScrollSensitivity": 5,
+        "editor.dragAndDrop": true,
+        "editor.copyWithSyntaxHighlighting": true,
+        "shellformat.path": "/usr/bin/shfmt",
+        "shellformat.flag": "-i 2 -ci -bn",
+        "shellcheck.enable": true,
+        "shellcheck.useWorkspaceRootAsCwd": true,
+        "shellcheck.run": "onSave",
+        "terminal.integrated.persistentSessionReviveProcess": "never",
+        "terminal.integrated.enableVisualBell": false,
+        "accessibility.signals": {
+          "terminalBell": false
+        },
+        "terminal.integrated.gpuAcceleration": "on",
+        "terminal.integrated.rightClickBehavior": "selectWord",
+        "workbench.startupEditor": "none",
+        "workbench.iconTheme": "file-icons",
+        "workbench.tree.indent": 16,
+        "workbench.tree.renderIndentGuides": "always",
+        "telemetry.telemetryLevel": "off",
+        "security.workspace.trust.enabled": true,
+        "security.workspace.trust.untrustedFiles": "prompt",
+        "python.linting.enabled": true,
+        "python.formatting.provider": "black"
+      },
+      "extensions": [
+        "redhat.ansible",
+        "redhat.vscode-yaml",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "ms-vscode.makefile-tools"
+      ]
+    }
+  },
+  "postCreateCommand": "git config --global core.editor 'code --wait' && git config --global init.defaultBranch main && echo 'DEVCONTAINER_USER in container:' $USER && whoami && id && ssh-add -l && ansible --version && python3 -m pip install --user --upgrade pip wheel setuptools && python3 -m pip check && ansible-galaxy collection list && pre-commit install --install-hooks && pre-commit install --hook-type commit-msg",
+  "postStartCommand": "",
+  "updateRemoteUserUID": true,
+  "containerUser": "${localEnv:HOST_USERNAME}",
+  "shutdownAction": "stopContainer",
+  "containerEnv": {
+    "PYTHONPATH": "/workspace",
+    "ANSIBLE_FORCE_COLOR": "1",
+    "ANSIBLE_HOST_KEY_CHECKING": "False",
+    "ANSIBLE_RETRY_FILES_ENABLED": "False",
+    "ANSIBLE_STDOUT_CALLBACK": "yaml",
+    "ANSIBLE_INVENTORY_UNPARSED_WARNING": "False",
+    "ANSIBLE_DEPRECATION_WARNINGS": "True",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "SHELL": "/bin/bash"
+  },
+  "waitFor": "onCreateCommand",
+  "initializeCommand": "mkdir -p ${localWorkspaceFolder}/.vscode-server/extensions",
+  "onCreateCommand": "ansible-galaxy collection install -r requirements.yml --ignore-errors || true"
 }
