@@ -4,7 +4,7 @@
 PROJECT_DIR=/workspace
 REMOTE_URL="git@github.com:eduardoshanahan/devcontainers-ansible.git"
 BRANCH="main"
-FORCE_PULL=true  # Set to true to force overwrite local changes
+FORCE_PULL=false  # Set to true to force overwrite local changes
 
 cd "$PROJECT_DIR" || { echo "Project directory not found!"; exit 1; }
 
