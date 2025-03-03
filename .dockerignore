@@ -1,12 +1,94 @@
-# Ignore Git history
+# Version control
 .git
 .gitignore
+.gitattributes
 
-# Ignore VS Code settings
+# IDE and editor files
 .vscode
+.idea
+*.swp
+*.swo
+*~
 
-# Ignore log files
+# Log files
 *.log
+logs/
+ansible.log
 
-# Ignore temporary files
+# Temporary files
 tmp/
+temp/
+*.tmp
+
+# Environment files
+.env
+.env.*
+*.env
+.devcontainer/.env
+.devcontainer/.env.*
+
+# Documentation
+docs/
+# Don't ignore all markdown files, only specific ones
+CONTRIBUTING.md
+CHANGELOG.md
+LICENSE
+
+# Test files
+test/
+tests/
+__tests__/
+*.test.*
+*.spec.*
+
+# Build artifacts
+dist/
+build/
+*.tar
+*.gz
+*.zip
+
+# Dependencies
+node_modules/
+vendor/
+.venv/
+venv/
+ENV/
+
+# Ansible specific
+*.retry
+*.lock
+.ansible/
+.vault_pass
+vault.key
+inventory.yml
+/inventory/*.yml
+/inventory/*.yaml
+/inventory/*.ini
+!/inventory/example.yml
+!/inventory/example.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.python-version
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
