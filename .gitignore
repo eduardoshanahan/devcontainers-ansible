@@ -64,7 +64,7 @@ inventory.yml
 *.swp
 *.swo
 *~
-.cursor/
+# Cursor temporary files and logs, but not our rules
 .cursor-log/
 .cursor-cache/
 
