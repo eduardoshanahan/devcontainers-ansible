@@ -62,6 +62,28 @@ docker run -it --name ${DOCKER_CONTAINER_NAME} ${DOCKER_IMAGE_NAME}:${DOCKER_IMA
 
 This project uses several tools to maintain high code quality and consistent Git practices:
 
+### Repository Synchronization
+
+The repository includes a `sync_git.sh` script to help maintain synchronization with the remote repository:
+
+```bash
+./sync_git.sh
+```
+
+The script provides the following features:
+- Automatically initializes git repository if not present
+- Sets up the correct remote URL
+- Syncs with the remote repository
+- Can be configured to force pull changes (useful in development containers)
+
+Configuration options in `sync_git.sh`:
+- `PROJECT_DIR`: The directory where the repository is located
+- `REMOTE_URL`: The Git repository URL
+- `BRANCH`: The branch to sync with (default: main)
+- `FORCE_PULL`: When set to `true`, forces overwrite of local changes
+
+⚠️ Note: When `FORCE_PULL=true`, the script will overwrite any local changes and remove untracked files. Use with caution.
+
 ### Initial Setup
 
 1. Install pre-commit hooks:
@@ -260,98 +282,64 @@ Access tasks through VS Code:
 
 ## Configuration
 
+### Cursor Project Rules
+
+The repository includes a `.cursor-project-rules` file that configures Cursor-specific project settings:
+
+```json
+{
+  "name": "devcontainers-ansible",
+  "include": [
+    "**/*.{yml,yaml,json,md,sh,py,ini}",
+    ".devcontainer/**/*",
+    ".vscode/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    ".git",
+    "__pycache__",
+    "*.pyc",
+    ".pytest_cache",
+    ".env"
+  ],
+  "formatOnSave": true,
+  "lintOnSave": true,
+  "defaultFormatter": {
+    "yml,yaml": "prettier",
+    "json": "prettier",
+    "md": "prettier",
+    "sh": "shfmt",
+    "py": "black"
+  }
+}
+```
+
+These rules ensure:
+- Proper file watching for relevant file types
+- Exclusion of unnecessary directories and files
+- Automatic formatting on save
+- Automatic linting on save
+- Consistent formatter selection per file type
+
+### Cursor Editor Settings
+
+Place your Cursor-specific rules in `.vscode/settings.json` under the `[cursor]` section:
+
+```json
+{
+  "[cursor]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+  }
+}
+```
+
+These settings ensure consistent code formatting and style when using Cursor.
+
 ### Ansible Configuration
 
-The `ansible.cfg` file includes:
-
-- Inventory settings
-- Performance optimizations
-- SSH configurations
-- Privilege escalation
-- Error handling
-- Vault settings
-
-### VS Code Settings
-
-Includes configurations for:
-
-- Python development
-- Ansible development
-- YAML formatting
-- Git integration
-- Terminal settings
-- Editor preferences
-
-## Best Practices
-
-1. Never commit sensitive information
-2. Use ansible-vault for secrets
-3. Keep inventory files separate
-4. Follow Ansible best practices
-5. Use version control effectively
-6. Regular linting and testing
-7. Document your code
-8. Use meaningful commit messages
-
-## Development Workflow
-
-1. Create feature branch
-2. Make changes
-3. Run linting (VS Code Task: "Lint Ansible")
-4. Run syntax check (VS Code Task: "Syntax Check")
-5. Commit changes
-6. Create pull request
-
-To run tasks in VS Code:
-
-1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
-2. Type "Tasks: Run Task"
-3. Select the desired task
-
-## Troubleshooting
-
-Common issues and solutions:
-
-1. SSH agent not working:
-
-   - Check SSH_AUTH_SOCK variable
-   - Ensure keys are added to agent
-   - Verify permissions
-
-2. Container fails to start:
-
-   - Verify Docker is running
-   - Check environment variables
-   - Check Docker logs
-
-3. VS Code extensions not loading:
-
-   - Rebuild container
-   - Check extension marketplace availability
-   - Verify internet connection
-
-4. Ansible issues:
-   - Check inventory file
-   - Verify SSH access
-   - Check privilege escalation
-   - Review ansible.cfg
-
-## Security
-
-- Use vault for sensitive data
-- Regular security updates
-- Proper file permissions
-- SSH key management
-- Secure inventory handling
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
-
-## License
-
-[MIT License](LICENSE)
-
-## Support
-
-For issues and feature requests, please create an issue in the repository.
+The `ansible.cfg`
