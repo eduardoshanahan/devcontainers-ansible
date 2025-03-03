@@ -284,42 +284,15 @@ Access tasks through VS Code:
 
 ### Cursor Project Rules
 
-The repository includes a `.cursor-project-rules` file that configures Cursor-specific project settings:
+The repository follows a structured approach to Cursor rules:
 
-```json
-{
-  "name": "devcontainers-ansible",
-  "include": [
-    "**/*.{yml,yaml,json,md,sh,py,ini}",
-    ".devcontainer/**/*",
-    ".vscode/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    ".git",
-    "__pycache__",
-    "*.pyc",
-    ".pytest_cache",
-    ".env"
-  ],
-  "formatOnSave": true,
-  "lintOnSave": true,
-  "defaultFormatter": {
-    "yml,yaml": "prettier",
-    "json": "prettier",
-    "md": "prettier",
-    "sh": "shfmt",
-    "py": "black"
-  }
-}
-```
+1. All Cursor rules are stored in the `.cursor/rules` directory as individual markdown files
+2. Each rule file follows a standard format with clear sections for the rule and its details
+3. Current rules include:
+   - `rule-storage.md`: Defines how Cursor rules should be stored and formatted
+   - `project-settings.md`: Defines project-wide Cursor settings and configurations
 
-These rules ensure:
-- Proper file watching for relevant file types
-- Exclusion of unnecessary directories and files
-- Automatic formatting on save
-- Automatic linting on save
-- Consistent formatter selection per file type
+For the complete set of rules, please check the `.cursor/rules` directory.
 
 ### Cursor Editor Settings
 
