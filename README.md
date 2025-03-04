@@ -199,6 +199,8 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 - `build`: Changes that affect the build system or external dependencies
 - `ci`: Changes to CI configuration files and scripts
 - `chore`: Other changes that don't modify src or test files
+- `revert`: Revert a previous commit
+- `bump`: Version bump
 
 #### Scope
 
@@ -215,23 +217,52 @@ The scope should be the name of the component affected (e.g., ansible, git, dock
 ```text
 feat(ansible): add new role for nginx configuration
 
+Add a new Ansible role for managing Nginx installations. This role includes:
+- Basic installation and configuration
+- Virtual host management
+- SSL certificate handling
+- Security hardening options
+
 fix(docker): resolve permission issues in volume mounts
+
+Fixed file permission problems when mounting volumes in Docker containers.
+Updated the Dockerfile to ensure proper UID/GID mapping and file ownership.
+This resolves issues with write permissions in mounted directories.
 
 docs(readme): update installation instructions
 
+Improved the clarity of installation steps and added troubleshooting guides.
+Added examples for common setup scenarios and expanded the prerequisites
+section with more detailed system requirements.
+
 style(yaml): format all playbooks using yamllint
 
+Applied consistent YAML formatting across all playbooks and roles.
+Updated indentation, removed trailing spaces, and ensured proper document
+structure according to yamllint rules.
+
 test(roles): add integration tests for mysql role
+
+Added comprehensive integration tests for the MySQL role:
+- Database creation and user management tests
+- Replication setup verification
+- Backup and restore procedures
+- Performance optimization checks
 ```
 
 #### Breaking Changes
 
-For breaking changes, add `BREAKING CHANGE:` in the footer:
+For breaking changes, add `BREAKING CHANGE:` in the footer and append `!` after the scope:
 
 ```text
-feat(api): update authentication method
+feat(api)!: update authentication method
 
-BREAKING CHANGE: `auth_token` is now required for all API calls
+Implemented JWT-based authentication to replace the existing token system.
+Added support for refresh tokens and enhanced security measures.
+
+BREAKING CHANGE: `auth_token` is now required for all API calls and must be
+in JWT format. Previous authentication methods will stop working after the
+next release.
 ```
 
 ### Pre-commit Checks
