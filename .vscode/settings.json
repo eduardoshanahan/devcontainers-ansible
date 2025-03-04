@@ -48,5 +48,35 @@
       "foreground": "#00FF00",
       "icon": "checklist"
     }
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnSave": true
+  },
+  "markdownlint.config": {
+    "MD013": false,
+    "MD024": false,
+    "MD033": false,
+    "MD041": false,
+    "MD022": false,
+    "MD032": false,
+    "MD029": false,
+    "MD025": false,
+    "MD026": false,
+    "MD040": false,
+    "MD031": false,
+    "MD038": false,
+    "MD039": false,
+    "MD042": false,
+    "MD043": false,
+    "MD044": false,
+    "MD045": false,
+    "MD046": false,
+    "MD047": false,
+    "MD048": false,
+    "MD049": false,
+    "MD050": false
   }
 }

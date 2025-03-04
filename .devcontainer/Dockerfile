@@ -41,7 +41,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \
     sudo \
     less \
-    vim \
     nano \
     zip \
     unzip \
@@ -61,9 +60,9 @@ ENV LC_ALL=en_IE.UTF-8
 
 # Install Ansible and related tools
 RUN pip3 install --no-cache-dir \
-    ansible==8.5.0 \
-    ansible-lint==6.22.1 \
-    yamllint==1.33.0 \
+    ansible==9.2.0 \
+    ansible-lint==25.1.3 \
+    yamllint==1.34.0 \
     molecule==6.0.2 \
     docker==7.0.0 \
     pytest==8.0.0 \
