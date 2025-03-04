@@ -1,6 +1,6 @@
 # Ansible Development Environment in Devcontainers
 
-This repository provides a ready-to-use development environment using devcontainers, supporting both Visual Studio Code and Cursor editors. It ensures consistent Git configuration and proper file permissions whether you're working inside the container or on the host machine. It is focused on working with Ansible whitout installing anything in the local machine.
+This repository provides a ready-to-use development environment using devcontainers, supporting both Visual Studio Code and Cursor editors. It ensures consistent Git configuration and proper file permissions whether you're working inside the container or on the host machine. It is focused on working with Ansible without installing anything in the local machine.
 
 ## Features
 
@@ -177,25 +177,61 @@ The script provides the following features:
 
 ### Commit Message Format
 
-We use Conventional Commits with the following types:
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for commit messages. Each commit message should be structured as follows:
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `perf`: Performance improvements
-- `test`: Adding or updating tests
-- `build`: Build system changes
-- `ci`: CI configuration changes
-- `chore`: Other changes
+```text
+<type>(<scope>): <description>
 
-Example:
+[optional body]
 
+[optional footer(s)]
 ```
-feat(git): add support for custom Git aliases
 
-Added a comprehensive set of Git aliases for improved workflow efficiency.
+#### Types
+
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, missing semicolons, etc.)
+- `refactor`: Code changes that neither fix a bug nor add a feature
+- `perf`: Code changes that improve performance
+- `test`: Adding missing tests or correcting existing tests
+- `build`: Changes that affect the build system or external dependencies
+- `ci`: Changes to CI configuration files and scripts
+- `chore`: Other changes that don't modify src or test files
+
+#### Scope
+
+The scope should be the name of the component affected (e.g., ansible, git, docker).
+
+#### Description
+
+- Use the imperative, present tense: "add" not "added" or "adds"
+- Don't capitalize first letter
+- No dot (.) at the end
+
+#### Examples
+
+```text
+feat(ansible): add new role for nginx configuration
+
+fix(docker): resolve permission issues in volume mounts
+
+docs(readme): update installation instructions
+
+style(yaml): format all playbooks using yamllint
+
+test(roles): add integration tests for mysql role
+```
+
+#### Breaking Changes
+
+For breaking changes, add `BREAKING CHANGE:` in the footer:
+
+```text
+feat(api): update authentication method
+
+BREAKING CHANGE: `auth_token` is now required for all API calls
 ```
 
 ### Pre-commit Checks
@@ -295,7 +331,7 @@ gl   # git log with graph
 gd   # git diff
 ```
 
-### 4. What to Check
+### 4. Git Setup Checklist
 
 ✓ Git installation:
 
@@ -367,7 +403,7 @@ ansible-doc ping
 ansible-galaxy init test_role
 ```
 
-### 4. What to Check
+### 4. Ansible Setup Checklist
 
 ✓ Ansible installation:
 
@@ -410,7 +446,7 @@ ansible-config dump
 ansible-config dump --only-changed
 ```
 
-2. Verify Python environment:
+1. Verify Python environment:
 
 ```bash
 # Check Python version
@@ -420,14 +456,14 @@ python3 --version
 pip list | grep ansible
 ```
 
-3. Test SSH connectivity:
+1. Test SSH connectivity:
 
 ```bash
 # Test SSH to target hosts
 ssh -i ~/.ssh/id_rsa user@target-host
 ```
 
-4. Check file permissions:
+1. Check file permissions:
 
 ```bash
 # Verify playbook permissions
@@ -437,7 +473,7 @@ ls -l src/roles/
 
 ## Directory Structure
 
-```
+```text
 .
 ├── .github/              # GitHub specific files
 ├── .devcontainer/        # Dev container configuration

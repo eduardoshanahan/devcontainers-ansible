@@ -12,11 +12,13 @@ fcrespo
 foxundermoon
 githistory
 gruntfuggly
+gstp
 mhutchie
 mushan
 mypy
 noninteractive
 NOPASSWD
+oneline
 pylint
 pytest
 PYTHONDONTWRITEBYTECODE
