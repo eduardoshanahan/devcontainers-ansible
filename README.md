@@ -1,124 +1,376 @@
-# Ansible Development Environment
+# Ansible Development Environment in Devcontainers
 
-This repository contains a development environment setup for Ansible using VS Code and Dev Containers.
+This repository provides a ready-to-use development environment using devcontainers, supporting both Visual Studio Code and Cursor editors. It ensures consistent Git configuration and proper file permissions whether you're working inside the container or on the host machine. It is focused on working with Ansible without installing anything in the local machine.
+
+## Features
+
+- Secure user permissions matching host system
+- Consistent Git configuration across environments
+- Pre-configured development tools and utilities
+- Support for both VS Code and Cursor editors
+- Customized shell with useful aliases and tools
+- GitHub CLI integration
+- Enhanced code search and navigation
+- Ansible development tools and configuration
 
 ## Prerequisites
 
-- [Visual Studio Code](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/)
-- [Docker](https://www.docker.com/products/docker-desktop)
-- [VS Code Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+- Ubuntu (tested on Ubuntu 24.10)
+- Docker installed and running
+- One of the following editors:
+  - Visual Studio Code with Remote - Containers extension
+  - Cursor Editor
 
 ## Quick Start
 
-1. Clone this repository:
-
-   ```bash
-   git clone <repository-url>
-   cd <repository-name>
-   ```
-
-2. Set up environment variables:
-
-   ```bash
-   cp .devcontainer/.env.example .devcontainer/.env
-   ```
-
-   Edit `.devcontainer/.env` with your personal information, Docker preferences, and editor choice (VS Code or Cursor).
-
-3. Launch the development environment:
-   ```bash
-   ./launch.sh
-   ```
-
-## Docker Configuration
-
-The development environment uses a Docker container with the following default settings (configurable in `.devcontainer/.env`):
-
-- Image Name: `ansible-dev`
-- Image Tag: `latest`
-- Container Name: `ansible-dev-env`
-
-You can customize these settings by editing the `.devcontainer/.env` file:
+### 1. Clone and Initialize
 
 ```bash
-DOCKER_IMAGE_NAME=ansible-dev
-DOCKER_IMAGE_TAG=latest
-DOCKER_CONTAINER_NAME=ansible-dev-env
+# Clone the repository
+git clone --depth 1 https://github.com/eduardoshanahan/devcontainers-ansible new-project-name
+cd new-project-name
+
+# Remove Git history to start fresh
+rm -rf .git/
+git init
 ```
 
-To rebuild the Docker image:
+### 2. Configure Environment
 
 ```bash
-docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .devcontainer/
+# Copy environment template
+cp .devcontainer/.env.example .devcontainer/.env
+
+# Get your user details (note these values)
+echo "Your username: $(whoami)"
+echo "Your UID: $(id -u)"
+echo "Your GID: $(id -g)"
+
+# Edit the environment file
+code .devcontainer/.env  # or cursor .devcontainer/.env
 ```
 
-To run the container manually (though normally handled by VS Code):
+Required environment variables:
+
+```dotenv
+# User configuration
+HOST_USERNAME="your_username"     # Output of whoami
+HOST_UID=1000                     # Output of id -u
+HOST_GID=1000                     # Output of id -g
+
+# Git configuration
+GIT_USER_NAME="Your Name"         # Your Git username
+GIT_USER_EMAIL="your@email.com"   # Your Git email
+
+# Editor configuration
+EDITOR_CHOICE=code               # Use 'code' for VS Code or 'cursor' for Cursor
+
+# Docker configuration
+DOCKER_IMAGE_NAME="your-image"    # Name for the Docker image
+DOCKER_IMAGE_TAG="1.0.0"         # Tag for the Docker image
+```
+
+### Docker Image Management
+
+By default, VS Code creates Docker images with auto-generated names. To use custom names:
+
+1. Set these variables in `.devcontainer/.env`:
 
 ```bash
-docker run -it --name ${DOCKER_CONTAINER_NAME} ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+DOCKER_IMAGE_NAME="your-image-name"
+DOCKER_IMAGE_TAG="your-tag"
 ```
+
+1. To clean up old images and rebuild with new names:
+
+```bash
+# Stop containers using old images
+docker stop $(docker ps -q --filter ancestor=<old-image-name>)
+
+# Remove old images
+docker image rm <old-image-name>:latest
+docker image rm <old-image-name-uid>:latest
+
+# Rebuild with new name
+./launch.sh
+```
+
+The container will be rebuilt with your specified image name and tag.
+
+### 3. Launch the Environment
+
+The `launch.sh` script in the root directory will help you start the development environment:
+
+```bash
+# Launch your chosen editor (VS Code or Cursor)
+./launch.sh
+```
+
+The script will:
+
+- Validate your environment configuration
+- Check if your chosen editor is installed
+- Clean up any existing containers
+- Launch the appropriate editor
+
+If there are any issues, the script will provide helpful error messages and instructions.
+
+## Included Tools and Features
+
+### Development Tools
+
+- Git with enhanced configuration
+- GitHub CLI
+- Build essentials
+- curl, wget, jq
+- zip/unzip utilities
+- tree, htop
+- bash-completion
+- Ansible and related tools
+
+### Git Aliases
+
+| Alias | Command                   | Description                      |
+| ----- | ------------------------- | -------------------------------- |
+| gs    | git status                | Show working tree status         |
+| gp    | git pull                  | Pull changes from remote         |
+| gd    | git diff                  | Show file differences            |
+| gc    | git commit                | Create a commit                  |
+| gb    | git branch                | List or manage branches          |
+| gl    | git log --oneline --graph | Show commit history graph        |
+| gco   | git checkout              | Switch branches or restore files |
+| gf    | git fetch --all --prune   | Update remote references         |
+| gst   | git stash                 | Stash changes                    |
+| gstp  | git stash pop             | Apply stashed changes            |
+
+## VS Code Extensions
+
+The environment comes with pre-configured extensions for:
+
+- Docker and container management
+- Git integration and visualization
+- Code intelligence and completion
+- Markdown support
+- Code formatting and linting
+- Spell checking
+- File icons and themes
+- Ansible support
 
 ## Git Workflow
 
 This project uses several tools to maintain high code quality and consistent Git practices:
 
-### Initial Setup
+### Repository Synchronization
 
-1. Install pre-commit hooks:
+The repository includes a `sync_git.sh` script to help maintain synchronization with the remote repository. When working inside the devcontainer, you can run it in several ways:
 
-   ```bash
-   pip install -r requirements.txt
-   pre-commit install --install-hooks
-   pre-commit install --hook-type commit-msg
-   ```
-
-2. Configure Git:
-   ```bash
-   git config --local core.autocrlf input
-   git config --local core.eol lf
-   ```
-
-### Making Changes
-
-1. Create a new branch:
+1. From the workspace root (recommended):
 
    ```bash
-   git checkout -b feature/your-feature-name
+   ./scripts/sync_git.sh
    ```
 
-2. Make your changes and stage them:
+1. Using the absolute path (from any directory):
 
    ```bash
-   git add .
+   /workspace/scripts/sync_git.sh
    ```
 
-3. Commit using Commitizen:
+1. With force pull option (overwrites local changes):
+
    ```bash
-   cz commit
+   FORCE_PULL=true ./scripts/sync_git.sh
    ```
-   This will guide you through creating a standardized commit message.
+
+1. With a different branch:
+
+   ```bash
+   BRANCH=develop ./scripts/sync_git.sh
+   ```
+
+The script provides the following features:
+
+- Automatically initializes git repository if not present
+- Sets up the correct remote URL
+- Syncs with the remote repository
+- Creates backups of local changes when force pulling
+- Provides colored output for better readability
+- Handles detached HEAD states automatically
+
+#### Script Behavior
+
+1. **Normal Operation**:
+
+   - Checks for local changes
+   - Pulls latest changes from remote
+   - Fails if there are uncommitted changes
+
+1. **Force Pull Mode**:
+
+   - Backs up any local changes
+   - Forces sync with remote branch
+   - Removes untracked files
+   - Use with caution: `FORCE_PULL=true`
+
+1. **Error Handling**:
+
+   - Provides clear error messages
+   - Creates backups before destructive operations
+   - Guides you through fixing common issues
+
+1. **Safety Features**:
+
+   - Won't overwrite uncommitted changes without FORCE_PULL
+   - Creates backups of local changes
+   - Validates git configuration before operations
+
+#### Common Use Cases
+
+1. **Initial Setup**:
+
+   ```bash
+   cd /workspace
+   ./scripts/sync_git.sh
+   ```
+
+1. **Daily Updates**:
+
+   ```bash
+   # From workspace root
+   ./scripts/sync_git.sh
+   ```
+
+1. **Discarding Local Changes**:
+
+   ```bash
+   # Will backup changes first
+   FORCE_PULL=true ./scripts/sync_git.sh
+   ```
+
+1. **Working with Feature Branches**:
+
+   ```bash
+   BRANCH=feature/my-feature ./scripts/sync_git.sh
+   ```
+
+#### Troubleshooting
+
+If you encounter issues:
+
+1. **Uncommitted Changes**:
+
+   ```bash
+   # Either commit your changes:
+   git commit -m "feat(scope): your changes"
+   ./scripts/sync_git.sh
+
+   # Or force pull (will backup changes):
+   FORCE_PULL=true ./scripts/sync_git.sh
+   ```
+
+1. **Wrong Branch**:
+
+   ```bash
+   # Specify the correct branch:
+   BRANCH=main ./scripts/sync_git.sh
+   ```
+
+1. **No Remote URL**:
+
+   ```bash
+   # Set up your remote first:
+   git remote add origin <your-repository-url>
+   ./scripts/sync_git.sh
+   ```
 
 ### Commit Message Format
 
-We use Conventional Commits with the following types:
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for commit messages. Each commit message should be structured as follows:
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code refactoring
-- `perf`: Performance improvements
-- `test`: Adding or updating tests
-- `build`: Build system changes
-- `ci`: CI configuration changes
-- `chore`: Other changes
+```text
+<type>(<scope>): <description>
 
-Example:
+[optional body]
 
+[optional footer(s)]
 ```
-feat(inventory): add support for dynamic AWS hosts
 
-Added AWS dynamic inventory plugin configuration and documentation.
+#### Types
+
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, missing semicolons, etc.)
+- `refactor`: Code changes that neither fix a bug nor add a feature
+- `perf`: Code changes that improve performance
+- `test`: Adding missing tests or correcting existing tests
+- `build`: Changes that affect the build system or external dependencies
+- `ci`: Changes to CI configuration files and scripts
+- `chore`: Other changes that don't modify src or test files
+- `revert`: Revert a previous commit
+- `bump`: Version bump
+
+#### Scope
+
+The scope should be the name of the component affected (e.g., ansible, git, docker).
+
+#### Description
+
+- Use the imperative, present tense: "add" not "added" or "adds"
+- Don't capitalize first letter
+- No dot (.) at the end
+
+#### Examples
+
+```text
+feat(ansible): add new role for nginx configuration
+
+Add a new Ansible role for managing Nginx installations. This role includes:
+- Basic installation and configuration
+- Virtual host management
+- SSL certificate handling
+- Security hardening options
+
+fix(docker): resolve permission issues in volume mounts
+
+Fixed file permission problems when mounting volumes in Docker containers.
+Updated the Dockerfile to ensure proper UID/GID mapping and file ownership.
+This resolves issues with write permissions in mounted directories.
+
+docs(readme): update installation instructions
+
+Improved the clarity of installation steps and added troubleshooting guides.
+Added examples for common setup scenarios and expanded the prerequisites
+section with more detailed system requirements.
+
+style(yaml): format all playbooks using yamllint
+
+Applied consistent YAML formatting across all playbooks and roles.
+Updated indentation, removed trailing spaces, and ensured proper document
+structure according to yamllint rules.
+
+test(roles): add integration tests for mysql role
+
+Added comprehensive integration tests for the MySQL role:
+- Database creation and user management tests
+- Replication setup verification
+- Backup and restore procedures
+- Performance optimization checks
+```
+
+#### Breaking Changes
+
+For breaking changes, add `BREAKING CHANGE:` in the footer and append `!` after the scope:
+
+```text
+feat(api)!: update authentication method
+
+Implemented JWT-based authentication to replace the existing token system.
+Added support for refresh tokens and enhanced security measures.
+
+BREAKING CHANGE: `auth_token` is now required for all API calls and must be
+in JWT format. Previous authentication methods will stop working after the
+next release.
 ```
 
 ### Pre-commit Checks
@@ -139,219 +391,243 @@ Run checks manually:
 pre-commit run --all-files
 ```
 
-### Version Management
+## Troubleshooting
 
-1. Generate changelog:
+### Permission Issues
 
-   ```bash
-   git-changelog
-   ```
+```bash
+# Verify your host machine IDs match .env
+id -u  # Should match HOST_UID
+id -g  # Should match HOST_GID
 
-2. Bump version:
-   ```bash
-   cz bump
-   ```
+# Check container user
+docker exec <container-name> id
+```
 
-### Git Best Practices
+### Editor Launch Issues
 
-1. Keep commits atomic and focused
-2. Write descriptive commit messages
-3. Reference issues in commits when applicable
-4. Keep branches up to date with main
-5. Delete branches after merging
-6. Use pull requests for code review
+```bash
+# Check if editor is installed
+command -v code    # For VS Code
+command -v cursor  # For Cursor
 
-### Git Hooks
+# Verify environment variables
+cat .devcontainer/.env
+```
 
-Pre-commit hooks check for:
+### Git Configuration
 
-- Code formatting
-- Linting
-- Security issues
-- Commit message format
-- File formatting
-- Line endings
+```bash
+# Verify Git configuration
+git config --global --list
 
-### Troubleshooting
+# Reset Git configuration if needed
+git config --global --unset-all user.name
+git config --global --unset-all user.email
+```
 
-1. If pre-commit hooks fail:
+## Testing Git Setup
 
-   ```bash
-   pre-commit clean
-   pre-commit install --install-hooks
-   ```
+To verify that Git is working correctly in your container, follow these steps:
 
-2. To skip hooks temporarily:
+### 1. Check Git Installation and Configuration
 
-   ```bash
-   git commit --no-verify
-   ```
+```bash
+# Verify Git version and configuration
+git --version
+git config --global --list
+```
 
-   (Use sparingly and only when necessary)
+Expected output should show:
 
-3. To update hooks:
-   ```bash
-   pre-commit autoupdate
-   ```
+- Git version installed
+- Your configured username and email
+- Core settings like editor, file mode, etc.
 
-## Environment Variables
+### 2. Test Basic Git Operations
 
-Required environment variables in `.devcontainer/.env`:
+```bash
+# Create and stage a test file
+echo "test content" > test.txt
+git add test.txt
+git status  # Should show test.txt as staged
 
-- `HOST_USERNAME`: Your username
-- `HOST_UID`: Your user ID (usually 1000)
-- `HOST_GID`: Your group ID (usually 1000)
-- `GIT_USER_NAME`: Your Git username
-- `GIT_USER_EMAIL`: Your Git email
+# Create a test commit
+git commit -m "test commit" test.txt
+git log -1  # Should show your commit
 
-Optional variables:
+# Test file modifications
+rm test.txt
+git status  # Should show test.txt as deleted
+```
 
-- `SSH_AUTH_SOCK`: Path to SSH agent socket
-- `ANSIBLE_CONFIG`: Path to ansible.cfg
-- `ANSIBLE_VAULT_PASSWORD_FILE`: Path to vault password file
+### 3. Verify Git Aliases
+
+```bash
+# Test common aliases
+gs   # git status
+gl   # git log with graph
+gd   # git diff
+```
+
+### 4. Git Setup Checklist
+
+✓ Git installation:
+
+- Git command works
+- Correct version is installed
+- Configuration is properly set
+
+✓ Basic operations:
+
+- File staging works
+- Commits are created correctly
+- Status shows changes accurately
+- Log shows commit history
+
+✓ Permissions:
+
+- Files can be created/deleted
+
+## Testing Ansible Setup
+
+To verify that Ansible is working correctly in your container, follow these steps:
+
+### 1. Check Ansible Installation and Configuration
+
+```bash
+# Verify Ansible version and configuration
+ansible --version
+ansible-config dump --only-changed
+
+# Check Ansible collections
+ansible-galaxy collection list
+
+# Verify Ansible roles
+ansible-galaxy role list
+```
+
+Expected output should show:
+
+- Ansible version installed
+- Core configuration settings
+- Installed collections and roles
+
+### 2. Test Basic Ansible Operations
+
+```bash
+# Test inventory parsing
+ansible-inventory --list
+
+# Test playbook syntax
+ansible-playbook --syntax-check src/playbooks/*.yml
+
+# Run a simple ping test
+ansible all -m ping -i hosts.ini
+
+# Test playbook execution
+ansible-playbook src/playbooks/test.yml -i hosts.ini
+```
+
+### 3. Verify Ansible Tools
+
+```bash
+# Test ansible-lint
+ansible-lint src/playbooks/*.yml
+
+# Test ansible-doc
+ansible-doc ping
+
+# Test ansible-galaxy
+ansible-galaxy init test_role
+```
+
+### 4. Ansible Setup Checklist
+
+✓ Ansible installation:
+
+- Ansible command works
+- Correct version is installed
+- Configuration is properly set
+- Collections and roles are installed
+
+✓ Basic operations:
+
+- Inventory parsing works
+- Playbook syntax checking works
+- Ping module works
+- Playbook execution works
+
+✓ Development tools:
+
+- ansible-lint is working
+- ansible-doc is accessible
+- ansible-galaxy is functional
+
+✓ Permissions:
+
+- Can create and modify playbooks
+- Can create and modify roles
+- Can access inventory files
+- Can execute playbooks
+
+### 5. Common Issues and Solutions
+
+If you encounter issues:
+
+1. Check Ansible configuration:
+
+```bash
+# View current configuration
+ansible-config dump
+
+# Check for configuration errors
+ansible-config dump --only-changed
+```
+
+1. Verify Python environment:
+
+```bash
+# Check Python version
+python3 --version
+
+# Verify pip packages
+pip list | grep ansible
+```
+
+1. Test SSH connectivity:
+
+```bash
+# Test SSH to target hosts
+ssh -i ~/.ssh/id_rsa user@target-host
+```
+
+1. Check file permissions:
+
+```bash
+# Verify playbook permissions
+ls -l src/playbooks/
+ls -l src/roles/
+```
 
 ## Directory Structure
 
-```
+```text
 .
-├── .devcontainer/          # Dev container configuration
-│   ├── .env.example       # Example environment variables
-│   ├── Dockerfile         # Container definition
-│   ├── devcontainer.json  # VS Code dev container config
-│   └── ssh-agent-setup.sh # SSH agent configuration
-├── .vscode/               # VS Code workspace settings
-├── src/                   # Source directory
-│   ├── inventory/        # Ansible inventory files
-│   ├── playbooks/        # Ansible playbooks
-│   ├── roles/            # Ansible roles
-│   └── ansible.cfg       # Ansible configuration
-├── tests/                # Test files
-├── requirements.txt      # Python dependencies
-└── requirements.yml      # Ansible collections and roles
+├── .github/              # GitHub specific files
+├── .devcontainer/        # Dev container configuration
+├── .vscode/             # VS Code workspace settings
+├── .cursor/             # Cursor rules and configurations
+├── config/              # Configuration files
+│   └── ansible/         # Ansible-specific configurations
+├── scripts/             # Shell scripts and utilities
+│   ├── launch.sh        # Development environment launcher
+│   └── sync-git.sh      # Git synchronization utility
+├── src/                 # Source directory
+│   ├── inventory/       # Ansible inventory files
+│   ├── playbooks/       # Ansible playbooks
+│   └── roles/          # Ansible roles
+└── tests/              # Test files
 ```
 
-## Available Tasks
-
-Access tasks through VS Code:
-
-1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
-2. Type "Tasks: Run Task"
-3. Select from available tasks:
-
-- Install Requirements: Install all Python and Ansible dependencies
-- Lint Ansible: Run ansible-lint on playbooks
-- Syntax Check: Verify playbook syntax
-- Create Vault File: Create new encrypted file
-- Edit Vault File: Edit existing encrypted file
-- Clean Cache: Remove temporary files
-
-## Features
-
-- Automated development environment setup
-- SSH agent forwarding
-- Git configuration
-- Integrated Ansible linting and validation
-- Python development tools
-- Consistent code formatting
-- Comprehensive VS Code extensions
-- Integrated task running
-- Vault integration
-- Inventory management
-
-## Configuration
-
-### Ansible Configuration
-
-The `ansible.cfg` file includes:
-
-- Inventory settings
-- Performance optimizations
-- SSH configurations
-- Privilege escalation
-- Error handling
-- Vault settings
-
-### VS Code Settings
-
-Includes configurations for:
-
-- Python development
-- Ansible development
-- YAML formatting
-- Git integration
-- Terminal settings
-- Editor preferences
-
-## Best Practices
-
-1. Never commit sensitive information
-2. Use ansible-vault for secrets
-3. Keep inventory files separate
-4. Follow Ansible best practices
-5. Use version control effectively
-6. Regular linting and testing
-7. Document your code
-8. Use meaningful commit messages
-
-## Development Workflow
-
-1. Create feature branch
-2. Make changes
-3. Run linting (VS Code Task: "Lint Ansible")
-4. Run syntax check (VS Code Task: "Syntax Check")
-5. Commit changes
-6. Create pull request
-
-To run tasks in VS Code:
-
-1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
-2. Type "Tasks: Run Task"
-3. Select the desired task
-
-## Troubleshooting
-
-Common issues and solutions:
-
-1. SSH agent not working:
-
-   - Check SSH_AUTH_SOCK variable
-   - Ensure keys are added to agent
-   - Verify permissions
-
-2. Container fails to start:
-
-   - Verify Docker is running
-   - Check environment variables
-   - Check Docker logs
-
-3. VS Code extensions not loading:
-
-   - Rebuild container
-   - Check extension marketplace availability
-   - Verify internet connection
-
-4. Ansible issues:
-   - Check inventory file
-   - Verify SSH access
-   - Check privilege escalation
-   - Review ansible.cfg
-
-## Security
-
-- Use vault for sensitive data
-- Regular security updates
-- Proper file permissions
-- SSH key management
-- Secure inventory handling
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
-
-## License
-
-[MIT License](LICENSE)
-
-## Support
-
-For issues and feature requests, please create an issue in the repository.
+For detailed workspace organization rules, see `.cursor/rules/workspace-organization.md`.

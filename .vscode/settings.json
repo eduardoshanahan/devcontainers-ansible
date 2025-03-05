@@ -1,58 +1,82 @@
 {
-    "ansible.python.interpreterPath": "/usr/bin/python3",
-    // Spell checker settings
-    "cSpell.customDictionaries": {
-        "custom-dictionary-workspace": {
-            "name": "custom-dictionary-workspace",
-            "path": "${workspaceFolder:workspace}/.cspell/custom-dictionary-workspace.txt",
-            "addWords": true,
-            "scope": "workspace"
-        }
-    },
-    "cSpell.words": [
-        "ansible",
-        "playbook",
-        "vars",
-        "venv",
-        "virtualenv",
-        "yaml",
-        "yml"
-    ],
-    // Project-specific settings
-    "files.exclude": {
-        ".pytest_cache": true,
-        ".coverage": true,
-        "htmlcov": true,
-        ".tox": true,
-        "**/*.retry": true
-    },
-    // Task explorer settings
-    "taskExplorer.exclude": [
-        "**/.venv/**",
-        "**/node_modules/**"
-    ],
-    // Todo Tree settings
-    "todo-tree.general.tags": [
-        "BUG",
-        "HACK",
-        "FIXME",
-        "TODO",
-        "XXX",
-        "[ ]",
-        "[x]"
-    ],
-    "todo-tree.highlights.customHighlight": {
-        "BUG": {
-            "foreground": "#FF0000",
-            "icon": "bug"
-        },
-        "FIXME": {
-            "foreground": "#FF6600",
-            "icon": "tools"
-        },
-        "TODO": {
-            "foreground": "#00FF00",
-            "icon": "checklist"
-        }
+  "ansible.python.interpreterPath": "/usr/bin/python3",
+  // Window settings
+  "window.newWindowDimensions": "inherit",
+  "window.restoreWindows": "folders",
+  "window.zoomLevel": 0,
+  "window.density.editorTabHeight": "compact",
+  "window.density.editorTabSizing": "shrink",
+  "window.density.editorGroupHeaderHeight": "compact",
+  "window.density.activityBarWidth": "compact",
+  "window.density.sideBarWidth": "compact",
+  "window.density.panelHeight": "compact",
+  "window.density.statusBarHeight": "compact",
+  "window.density.titleBarHeight": "compact",
+  "window.density.menuBarHeight": "compact",
+  // Spell checker settings
+  "cSpell.customDictionaries": {
+    "custom-dictionary-workspace": {
+      "name": "custom-dictionary-workspace",
+      "path": "${workspaceFolder:workspace}/.cspell/custom-dictionary-workspace.txt",
+      "addWords": true,
+      "scope": "workspace"
     }
+  },
+  "cSpell.words": ["ansible", "playbook", "vars", "venv", "virtualenv", "yaml", "yml"],
+  // Project-specific settings
+  "files.exclude": {
+    ".pytest_cache": true,
+    ".coverage": true,
+    "htmlcov": true,
+    ".tox": true,
+    "**/*.retry": true
+  },
+  // Task explorer settings
+  "taskExplorer.exclude": ["**/.venv/**", "**/node_modules/**"],
+  // Todo Tree settings
+  "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX", "[ ]", "[x]"],
+  "todo-tree.highlights.customHighlight": {
+    "BUG": {
+      "foreground": "#FF0000",
+      "icon": "bug"
+    },
+    "FIXME": {
+      "foreground": "#FF6600",
+      "icon": "tools"
+    },
+    "TODO": {
+      "foreground": "#00FF00",
+      "icon": "checklist"
+    }
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnSave": true
+  },
+  "markdownlint.config": {
+    "MD013": false,
+    "MD024": false,
+    "MD033": false,
+    "MD041": false,
+    "MD022": false,
+    "MD032": false,
+    "MD029": false,
+    "MD025": false,
+    "MD026": false,
+    "MD040": false,
+    "MD031": false,
+    "MD038": false,
+    "MD039": false,
+    "MD042": false,
+    "MD043": false,
+    "MD044": false,
+    "MD045": false,
+    "MD046": false,
+    "MD047": false,
+    "MD048": false,
+    "MD049": false,
+    "MD050": false
+  }
 }

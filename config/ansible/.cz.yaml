@@ -35,4 +35,4 @@ commitizen:
         message: Are there any breaking changes?
     - footer:
         type: input
-        message: Footer (optional). BREAKING CHANGE/Closes/Fixes (e.g., Closes #123)
+        message: Footer (optional). BREAKING CHANGE/Closes/Fixes (e.g., Closes # 123)
