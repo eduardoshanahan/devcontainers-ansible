@@ -1,5 +1,6 @@
 # Custom Dictionary Words
 ansiblelint
+autocorrect
 autofetch
 beautysh
 bierner
@@ -19,9 +20,15 @@ githistory
 gitlint
 gruntfuggly
 gstp
+HISTCONTROL
+HISTFILESIZE
+HISTSIZE
+HISTTIMEFORMAT
 htmlcov
+ignoreboth
 jsonfile
 keygen
+localtime
 mdformat
 mhutchie
 mushan
@@ -37,6 +44,7 @@ PYTHONDONTWRITEBYTECODE
 PYTHONUNBUFFERED
 sdist
 Shanahan
+shfmt
 Strikethrough
 testinfra
 visualstudioexptteam
@@ -45,3 +53,4 @@ wholroyd
 yaegashi
 yourname
 yzhang
+zoneinfo
