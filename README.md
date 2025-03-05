@@ -362,15 +362,13 @@ in several ways:
    /workspace/scripts/sync_git.sh
    ```
 
-````
-
-1. With force pull option (overwrites local changes):
+3. With force pull option (overwrites local changes):
 
    ```bash
    FORCE_PULL=true ./scripts/sync_git.sh
-````
+   ```
 
-1. With a different branch:
+4. With a different branch:
 
    ```bash
    BRANCH=develop ./scripts/sync_git.sh
@@ -722,22 +720,6 @@ ansible-playbook src/playbooks/test.yml -i hosts.ini
 ### 3. Verify Ansible Tools
 
 ```bash
-# Test inventory parsing
-ansible-inventory --list
-
-# Test playbook syntax
-ansible-playbook --syntax-check src/playbooks/*.yml
-
-# Run a simple ping test
-ansible all -m ping -i hosts.ini
-
-# Test playbook execution
-ansible-playbook src/playbooks/test.yml -i hosts.ini
-```
-
-### 3. Verify Ansible Tools
-
-```bash
 # Test ansible-lint
 ansible-lint src/playbooks/*.yml
 
@@ -838,3 +820,176 @@ ls -l src/roles/
 
 For detailed workspace organization rules, see
 `.cursor/rules/workspace-organization.md`.
+
+## Testing and Setup Scripts
+
+### Pre-commit Hooks
+
+The project uses pre-commit hooks to ensure code quality and consistency:
+
+```bash
+# Install pre-commit hooks
+pre-commit install --install-hooks
+
+# Run pre-commit hooks on all files
+pre-commit run --all-files
+```
+
+Available hooks:
+
+- `trailing-whitespace`: Removes trailing whitespace
+- `end-of-file-fixer`: Ensures files end with a newline
+- `check-yaml`: Validates YAML files
+- `check-added-large-files`: Prevents large files from being committed
+- `check-merge-conflict`: Checks for merge conflict markers
+- `detect-private-key`: Prevents accidental commit of private keys
+- `check-case-conflict`: Checks for case conflicts in filenames
+- `forbid-new-submodules`: Prevents new submodules
+- `mixed-line-ending`: Checks for mixed line endings
+- `ansible-lint`: Lints Ansible files
+- `black`: Formats Python code
+- `yamllint`: Lints YAML files
+- `gitleaks`: Checks for secrets
+- `commitizen`: Enforces commit message format
+- `gitlint`: Validates commit messages
+- `prettier`: Formats JSON and YAML files
+- `mdformat`: Formats Markdown files
+- `forbid-crlf`: Prevents CRLF line endings
+- `remove-crlf`: Converts CRLF to LF
+- `forbid-tabs`: Prevents tabs in files
+- `remove-tabs`: Converts tabs to spaces
+
+### Markdown Testing
+
+The project includes markdown formatting tests:
+
+```bash
+# Run markdown tests
+./config/markdown/tests/test-format.sh
+```
+
+This script:
+
+- Checks for `mdformat` installation
+- Formats all markdown files
+- Validates formatting rules
+- Reports any issues
+
+### Ansible Testing
+
+The project includes several Ansible testing tools:
+
+```bash
+# Run ansible-lint
+ansible-lint
+
+# Run yamllint
+yamllint
+
+# Run molecule tests (if configured)
+molecule test
+
+# Run test playbook
+ansible-playbook src/playbooks/test.yml
+```
+
+### Shell Script Testing
+
+Shell scripts are validated using:
+
+```bash
+# Run shellcheck
+shellcheck scripts/*.sh
+
+# Format shell scripts
+shfmt -i 2 -ci -bn scripts/*.sh
+```
+
+### Git Setup Script
+
+The `sync_git.sh` script helps manage Git configuration:
+
+```bash
+# Run the sync script
+./scripts/sync_git.sh
+
+# Options:
+# -h, --help     Show help message
+# -v, --verbose  Show detailed output
+# -f, --force    Force update of Git configuration
+```
+
+This script:
+
+- Syncs Git configuration between host and container
+- Updates Git user information
+- Configures Git editor preferences
+- Sets up Git hooks
+- Manages Git credentials
+
+### Launch Script
+
+The `launch.sh` script manages the development environment:
+
+```bash
+# Launch the environment
+./launch.sh
+
+# Options:
+# -h, --help     Show help message
+# -v, --verbose  Show detailed output
+# -c, --clean    Clean up existing containers
+# -r, --rebuild  Rebuild the container
+```
+
+This script:
+
+- Validates environment configuration
+- Checks editor installation
+- Manages Docker containers
+- Launches the appropriate editor
+- Handles error cases
+
+### Environment Setup
+
+The project uses several environment files:
+
+1. `.devcontainer/.env`:
+
+   - User configuration
+   - Git settings
+   - Editor preferences
+   - Docker settings
+
+2. `.env.example`:
+
+   - Template for environment variables
+   - Example values and documentation
+
+3. `.env.local` (optional):
+
+   - Local overrides for environment variables
+   - Not tracked in Git
+
+### VS Code Tasks
+
+The project includes predefined VS Code tasks:
+
+1. **Git Tasks**:
+
+   - `Git: Sync Configuration`: Syncs Git settings
+   - `Git: Update User Info`: Updates Git user details
+   - `Git: Configure Editor`: Sets up Git editor preferences
+
+2. **Testing Tasks**:
+
+   - `Test: Run All`: Runs all tests
+   - `Test: Pre-commit`: Runs pre-commit hooks
+   - `Test: Markdown`: Runs markdown tests
+   - `Test: Ansible`: Runs Ansible tests
+
+3. **Development Tasks**:
+
+   - `Dev: Rebuild Container`: Rebuilds the devcontainer
+   - `Dev: Clean Up`: Cleans up Docker resources
+   - `Dev: Update Extensions`: Updates VS Code extensions

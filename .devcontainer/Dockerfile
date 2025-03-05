@@ -52,11 +52,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     locales \
     && rm -rf /var/lib/apt/lists/* \
     && wget -O /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.0.1/shfmt_v3.0.1_linux_amd64 \
-    && chmod +x /usr/local/bin/shfmt \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get update \
-    && apt-get install -y nodejs \
-    && npm install -g prettier
+    && chmod +x /usr/local/bin/shfmt
 
 # Set the locale
 RUN locale-gen en_IE.UTF-8
