@@ -51,7 +51,17 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        types_or: [yaml, markdown, json]
+        types_or: [yaml, json]
+
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.17
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-frontmatter
+          - mdformat-footnote
+          - mdformat-tables
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.5.4
