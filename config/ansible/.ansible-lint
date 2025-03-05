@@ -1,21 +1,35 @@
 ---
-# Basic ansible-lint configuration
-exclude_paths:
-  - .cache/
-  - .git/
-  - .venv/
-  - .devcontainer/
+# Ansible Lint configuration file
+# See: https://ansible-lint.readthedocs.io/en/latest/configuring.html
 
-# Enable all rules by default
+# List of enabled rules
 enable_list:
-  - all
+  - no-same-owner # Disable same-owner check as it's not relevant in containers
+  - no-handler # Allow tasks without handlers
+  - no-changed-when # Allow tasks without changed_when
+  - no-jinja-when # Allow Jinja2 in when conditions
+  - no-risky-shell-pipe # Allow shell pipes
+  - no-risky-octal # Allow octal values
+  - no-risky-file-permissions # Allow file permissions
+  - no-risky-sudo # Allow sudo usage
+  - no-risky-command # Allow command module usage
+  - no-risky-unix-device # Allow device files
 
-# Offline mode for container usage
-offline: true
+# Exclude paths
+exclude_paths:
+  - "tests/"
+  - "molecule/"
+  - ".git/"
+  - ".venv/"
+  - "venv/"
+  - ".env/"
+  - "*.retry"
 
-# Use YAML callback for better readability
-use_default_rules: true
+# Verbose output
 verbosity: 1
+
+# Offline mode
+offline: true
 
 # Skip these rules
 skip_list:

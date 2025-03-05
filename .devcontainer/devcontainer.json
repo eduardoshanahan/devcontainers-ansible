@@ -14,12 +14,18 @@
   "remoteUser": "${localEnv:HOST_USERNAME}",
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
-  "mounts": ["source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"],
+  "mounts": [
+    "source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
+  ],
   "remoteEnv": {
     "SSH_AUTH_SOCK": "/ssh-agent"
   },
-  "securityOpt": ["no-new-privileges"],
-  "capAdd": ["SYS_PTRACE"],
+  "securityOpt": [
+    "no-new-privileges"
+  ],
+  "capAdd": [
+    "SYS_PTRACE"
+  ],
   "init": true,
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
@@ -46,13 +52,16 @@
         "python.analysis.autoImportCompletions": true,
         "python.analysis.indexing": true,
         "[python]": {
-          "editor.defaultFormatter": "ms-python.autopep8",
           "editor.formatOnSave": true,
-          "editor.codeActionsOnSave": ["source.organizeImports"],
-          "editor.rulers": [88, 100]
+          "editor.codeActionsOnSave": [
+            "source.organizeImports"
+          ],
+          "editor.rulers": [
+            88,
+            100
+          ],
+          "editor.defaultFormatter": "ms-python.black-formatter"
         },
-        "editor.formatOnSave": true,
-        "editor.rulers": [80, 100],
         "editor.renderWhitespace": "all",
         "editor.insertSpaces": true,
         "editor.tabSize": 2,
@@ -81,80 +90,21 @@
         "yaml.hover": true,
         "yaml.completion": true,
         "yaml.schemas": {
-          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json": [
+          "file:///workspace/config/ansible/schemas/role.json": [
+            "**/roles/*/meta/main.yml"
+          ],
+          "file:///workspace/config/ansible/schemas/ansible.json": [
             "**/tasks/*.yml",
             "**/handlers/*.yml"
           ],
-          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/playbook.json": [
+          "file:///workspace/config/ansible/schemas/playbook.json": [
             "**/playbooks/*.yml",
             "**/site.yml"
           ],
-          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/role.json": [
-            "**/roles/*/meta/main.yml"
-          ],
-          "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/inventory.json": [
+          "file:///workspace/config/ansible/schemas/inventory.json": [
             "**/inventory/*.yml"
           ]
         },
-        "[yaml]": {
-          "editor.insertSpaces": true,
-          "editor.tabSize": 2,
-          "editor.autoIndent": "keep",
-          "editor.detectIndentation": false,
-          "editor.defaultFormatter": "redhat.vscode-yaml",
-          "editor.formatOnSave": true
-        },
-        "ansible.ansible.path": "/usr/local/bin/ansible",
-        "ansible.validation.lint.enabled": true,
-        "ansible.validation.lint.path": "/usr/local/bin/ansible-lint",
-        "ansible.python.interpreterPath": "/usr/bin/python3",
-        "ansible.executionEnvironment.enabled": false,
-        "ansible.validation.enabled": true,
-        "ansible.validation.validatePlaybook": true,
-        "[ansible]": {
-          "editor.insertSpaces": true,
-          "editor.tabSize": 2,
-          "editor.detectIndentation": false,
-          "editor.formatOnSave": true
-        },
-        "git.enableSmartCommit": true,
-        "git.autofetch": true,
-        "git.confirmSync": false,
-        "git.fetchOnPull": true,
-        "git.pruneOnFetch": true,
-        "git.allowForcePush": true,
-        "git.suggestSmartCommit": true,
-        "git.untrackedChanges": "separate",
-        "files.associations": {
-          "*.yml": "yaml",
-          "*.yaml": "yaml",
-          "inventory": "ini",
-          "**/inventory/*": "ini",
-          "**/inventory/*.ini": "ini",
-          "ansible.cfg": "ini",
-          "**/group_vars/*": "yaml",
-          "**/host_vars/*": "yaml",
-          "**/defaults/*.yml": "yaml",
-          "**/tasks/*.yml": "yaml",
-          "**/handlers/*.yml": "yaml",
-          "**/templates/*.j2": "jinja",
-          "**/*.json.j2": "json"
-        },
-        "files.exclude": {
-          "**/.git": true,
-          "**/.svn": true,
-          "**/.hg": true,
-          "**/CVS": true,
-          "**/.DS_Store": true,
-          "**/*.pyc": true,
-          "**/__pycache__": true,
-          "**/.pytest_cache": true,
-          "**/.mypy_cache": true
-        },
-        "git.inputValidation": true,
-        "git.detectSubmodules": true,
-        "workbench.editor.enablePreview": false,
-        "workbench.editor.highlightModifiedTabs": true,
         "workbench.colorCustomizations": {
           "editorError.foreground": "#ff0000",
           "editorWarning.foreground": "#ffa500",
@@ -162,7 +112,11 @@
         },
         "problems.showCurrentInStatus": true,
         "problems.decorations.enabled": true,
-        "yaml.customTags": ["!vault", "!unsafe", "!reference"],
+        "yaml.customTags": [
+          "!vault",
+          "!unsafe",
+          "!reference"
+        ],
         "yaml.format.printWidth": 120,
         "yaml.format.proseWrap": "preserve",
         "ansible.ansible.useFullyQualifiedCollectionNames": true,
@@ -205,9 +159,7 @@
         "workbench.tree.renderIndentGuides": "always",
         "telemetry.telemetryLevel": "off",
         "security.workspace.trust.enabled": true,
-        "security.workspace.trust.untrustedFiles": "prompt",
-        "python.linting.enabled": true,
-        "python.formatting.provider": "black"
+        "security.workspace.trust.untrustedFiles": "prompt"
       },
       "extensions": [
         "redhat.ansible",
@@ -234,7 +186,8 @@
         "bierner.markdown-emoji",
         "bierner.markdown-footnotes",
         "AlanWalk.markdown-toc",
-        "ms-vsliveshare.vsliveshare"
+        "ms-vsliveshare.vsliveshare",
+        "ms-python.black-formatter"
       ]
     }
   },
