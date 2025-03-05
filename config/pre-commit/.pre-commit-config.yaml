@@ -52,6 +52,20 @@ repos:
     hooks:
       - id: prettier
         types_or: [yaml, json]
+        args:
+          [
+            "--write",
+            "--print-width",
+            "100",
+            "--tab-width",
+            "2",
+            "--semi",
+            "true",
+            "--single-quote",
+            "false",
+          ]
+        additional_dependencies:
+          - prettier@3.1.0
 
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.17
