@@ -13,9 +13,9 @@ ENV TZ=Europe/Dublin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Arguments from devcontainer.json
-ARG HOST_USERNAME
-ARG HOST_UID
-ARG HOST_GID
+ARG HOST_USERNAME=vscode
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 ARG GIT_USER_NAME
 ARG GIT_USER_EMAIL
 ARG EDITOR_CHOICE=code
@@ -50,7 +50,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     bash-completion \
     ca-certificates \
     locales \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && wget -O /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.0.1/shfmt_v3.0.1_linux_amd64 \
+    && chmod +x /usr/local/bin/shfmt \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && npm install -g prettier
 
 # Set the locale
 RUN locale-gen en_IE.UTF-8
@@ -69,10 +75,10 @@ RUN pip3 install --no-cache-dir \
     pytest-testinfra==9.0.0
 
 # Create non-root user with sudo access
-RUN groupadd --gid $HOST_GID $HOST_USERNAME \
-    && useradd --uid $HOST_UID --gid $HOST_GID -m $HOST_USERNAME \
-    && echo $HOST_USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$HOST_USERNAME \
-    && chmod 0440 /etc/sudoers.d/$HOST_USERNAME
+RUN groupadd --gid ${HOST_GID} ${HOST_USERNAME} \
+    && useradd --uid ${HOST_UID} --gid ${HOST_GID} -m ${HOST_USERNAME} \
+    && echo ${HOST_USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${HOST_USERNAME} \
+    && chmod 0440 /etc/sudoers.d/${HOST_USERNAME}
 
 # Configure Git for the user
 USER $HOST_USERNAME
@@ -91,18 +97,28 @@ RUN if [ "$EDITOR_CHOICE" = "cursor" ]; then \
     git config --global help.autocorrect 1
 
 # Set up Python environment for the user
-RUN python3 -m pip install --user --no-cache-dir \
+USER $HOST_USERNAME
+RUN mkdir -p /home/$HOST_USERNAME/.local/bin && \
+    /usr/bin/python3 -m pip install --user --no-cache-dir \
     pylint==3.0.3 \
     flake8==7.0.0 \
-    black==24.1.1 \
+    black==24.3.0 \
     mypy==1.8.0 \
     pre-commit==3.6.2 \
     commitizen==3.15.0 \
     gitlint==0.19.1 \
-    git-changelog==2.3.2
+    git-changelog==2.3.2 \
+    mdformat==0.7.17 \
+    mdformat-gfm==0.3.5 \
+    mdformat-frontmatter==2.0.1 \
+    mdformat-footnote==0.1.1 \
+    mdformat-tables==0.4.1 \
+    mdformat-toc==0.3.0 \
+    mdformat-beautysh==0.1.1
 
 # Setup bash configuration with Git aliases
-RUN echo 'export PS1="\[\033[01;32m\]\u@devcontainer\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "' >> ~/.bashrc && \
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && \
+    echo 'export PS1="\[\033[01;32m\]\u@devcontainer\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "' >> ~/.bashrc && \
     echo 'export HISTSIZE=5000' >> ~/.bashrc && \
     echo 'export HISTFILESIZE=10000' >> ~/.bashrc && \
     echo 'export HISTCONTROL=ignoreboth' >> ~/.bashrc && \
