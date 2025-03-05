@@ -1,0 +1,6 @@
+---
+- name: Test Role Playbook
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - test_role

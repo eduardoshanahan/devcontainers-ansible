@@ -1,0 +1,6 @@
+---
+# tasks file for test_role
+
+- name: Test role task
+  ansible.builtin.debug:
+    msg: "Test role is working correctly!"
