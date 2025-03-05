@@ -47,26 +47,6 @@ repos:
     hooks:
       - id: gitlint
 
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
-    hooks:
-      - id: prettier
-        types_or: [yaml, json]
-        args:
-          [
-            "--write",
-            "--print-width",
-            "100",
-            "--tab-width",
-            "2",
-            "--semi",
-            "true",
-            "--single-quote",
-            "false",
-          ]
-        additional_dependencies:
-          - prettier@3.1.0
-
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.17
     hooks:
@@ -79,6 +59,8 @@ repos:
           - mdformat-tables
           - mdformat-toc
           - mdformat-beautysh
+        types: [markdown]
+        files: \.md$
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.5.4
@@ -87,3 +69,21 @@ repos:
       - id: remove-crlf
       - id: forbid-tabs
       - id: remove-tabs
+
+  - repo: local
+    hooks:
+      - id: format-json
+        name: Format JSON
+        entry: jq '.' --indent 2
+        language: system
+        types: [json]
+        files: \.json$
+
+  - repo: local
+    hooks:
+      - id: format-yaml
+        name: Format YAML
+        entry: yamllint -f auto
+        language: system
+        types: [yaml]
+        files: \.(yaml|yml)$
