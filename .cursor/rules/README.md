@@ -1,6 +1,7 @@
 # Cursor Rules
 
-This directory contains all Cursor rules for the project. Each rule is defined in its own markdown file and follows a consistent structure.
+This directory contains all Cursor rules for the project. Each rule is defined
+in its own markdown file and follows a consistent structure.
 
 ## Rule Files
 
@@ -11,13 +12,15 @@ This directory contains all Cursor rules for the project. Each rule is defined i
 - [commit-messages.md](commit-messages.md) - Git commit message standards
 - [no-emojis.md](no-emojis.md) - Emoji usage guidelines
 - [project-settings.md](project-settings.md) - Project settings standards
+- [ansible-fqcn.md](ansible-fqcn.md) - Ansible FQCN usage standards
+- [markdown-format.md](markdown-format.md) - Markdown formatting standards
 
 ## Creating New Rules
 
 1. Create a new markdown file in this directory
-1. Use kebab-case for the file name (e.g., `my-new-rule.md`)
-1. Follow the structure defined in [organization.md](organization.md)
-1. Add the rule to this README
+2. Use kebab-case for the file name (e.g., `my-new-rule.md`)
+3. Follow the structure defined in [organization.md](organization.md)
+4. Add the rule to this README
 
 ## Structure
 

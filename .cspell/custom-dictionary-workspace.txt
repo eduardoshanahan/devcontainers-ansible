@@ -1,6 +1,7 @@
 # Custom Dictionary Words
 ansiblelint
 autofetch
+beautysh
 bierner
 codezombiech
 commitizen
@@ -19,6 +20,7 @@ gitlint
 gruntfuggly
 gstp
 htmlcov
+jsonfile
 keygen
 mdformat
 mhutchie
@@ -27,6 +29,7 @@ mypy
 noninteractive
 NOPASSWD
 oneline
+publickey
 pycache
 pylint
 pytest
@@ -34,6 +37,7 @@ PYTHONDONTWRITEBYTECODE
 PYTHONUNBUFFERED
 sdist
 Shanahan
+Strikethrough
 testinfra
 visualstudioexptteam
 vscodeintellicode

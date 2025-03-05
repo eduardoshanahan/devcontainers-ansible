@@ -1,8 +1,8 @@
 ---
-- name: Test playbook
+- name: Test Playbook
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Print test message
+    - name: Echo a message
       ansible.builtin.debug:
         msg: "Ansible is working correctly!"
