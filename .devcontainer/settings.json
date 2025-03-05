@@ -3,15 +3,15 @@
   "editor.formatOnSave": true,
   "terminal.integrated.shell.linux": "/bin/bash",
   "files.autoSave": "onFocusChange",
-  "editor.defaultFormatter": "esbenp.prettier-vscode", // Set Prettier as default formatter
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 2,
     "editor.formatOnSave": true
   },
   "[markdown]": {
-    "editor.wordWrap": "on", // Enable word wrap for Markdown
-    "editor.quickSuggestions": true, // Enable suggestions for Markdown
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": true,
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   "[yaml]": {
@@ -23,7 +23,10 @@
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,
     "editor.tabSize": 4,
-    "editor.rulers": [88, 100]
+    "editor.rulers": [
+      88,
+      100
+    ]
   },
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format",

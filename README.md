@@ -1016,8 +1016,9 @@ The project uses several environment files:
 
    - User configuration
    - Git settings
-   - Editor preferences
-   - Docker settings
+
+- Editor preferences
+  - Docker settings
 
 2. `.env.example`:
 

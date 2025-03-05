@@ -1,6 +1,5 @@
 {
   "ansible.python.interpreterPath": "/usr/bin/python3",
-  // Window settings
   "window.newWindowDimensions": "inherit",
   "window.restoreWindows": "folders",
   "window.zoomLevel": 0,
@@ -13,7 +12,6 @@
   "window.density.statusBarHeight": "compact",
   "window.density.titleBarHeight": "compact",
   "window.density.menuBarHeight": "compact",
-  // Spell checker settings
   "cSpell.customDictionaries": {
     "custom-dictionary-workspace": {
       "name": "custom-dictionary-workspace",
@@ -22,8 +20,15 @@
       "scope": "workspace"
     }
   },
-  "cSpell.words": ["ansible", "playbook", "vars", "venv", "virtualenv", "yaml", "yml"],
-  // Project-specific settings
+  "cSpell.words": [
+    "ansible",
+    "playbook",
+    "vars",
+    "venv",
+    "virtualenv",
+    "yaml",
+    "yml"
+  ],
   "files.exclude": {
     ".pytest_cache": true,
     ".coverage": true,
@@ -31,10 +36,19 @@
     ".tox": true,
     "**/*.retry": true
   },
-  // Task explorer settings
-  "taskExplorer.exclude": ["**/.venv/**", "**/node_modules/**"],
-  // Todo Tree settings
-  "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "XXX", "[ ]", "[x]"],
+  "taskExplorer.exclude": [
+    "**/.venv/**",
+    "**/node_modules/**"
+  ],
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "XXX",
+    "[ ]",
+    "[x]"
+  ],
   "todo-tree.highlights.customHighlight": {
     "BUG": {
       "foreground": "#FF0000",
@@ -51,14 +65,32 @@
   },
   "editor.formatOnSave": true,
   "[markdown]": {
-    "editor.defaultFormatter": "executablebookproject.mdformat",
+    "editor.defaultFormatter": "vscode.markdown-language-features",
     "editor.formatOnSave": true,
-    "editor.rulers": [80],
+    "editor.rulers": [
+      80
+    ],
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true
   },
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format",
     "shellformat.path": "/usr/local/bin/shfmt"
+  },
+  "yaml.schemas": {
+    "file:///workspace/config/ansible/schemas/role.json": [
+      "**/roles/*/meta/main.yml"
+    ],
+    "file:///workspace/config/ansible/schemas/ansible.json": [
+      "**/tasks/*.yml",
+      "**/handlers/*.yml"
+    ],
+    "file:///workspace/config/ansible/schemas/playbook.json": [
+      "**/playbooks/*.yml",
+      "**/site.yml"
+    ],
+    "file:///workspace/config/ansible/schemas/inventory.json": [
+      "**/inventory/*.yml"
+    ]
   }
 }

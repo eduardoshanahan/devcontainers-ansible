@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["galaxy_info"],
+  "properties": {
+    "galaxy_info": {
+      "type": "object",
+      "required": ["author", "description", "min_ansible_version", "platforms"],
+      "properties": {
+        "author": { "type": "string" },
+        "description": { "type": "string" },
+        "company": { "type": "string" },
+        "license": { "type": "string" },
+        "min_ansible_version": { "type": "string" },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "versions"],
+            "properties": {
+              "name": { "type": "string" },
+              "versions": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "galaxy_tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  }
+}
