@@ -1,5 +1,5 @@
 {
-  "name": "Devcontainer to use Ansible in Ubuntu",
+  "name": "Ansible and Git Development Environment",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".",
@@ -24,6 +24,7 @@
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
       "configureZshAsDefaultShell": false,
@@ -214,7 +215,26 @@
         "ms-azuretools.vscode-docker",
         "eamodio.gitlens",
         "github.vscode-pull-request-github",
-        "ms-vscode.makefile-tools"
+        "ms-vscode.makefile-tools",
+        "codezombiech.gitignore",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "visualstudioexptteam.vscodeintellicode",
+        "streetsidesoftware.code-spell-checker",
+        "editorconfig.editorconfig",
+        "gruntfuggly.todo-tree",
+        "file-icons.file-icons",
+        "foxundermoon.shell-format",
+        "esbenp.prettier-vscode",
+        "yzhang.markdown-all-in-one",
+        "shd101wyy.markdown-preview-enhanced",
+        "davidanson.vscode-markdownlint",
+        "fcrespo82.markdown-table-formatter",
+        "mushan.vscode-paste-image",
+        "bierner.markdown-emoji",
+        "bierner.markdown-footnotes",
+        "AlanWalk.markdown-toc",
+        "ms-vsliveshare.vsliveshare"
       ]
     }
   },

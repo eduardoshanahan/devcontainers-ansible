@@ -64,13 +64,18 @@ inventory.yml
 *.swp
 *.swo
 *~
-.cursor/
+# Cursor temporary files and logs, but not our rules
 .cursor-log/
 .cursor-cache/
 
 # OS specific
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+ehthumbs.db
 *.tmp
 *.bak
 *.log
@@ -80,3 +85,29 @@ tmp/
 temp/
 .cache/
 .history/
+.vscode-server/
+.bash_history
+
+# Build artifacts
+*.tar
+*.gz
+*.zip
+
+# Dependencies
+node_modules/
+vendor/
+package-lock.json
+yarn.lock
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Custom dictionary
+.cspell/custom-dictionary-workspace.txt
+
+# SSH keys and certificates
+*.pem
+*.key
+*.crt
+*.cer
