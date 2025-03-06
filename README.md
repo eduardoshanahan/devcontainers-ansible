@@ -21,6 +21,8 @@ Ansible without installing anything in the local machine.
   - [Included Tools and Features](#included-tools-and-features)
     - [Development Tools](#development-tools)
     - [Git Aliases](#git-aliases)
+    - [Pre-commit Hooks](#pre-commit-hooks)
+      - [Recommended Workflow](#recommended-workflow)
   - [VS Code Extensions](#vs-code-extensions)
   - [Configuration](#configuration)
     - [Ansible Configuration](#ansible-configuration)
@@ -55,7 +57,7 @@ Ansible without installing anything in the local machine.
     - [5. Common Issues and Solutions](#5-common-issues-and-solutions)
   - [Directory Structure](#directory-structure)
   - [Testing and Setup Scripts](#testing-and-setup-scripts)
-    - [Pre-commit Hooks](#pre-commit-hooks)
+    - [Pre-commit Hooks](#pre-commit-hooks-1)
     - [Markdown Testing](#markdown-testing)
     - [Ansible Testing](#ansible-testing)
     - [Shell Script Testing](#shell-script-testing)
@@ -247,6 +249,72 @@ instructions.
 | gf    | git fetch --all --prune   | Update remote references         |
 | gst   | git stash                 | Stash changes                    |
 | gstp  | git stash pop             | Apply stashed changes            |
+
+### Pre-commit Hooks
+
+The project uses pre-commit hooks to ensure code quality and consistency. The
+following hooks are active:
+
+1. **Code Formatting**:
+
+   - `black`: Python code formatting
+   - `mdformat`: Markdown formatting
+   - `Format JSON`: JSON formatting
+   - `Format YAML`: YAML formatting
+
+2. **Linting**:
+
+   - `ansible-lint`: Ansible code linting
+   - `yamllint`: YAML linting
+   - `shellcheck`: Shell script linting
+
+3. **Security**:
+
+   - `detect-private-key`: Prevents committing private keys
+   - `gitleaks`: Detects hardcoded secrets
+
+4. **Git Standards**:
+
+   - `commitizen`: Enforces commit message format
+   - `gitlint`: Additional commit message checks
+   - `mixed-line-ending`: Ensures consistent line endings
+
+#### Recommended Workflow
+
+1. Stage your changes:
+
+   ```bash
+   git add <files>
+   ```
+
+2. Run pre-commit hooks manually (optional but recommended):
+
+   ```bash
+   pre-commit run --all-files
+   ```
+
+3. Create a commit:
+
+   ```bash
+   git commit -m "type(scope): description"
+   ```
+
+   The commit message must follow the conventional commits format:
+
+   - `type`: feat, fix, chore, docs, style, refactor, test, etc.
+   - `scope`: optional, describes the affected area
+   - `description`: brief description of the changes
+
+4. If any hooks fail:
+
+   - Fix the issues reported by the hooks
+   - Stage the fixes: `git add <fixed-files>`
+   - Try committing again
+   - **Important**: After hook failures, check `git status` again as some hooks
+     may have modified your files
+
+Note: The hooks will run automatically on commit, but running them manually
+first can help catch issues early.
 
 ## VS Code Extensions
 
