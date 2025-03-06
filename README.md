@@ -16,7 +16,6 @@ Ansible without installing anything in the local machine.
     - [1. Clone and Initialize](#1-clone-and-initialize)
     - [2. Configure Environment](#2-configure-environment)
     - [Docker Image Management](#docker-image-management)
-    - [Docker Image Management](#docker-image-management-1)
     - [3. Launch the Environment](#3-launch-the-environment)
   - [Included Tools and Features](#included-tools-and-features)
     - [Development Tools](#development-tools)
@@ -35,7 +34,6 @@ Ansible without installing anything in the local machine.
       - [Troubleshooting](#troubleshooting)
     - [Commit Message Format](#commit-message-format)
       - [Types](#types)
-      - [Types](#types-1)
       - [Scope](#scope)
       - [Description](#description)
       - [Examples](#examples)
@@ -57,8 +55,9 @@ Ansible without installing anything in the local machine.
     - [5. Common Issues and Solutions](#5-common-issues-and-solutions)
   - [Directory Structure](#directory-structure)
   - [Testing and Setup Scripts](#testing-and-setup-scripts)
-    - [Pre-commit Hooks](#pre-commit-hooks-1)
     - [Markdown Testing](#markdown-testing)
+    - [Pre-commit Hooks](#pre-commit-hooks-1)
+      - [Recommended Workflow](#recommended-workflow-1)
     - [Ansible Testing](#ansible-testing)
     - [Shell Script Testing](#shell-script-testing)
     - [Git Setup Script](#git-setup-script)
@@ -142,51 +141,11 @@ custom names:
 1. Set these variables in `.devcontainer/.env`:
 
 ```bash
-# Copy environment template
-cp .devcontainer/.env.example .devcontainer/.env
-
-# Get your user details (note these values)
-echo "Your username: $(whoami)"
-echo "Your UID: $(id -u)"
-echo "Your GID: $(id -g)"
-
-# Edit the environment file
-code .devcontainer/.env  # or cursor .devcontainer/.env
-```
-
-Required environment variables:
-
-```dotenv
-# User configuration
-HOST_USERNAME="your_username"     # Output of whoami
-HOST_UID=1000                     # Output of id -u
-HOST_GID=1000                     # Output of id -g
-
-# Git configuration
-GIT_USER_NAME="Your Name"         # Your Git username
-GIT_USER_EMAIL="your@email.com"   # Your Git email
-
-# Editor configuration
-EDITOR_CHOICE=code               # Use 'code' for VS Code or 'cursor' for Cursor
-
-# Docker configuration
-DOCKER_IMAGE_NAME="your-image"    # Name for the Docker image
-DOCKER_IMAGE_TAG="1.0.0"         # Tag for the Docker image
-```
-
-### Docker Image Management
-
-By default, VS Code creates Docker images with auto-generated names. To use
-custom names:
-
-1. Set these variables in `.devcontainer/.env`:
-
-```bash
 DOCKER_IMAGE_NAME="your-image-name"
 DOCKER_IMAGE_TAG="your-tag"
 ```
 
-1. To clean up old images and rebuild with new names:
+2. To clean up old images and rebuild with new names:
 
 ```bash
 # Stop containers using old images
@@ -252,8 +211,17 @@ instructions.
 
 ### Pre-commit Hooks
 
-The project uses pre-commit hooks to ensure code quality and consistency. The
-following hooks are active:
+The project uses pre-commit hooks to ensure code quality and consistency:
+
+```bash
+# Install pre-commit hooks
+pre-commit install --install-hooks
+
+# Run pre-commit hooks on all files
+pre-commit run --all-files
+```
+
+Available hooks:
 
 1. **Code Formatting**:
 
@@ -278,6 +246,20 @@ following hooks are active:
    - `commitizen`: Enforces commit message format
    - `gitlint`: Additional commit message checks
    - `mixed-line-ending`: Ensures consistent line endings
+
+5. **File Formatting**:
+
+   - `trailing-whitespace`: Removes trailing whitespace
+   - `end-of-file-fixer`: Ensures files end with a newline
+   - `check-yaml`: Validates YAML files
+   - `check-added-large-files`: Prevents large files from being committed
+   - `check-merge-conflict`: Checks for merge conflict markers
+   - `check-case-conflict`: Checks for case conflicts in filenames
+   - `forbid-new-submodules`: Prevents new submodules
+   - `forbid-crlf`: Prevents CRLF line endings
+   - `remove-crlf`: Converts CRLF to LF
+   - `forbid-tabs`: Prevents tabs in files
+   - `remove-tabs`: Converts tabs to spaces
 
 #### Recommended Workflow
 
@@ -419,6 +401,22 @@ The Git commit message configuration (`config/git/.gitlint`) enforces:
    - Revert commits ignored
    - Fixup commits ignored
    - Squash commits ignored
+
+5. **Editor Configuration**:
+
+   The commit message editor is automatically configured based on your
+   `EDITOR_CHOICE` environment variable:
+
+   ```bash
+   # For VS Code
+   git config --global core.editor "code --wait"
+
+   # For Cursor
+   git config --global core.editor "cursor --wait"
+   ```
+
+   This ensures that commit messages are edited in your preferred editor with
+   proper syntax highlighting and formatting support.
 
 ### Example Role and Testing
 
@@ -611,22 +609,6 @@ follows:
 
 #### Types
 
-We follow the [Conventional Commits](https://www.conventionalcommits.org/)
-specification for commit messages. Each commit message should be structured as
-follows:
-
-```text
-<type>(<scope>): <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-#### Types
-
-- `feat`: A new feature
-- `fix`: A bug fix
 - `feat`: A new feature
 - `fix`: A bug fix
 - `docs`: Documentation changes
@@ -949,42 +931,6 @@ For detailed workspace organization rules, see
 
 ## Testing and Setup Scripts
 
-### Pre-commit Hooks
-
-The project uses pre-commit hooks to ensure code quality and consistency:
-
-```bash
-# Install pre-commit hooks
-pre-commit install --install-hooks
-
-# Run pre-commit hooks on all files
-pre-commit run --all-files
-```
-
-Available hooks:
-
-- `trailing-whitespace`: Removes trailing whitespace
-- `end-of-file-fixer`: Ensures files end with a newline
-- `check-yaml`: Validates YAML files
-- `check-added-large-files`: Prevents large files from being committed
-- `check-merge-conflict`: Checks for merge conflict markers
-- `detect-private-key`: Prevents accidental commit of private keys
-- `check-case-conflict`: Checks for case conflicts in filenames
-- `forbid-new-submodules`: Prevents new submodules
-- `mixed-line-ending`: Checks for mixed line endings
-- `ansible-lint`: Lints Ansible files
-- `black`: Formats Python code
-- `yamllint`: Lints YAML files
-- `gitleaks`: Checks for secrets
-- `commitizen`: Enforces commit message format
-- `gitlint`: Validates commit messages
-- `prettier`: Formats JSON and YAML files
-- `mdformat`: Formats Markdown files
-- `forbid-crlf`: Prevents CRLF line endings
-- `remove-crlf`: Converts CRLF to LF
-- `forbid-tabs`: Prevents tabs in files
-- `remove-tabs`: Converts tabs to spaces
-
 ### Markdown Testing
 
 The project includes markdown formatting tests:
@@ -1000,6 +946,95 @@ This script:
 - Formats all markdown files
 - Validates formatting rules
 - Reports any issues
+
+### Pre-commit Hooks
+
+The project uses pre-commit hooks to ensure code quality and consistency:
+
+```bash
+# Install pre-commit hooks
+pre-commit install --install-hooks
+
+# Run pre-commit hooks on all files
+pre-commit run --all-files
+```
+
+Available hooks:
+
+1. **Code Formatting**:
+
+   - `black`: Python code formatting
+   - `mdformat`: Markdown formatting
+   - `Format JSON`: JSON formatting
+   - `Format YAML`: YAML formatting
+
+2. **Linting**:
+
+   - `ansible-lint`: Ansible code linting
+   - `yamllint`: YAML linting
+   - `shellcheck`: Shell script linting
+
+3. **Security**:
+
+   - `detect-private-key`: Prevents committing private keys
+   - `gitleaks`: Detects hardcoded secrets
+
+4. **Git Standards**:
+
+   - `commitizen`: Enforces commit message format
+   - `gitlint`: Additional commit message checks
+   - `mixed-line-ending`: Ensures consistent line endings
+
+5. **File Formatting**:
+
+   - `trailing-whitespace`: Removes trailing whitespace
+   - `end-of-file-fixer`: Ensures files end with a newline
+   - `check-yaml`: Validates YAML files
+   - `check-added-large-files`: Prevents large files from being committed
+   - `check-merge-conflict`: Checks for merge conflict markers
+   - `check-case-conflict`: Checks for case conflicts in filenames
+   - `forbid-new-submodules`: Prevents new submodules
+   - `forbid-crlf`: Prevents CRLF line endings
+   - `remove-crlf`: Converts CRLF to LF
+   - `forbid-tabs`: Prevents tabs in files
+   - `remove-tabs`: Converts tabs to spaces
+
+#### Recommended Workflow
+
+1. Stage your changes:
+
+   ```bash
+   git add <files>
+   ```
+
+2. Run pre-commit hooks manually (optional but recommended):
+
+   ```bash
+   pre-commit run --all-files
+   ```
+
+3. Create a commit:
+
+   ```bash
+   git commit -m "type(scope): description"
+   ```
+
+   The commit message must follow the conventional commits format:
+
+   - `type`: feat, fix, chore, docs, style, refactor, test, etc.
+   - `scope`: optional, describes the affected area
+   - `description`: brief description of the changes
+
+4. If any hooks fail:
+
+   - Fix the issues reported by the hooks
+   - Stage the fixes: `git add <fixed-files>`
+   - Try committing again
+   - **Important**: After hook failures, check `git status` again as some hooks
+     may have modified your files
+
+Note: The hooks will run automatically on commit, but running them manually
+first can help catch issues early.
 
 ### Ansible Testing
 

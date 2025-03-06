@@ -10,7 +10,7 @@ source .devcontainer/ssh-agent-setup.sh
 
 # Configure Git
 echo "Configuring Git..."
-git config --global core.editor 'code --wait'
+git config --global core.editor 'nano'
 git config --global init.defaultBranch main
 
 # Display container information
