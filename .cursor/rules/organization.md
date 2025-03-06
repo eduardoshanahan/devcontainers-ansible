@@ -2,7 +2,8 @@
 
 ## Description
 
-All Cursor rules must be stored in the `.cursor/rules` directory, with each rule in its own markdown file.
+All Cursor rules must be stored in the `.cursor/rules` directory, with each rule
+in its own markdown file.
 
 ## Structure
 
@@ -10,10 +11,10 @@ All Cursor rules must be stored in the `.cursor/rules` directory, with each rule
 - File name should be descriptive and use kebab-case
 - Each rule should have the following sections:
   1. Title (H1)
-  1. Description
-  1. Structure (if applicable)
-  1. Examples
-  1. Enforcement
+  2. Description
+  3. Structure (if applicable)
+  4. Examples
+  5. Enforcement
 
 ## Examples
 

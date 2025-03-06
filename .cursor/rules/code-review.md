@@ -2,7 +2,8 @@
 
 ## Description
 
-All code changes must go through a standardized review process to maintain code quality and knowledge sharing.
+All code changes must go through a standardized review process to maintain code
+quality and knowledge sharing.
 
 ## Structure
 

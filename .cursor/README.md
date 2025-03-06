@@ -1,6 +1,7 @@
 # .cursor Directory
 
-This directory contains Cursor-specific configurations and rules for the project.
+This directory contains Cursor-specific configurations and rules for the
+project.
 
 ## Directory Structure
 
@@ -14,16 +15,19 @@ This directory contains Cursor-specific configurations and rules for the project
 
 ## Purpose
 
-The `.cursor` directory serves as a central location for all Cursor-specific configurations and rules. This ensures:
+The `.cursor` directory serves as a central location for all Cursor-specific
+configurations and rules. This ensures:
 
 1. Clear separation of Cursor configurations from other project files
-1. Consistent location for all Cursor-related settings
-1. Easy discovery of project rules and standards
-1. Version control of Cursor configurations
+2. Consistent location for all Cursor-related settings
+3. Easy discovery of project rules and standards
+4. Version control of Cursor configurations
 
 ## Rules Directory
 
-The `rules/` directory contains individual markdown files, each defining a specific rule or set of rules for the project. Each rule file follows a standardized format as defined in `rules/rule-storage.md`.
+The `rules/` directory contains individual markdown files, each defining a
+specific rule or set of rules for the project. Each rule file follows a
+standardized format as defined in `rules/rule-storage.md`.
 
 ### Current Rules
 
@@ -33,7 +37,7 @@ The `rules/` directory contains individual markdown files, each defining a speci
    - Specifies naming conventions
    - Details required sections and structure
 
-1. `project-settings.md`
+2. `project-settings.md`
 
    - Contains project-wide Cursor settings
    - Defines formatting and linting configurations
@@ -44,9 +48,9 @@ The `rules/` directory contains individual markdown files, each defining a speci
 To add a new rule:
 
 1. Create a new markdown file in the `rules/` directory
-1. Follow the naming convention defined in `rule-storage.md`
-1. Use the standard rule format
-1. Update this README if the rule introduces new concepts or categories
+2. Follow the naming convention defined in `rule-storage.md`
+3. Use the standard rule format
+4. Update this README if the rule introduces new concepts or categories
 
 ## Maintenance
 

@@ -2,7 +2,8 @@
 
 ## Description
 
-All project versions must follow semantic versioning (MAJOR.MINOR.PATCH) and maintain a clear changelog.
+All project versions must follow semantic versioning (MAJOR.MINOR.PATCH) and
+maintain a clear changelog.
 
 ## Structure
 

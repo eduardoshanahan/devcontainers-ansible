@@ -2,7 +2,8 @@
 
 ## Description
 
-All commit messages must follow a consistent format to maintain a clear and useful git history.
+All commit messages must follow a consistent format to maintain a clear and
+useful git history.
 
 ## Structure
 

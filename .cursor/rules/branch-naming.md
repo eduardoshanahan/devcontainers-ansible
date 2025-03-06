@@ -2,7 +2,8 @@
 
 ## Description
 
-All Git branches must follow a consistent naming pattern to maintain clarity and organization in the repository.
+All Git branches must follow a consistent naming pattern to maintain clarity and
+organization in the repository.
 
 ## Structure
 

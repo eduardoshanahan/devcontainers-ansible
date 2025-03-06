@@ -2,7 +2,8 @@
 
 ## Rule
 
-Project must maintain a `.cursor-project-rules` file in the root directory with standardized formatting and linting configurations.
+Project must maintain a `.cursor-project-rules` file in the root directory with
+standardized formatting and linting configurations.
 
 ## Details
 
@@ -46,12 +47,12 @@ The `.cursor-project-rules` file must contain:
    - Must include configuration directories
    - Must exclude temporary and system files
 
-1. Automation
+2. Automation
 
    - Must enable format on save
    - Must enable lint on save
 
-1. Formatters
+3. Formatters
 
    - Must specify default formatters for each file type
    - Must use industry-standard formatters

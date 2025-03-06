@@ -2,7 +2,8 @@
 
 ## Rule
 
-The workspace must follow a standardized directory structure to ensure consistency and maintainability.
+The workspace must follow a standardized directory structure to ensure
+consistency and maintainability.
 
 ## Details
 
@@ -32,20 +33,20 @@ The workspace must follow a standardized directory structure to ensure consisten
    - Language/tool-specific configs go in subdirectories
    - Exceptions: Git-related files (`.gitignore`, `.gitattributes`) stay in root
 
-1. **Scripts**
+2. **Scripts**
 
    - All shell scripts must be in the `scripts` directory
    - Must have executable permissions
    - Must include shebang line
    - Must be documented in README.md
 
-1. **Source Code**
+3. **Source Code**
 
    - All Ansible code must be in `src` directory
    - Organized by type (inventory, playbooks, roles)
    - Follow Ansible best practices for structure
 
-1. **Documentation**
+4. **Documentation**
 
    - README.md stays in root
    - Component-specific documentation goes with the component
@@ -59,7 +60,7 @@ The workspace must follow a standardized directory structure to ensure consisten
    - Use hyphens for multi-word names
    - Be descriptive and clear
 
-1. **Files**
+2. **Files**
 
    - Use lowercase
    - Use hyphens for multi-word names
