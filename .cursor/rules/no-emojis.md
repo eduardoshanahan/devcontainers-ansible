@@ -2,7 +2,9 @@
 
 ## Description
 
-Emojis should not be used in markdown files within the project. This ensures consistency in documentation, improves readability, and prevents potential rendering issues across different platforms and markdown viewers.
+Emojis should not be used in markdown files within the project. This ensures
+consistency in documentation, improves readability, and prevents potential
+rendering issues across different platforms and markdown viewers.
 
 ## Structure
 
