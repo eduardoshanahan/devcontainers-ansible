@@ -191,7 +191,7 @@
       ]
     }
   },
-  "postCreateCommand": "git config --global core.editor 'code --wait' && git config --global init.defaultBranch main && echo 'DEVCONTAINER_USER in container:' $USER && whoami && id && ssh-add -l && ansible --version && python3 -m pip install --user --upgrade pip wheel setuptools && python3 -m pip check && ansible-galaxy collection list && pre-commit install --install-hooks && pre-commit install --hook-type commit-msg",
+  "postCreateCommand": "chmod +x .devcontainer/setup.sh && .devcontainer/setup.sh",
   "postStartCommand": "",
   "updateRemoteUserUID": true,
   "containerUser": "${localEnv:HOST_USERNAME}",
