@@ -15,8 +15,8 @@ Ansible without installing anything in the local machine.
   - [Quick Start](#quick-start)
     - [1. Clone and Initialize](#1-clone-and-initialize)
     - [2. Configure Environment](#2-configure-environment)
-    - [Docker Image Management](#docker-image-management)
-    - [3. Launch the Environment](#3-launch-the-environment)
+    - [3. Docker Image Management](#3-docker-image-management)
+    - [4. Launch the Environment](#4-launch-the-environment)
   - [Included Tools and Features](#included-tools-and-features)
     - [Development Tools](#development-tools)
     - [Git Aliases](#git-aliases)
@@ -133,7 +133,7 @@ DOCKER_IMAGE_NAME="your-image"    # Name for the Docker image
 DOCKER_IMAGE_TAG="1.0.0"         # Tag for the Docker image
 ```
 
-### Docker Image Management
+### 3. Docker Image Management
 
 By default, VS Code creates Docker images with auto-generated names. To use
 custom names:
@@ -161,7 +161,7 @@ docker image rm <old-image-name-uid>:latest
 
 The container will be rebuilt with your specified image name and tag.
 
-### 3. Launch the Environment
+### 4. Launch the Environment
 
 The `launch.sh` script in the root directory will help you start the development
 environment:
