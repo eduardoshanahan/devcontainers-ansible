@@ -1,5 +1,0 @@
----
-# handlers file for test_role
-- name: Example Handler
-  debug:
-    msg: "Handler executed successfully"
