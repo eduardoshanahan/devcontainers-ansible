@@ -71,7 +71,7 @@ The development container comes with several pre-installed tools and features:
 1. Clone this repository
 2. Copy `.devcontainer/config/.env.example` to `.devcontainer/config/.env`
 3. Update the environment variables in `.env` with your settings
-4. From your local machine, launch the editor with '''./launch.sh'''
+4. From your local machine, launch the editor with `./launch.sh`
 5. When prompted, click "Reopen in Container"
 
 ## Setting Up a New GitHub Project
@@ -124,7 +124,7 @@ The development container comes with several pre-installed tools and features:
    ```
 
 5. **Verify Setup**
-   - Start VS Code with '''./launch.sh'''
+   - Start VS Code with `./launch.sh`
    - Click "Reopen in Container"
    - Verify that the container builds successfully
    - Check that your Git configuration is working:
@@ -214,6 +214,7 @@ The development container uses environment variables for configuration. These ar
 ### Optional Variables
 
 #### Container Configuration
+
 | Variable | Description | Default | Format | Example |
 |----------|-------------|---------|--------|---------|
 | CONTAINER_HOSTNAME | Container hostname shown in prompt | dev | Letters, numbers, hyphens | `ansible-dev` |
@@ -221,29 +222,34 @@ The development container uses environment variables for configuration. These ar
 | WORKSPACE_PATH | Workspace directory path | `/workspace` | Absolute path | `/workspace` |
 
 #### Editor Configuration
+
 | Variable | Description | Default | Format | Example |
 |----------|-------------|---------|--------|---------|
 | EDITOR_CHOICE | Preferred editor | cursor | 'code' or 'cursor' | `cursor` |
 
 #### Git Configuration
+
 | Variable | Description | Default | Format | Example |
 |----------|-------------|---------|--------|---------|
 | GIT_REMOTE_URL | Remote repository URL | None | Git URL | `git@github.com:username/repo.git` |
 | GIT_DEFAULT_BRANCH | Default branch name | main | Branch name | `main` |
 
 #### Docker Configuration
+
 | Variable | Description | Default | Format | Example |
 |----------|-------------|---------|--------|---------|
 | DOCKER_IMAGE_NAME | Development container image name | dev-container | Lowercase letters, numbers, symbols | `ansible-dev` |
 | DOCKER_IMAGE_TAG | Development container image tag | latest | Letters, numbers, symbols | `v1.0.0` |
 
 #### SSH Configuration
+
 | Variable | Description | Default | Format | Example |
 |----------|-------------|---------|--------|---------|
 | SSH_AUTH_SOCK | SSH agent socket path | Auto-detected | Socket path | `/tmp/ssh-XXXXXX/agent.XXXX` |
 | SSH_AGENT_PID | SSH agent process ID | Auto-detected | Process ID | `12345` |
 
-#### Development Tools
+#### Development Tools Configuration
+
 | Variable | Description | Default | Format | Example |
 |----------|-------------|---------|--------|---------|
 | PYTHON_VERSION | Python version to install | 3.11 | Version string | `3.11` |
@@ -251,6 +257,7 @@ The development container uses environment variables for configuration. These ar
 | ANSIBLE_LINT_VERSION | Ansible-lint version | 25.1.3 | Version string | `25.1.3` |
 
 #### Performance and Resources
+
 | Variable | Description | Default | Format | Example |
 |----------|-------------|---------|--------|---------|
 | CONTAINER_MEMORY | Container memory limit | 4g | Memory string | `4g` |
@@ -270,24 +277,29 @@ The development container includes automatic environment variable validation:
 ### Variable Categories and Usage
 
 #### Container Identity Variables
+
 - `HOST_USERNAME`, `HOST_UID`, `HOST_GID`: Ensure proper file ownership and permissions
 - `CONTAINER_HOSTNAME`: Customizes the terminal prompt
 - `CONTAINER_USER`: Sets the user inside the container
 
 #### Git Configuration Variables
+
 - `GIT_USER_NAME`, `GIT_USER_EMAIL`: Used for commit authorship
 - `GIT_REMOTE_URL`: Required for the `sync_git.sh` script (see [Git Synchronization](#git-synchronization))
 - `GIT_DEFAULT_BRANCH`: Sets the default branch for new repositories
 
 #### SSH and Security Variables
+
 - `SSH_AUTH_SOCK`, `SSH_AGENT_PID`: Automatically managed by SSH agent forwarding
 - These variables enable secure Git operations without copying SSH keys
 
 #### Development Environment Variables
+
 - `PYTHON_VERSION`, `ANSIBLE_VERSION`: Control tool versions for consistency
 - `EDITOR_CHOICE`: Determines which editor to use for commit messages
 
 #### Performance Variables
+
 - `CONTAINER_MEMORY`, `CONTAINER_CPUS`: Control resource allocation
 - `CONTAINER_SHM_SIZE`: Affects shared memory for certain operations
 
@@ -391,7 +403,9 @@ Add extensions in the `devcontainer.json` file:
 ### Key Directories Explained
 
 #### `.devcontainer/`
+
 Contains all development container configuration:
+
 - **`config/`**: Environment variables and Starship prompt configuration
 - **`scripts/`**: Setup, initialization, and utility scripts
 - **`Dockerfile`**: Container image definition
@@ -399,39 +413,50 @@ Contains all development container configuration:
 - **Marker files**: Track container lifecycle events
 
 #### `.cursor/`
+
 Cursor-specific configurations:
+
 - **`rules/`**: AI rules for code generation and formatting
 - **`settings.json`**: Cursor editor settings
 
 #### `scripts/`
+
 Utility scripts for project management:
+
 - **`sync_git.sh`**: Git repository synchronization
 
 #### `src/`
+
 Source code and testing:
+
 - **`test-ansible.sh`**: Ansible testing script
 
 ### Configuration Files
 
 #### Environment and Container
+
 - **`.devcontainer/config/.env`**: Environment variables (create from `.env.example`)
 - **`.devcontainer/config/.env.example`**: Example environment variables
 - **`.devcontainer/config/starship.toml`**: Starship prompt configuration
 
 #### Scripts and Automation
+
 - **`launch.sh`**: Main entry point for starting the development environment
 - **`.devcontainer/scripts/`**: Container setup and management scripts
 - **`scripts/sync_git.sh`**: Git repository synchronization utility
 
 #### Testing and Development
+
 - **`test-playbook.yml`**: Basic Ansible playbook for testing
 - **`src/test-ansible.sh`**: Ansible testing script
 
-#### Editor Configuration
+#### Cursor Editor Configuration
+
 - **`.cursor/settings.json`**: Cursor editor settings
 - **`.cursor/rules/`**: AI rules for code generation and formatting
 
 #### Ignore Files
+
 - **`.gitignore`**: Git ignore patterns
 - **`.dockerignore`**: Docker ignore patterns
 - **`.cursorignore`**: Cursor ignore patterns
@@ -439,6 +464,7 @@ Source code and testing:
 ### Container Lifecycle Markers
 
 The `.devcontainer/` directory contains marker files that track container lifecycle events:
+
 - **`.onCreateCommandMarker`**: Indicates container creation completed
 - **`.postCreateCommandMarker`**: Indicates post-creation setup completed
 - **`.updateContentCommandMarker`**: Indicates content updates completed
