@@ -1,0 +1,8 @@
+---
+- name: Test Ansible Installation
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Test task
+      debug:
+        msg: "Ansible is working correctly!"
