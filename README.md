@@ -20,18 +20,25 @@ I am currently using Ubuntu 25.04. I would expect this to work in other versions
 
 The development container comes with several pre-installed tools and features:
 
-1. **Docker Integration**
+1. **Ansible Development Environment**
+   - Ansible core (version 9.2.0)
+   - Ansible-lint (version 25.1.3) for playbook validation
+   - Python 3.11 with pip for package management
+   - Pre-configured Ansible environment variables
+   - Built-in testing capabilities with `test-playbook.yml`
+
+2. **Docker Integration**
    - Microsoft Docker extension (`ms-azuretools.vscode-docker`)
    - Full Docker CLI support
    - Container management and debugging capabilities
    - Integrated Docker Desktop support
 
-2. **Shell Experience**
+3. **Shell Experience**
    - Starship prompt
    - Custom-configured prompt with Git status
    - Configurable via `starship.toml` in the config directory
 
-3. **JSON Tools**
+4. **JSON Tools**
    - `jq` command-line JSON processor
    - VS Code extensions for JSON:
      - Prettier (`esbenp.prettier-vscode`) for formatting
@@ -42,9 +49,44 @@ The development container comes with several pre-installed tools and features:
      - `jsonvalidate`: Check JSON syntax
      - `jsonpretty`: Format JSON with nice output
 
-4. **Additional VS Code Extensions**
+5. **Additional VS Code Extensions**
    - Markdown linting (`DavidAnson.vscode-markdownlint`)
    - Remote Containers support (`ms-vscode-remote.remote-containers`)
+   - YAML support for Ansible playbooks
+   - Syntax highlighting for Ansible files
+
+### Ansible Tools
+
+The container includes a complete Ansible development environment:
+
+#### Core Ansible
+
+- **Ansible**: Latest stable version (9.2.0) for automation
+- **Ansible-lint**: Playbook validation and best practices enforcement
+- **Python 3.11**: Required runtime with all necessary dependencies
+
+#### Development Features
+
+- **Playbook Testing**: Built-in `test-playbook.yml` for validation
+- **Linting Support**: Automatic playbook validation with ansible-lint
+- **YAML Support**: Full YAML syntax highlighting and validation
+- **Inventory Management**: Support for various inventory formats
+
+#### Testing and Validation
+
+```bash
+# Test Ansible installation
+ansible --version
+
+# Validate playbook syntax
+ansible-playbook --syntax-check test-playbook.yml
+
+# Run ansible-lint on playbooks
+ansible-lint test-playbook.yml
+
+# Test playbook execution
+ansible-playbook test-playbook.yml
+```
 
 ## Table of Contents
 
