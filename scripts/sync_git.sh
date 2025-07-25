@@ -127,7 +127,7 @@ main() {
             # Check for local changes
             if ! git diff-index --quiet HEAD --; then
                 error "Local changes detected. Please commit or stash them first."
-                error "Or set FORCE_PULL=true to overwrite local changes."
+                error "Or set FORCE_PULL to overwrite local changes -> FORCE_PULL=true ./scripts/sync_git.sh"
                 exit 1
             fi
             git pull origin "$BRANCH"
