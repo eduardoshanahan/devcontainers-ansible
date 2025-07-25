@@ -54,6 +54,7 @@
         "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:HOST_USERNAME}/.ssh,type=bind,consistency=cached"
     ],
     "postCreateCommand": "chmod +x ~/.devcontainer/scripts/post-create.sh && ~/.devcontainer/scripts/post-create.sh",
+    "initializeCommand": "export CONTAINER_MEMORY=${localEnv:CONTAINER_MEMORY:-4g} && export CONTAINER_CPUS=${localEnv:CONTAINER_CPUS:-2} && export CONTAINER_SHM_SIZE=${localEnv:CONTAINER_SHM_SIZE:-2g} && export CONTAINER_HOSTNAME=${localEnv:CONTAINER_HOSTNAME:-devcontainer-ansible}",
     "containerEnv": {
         "USERNAME": "${localEnv:HOST_USERNAME}",
         "USER_UID": "${localEnv:HOST_UID}",
@@ -69,6 +70,9 @@
         "ANSIBLE_LINT_VERSION": "${localEnv:ANSIBLE_LINT_VERSION:-25.1.3}"
     },
     "runArgs": [
-        "--hostname=${localEnv:CONTAINER_HOSTNAME:-dev}"
+        "--hostname=${localEnv:CONTAINER_HOSTNAME:devcontainer-ansible}",
+        "--memory=${localEnv:CONTAINER_MEMORY:4g}",
+        "--cpus=${localEnv:CONTAINER_CPUS:2}",
+        "--shm-size=${localEnv:CONTAINER_SHM_SIZE:2g}"
     ]
 }
