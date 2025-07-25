@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Set up trap to ensure cleanup happens even if script fails or is interrupted
+cleanup() {
+    echo "Cleaning up..."
+    if [ -f "test-playbook.yml" ]; then
+        rm -f test-playbook.yml
+        echo "Test playbook removed."
+    fi
+}
+
+# Set trap to call cleanup function on exit, interrupt, or error
+trap cleanup EXIT INT TERM
+
 echo "Testing Ansible installation..."
 
 # Test 1: Check Ansible version
@@ -27,7 +39,7 @@ cat > test-playbook.yml << 'EOL'
   gather_facts: false
   tasks:
     - name: Test task
-      debug:
+      ansible.builtin.debug:
         msg: "Ansible is working correctly!"
 EOL
 
@@ -46,9 +58,5 @@ if [ $? -ne 0 ]; then
     echo "ERROR: ansible-lint check failed"
     exit 1
 fi
-
-# Cleanup
-echo "Cleaning up..."
-rm test-playbook.yml
 
 echo "All tests passed! Ansible is working correctly." 

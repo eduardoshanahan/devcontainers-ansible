@@ -17,7 +17,7 @@ This rule ensures all markdown files follow consistent formatting standards and 
 
 ## Code Blocks
 
-- Use triple backticks with language specification: ```bash, ```json, ```yaml
+- Use triple backticks with language specification: ```bash
 - For inline code, use single backticks: `code`
 - **No spaces inside code spans** (MD038 rule)
   - Correct: `command`

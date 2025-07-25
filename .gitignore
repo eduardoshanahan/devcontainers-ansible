@@ -66,6 +66,9 @@ wheels/
 .coverage
 htmlcov/
 
+# Ansible
+.ansible/
+
 # Virtual Environment
 venv/
 ENV/
