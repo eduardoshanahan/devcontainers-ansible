@@ -35,7 +35,10 @@
                         "path": "/bin/bash",
                         "icon": "terminal-bash"
                     }
-                }
+                },
+                "editor.acceptSuggestionOnTab": false,
+                "editor.tabCompletion": "off",
+                "editor.acceptSuggestionOnEnter": "off"
             }
         }
     },
