@@ -146,10 +146,30 @@ ansible-playbook test-playbook.yml
 
 3. **Configure Environment**
 
+   - Copy and configure the environment file
+
    ```bash
-   # Copy and configure the environment file
    cp .devcontainer/config/.env.example .devcontainer/config/.env
-   # Edit .env with your project-specific settings
+   ```
+
+   - Edit .env with your project-specific settings. In particular update
+
+   ```text
+   CONTAINER_HOSTNAME=devcontainers-ansible
+
+   DOCKER_IMAGE_NAME=devcontainers-ansible
+   ```
+
+   - Edit devcontainer.json. In particular update
+
+   ```text
+    "name": "Ubuntu Devcontainers Ansible",
+
+   "DOCKER_IMAGE_NAME": "${localEnv:DOCKER_IMAGE_NAME:-devcontainers-ansible}",
+
+    {localEnv:CONTAINER_HOSTNAME:-devcontainers-ansible}",
+
+   "--hostname=${localEnv:CONTAINER_HOSTNAME:devcontainers-ansible}",
    ```
 
 4. **Initial Commit**
