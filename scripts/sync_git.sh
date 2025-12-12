@@ -185,7 +185,3 @@ main() {
 }
 
 main "$@"
-    else
-        info "Remote $remote does not have $branch. Pushing current branch upstream."
-        git push -u "$remote" "$branch"
-    fi
