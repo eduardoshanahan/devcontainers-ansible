@@ -5,12 +5,17 @@ if command -v starship >/dev/null 2>&1; then
     eval "$(starship init bash)"
 fi
 
-# Source environment variables
-if [ -f "/workspace/.devcontainer/config/.env" ]; then
-    source "/workspace/.devcontainer/config/.env"
+# Load environment variables using shared loader (try workspace first)
+if [ -f "/workspace/.devcontainer/scripts/env-loader.sh" ]; then
+    # shellcheck disable=SC1090
+    source "/workspace/.devcontainer/scripts/env-loader.sh"
+    load_project_env "/workspace"
+elif [ -f "/workspace/.env" ]; then
+    # simple fallback
+    # shellcheck disable=SC1090
+    source "/workspace/.env"
 else
-    echo "Error: .env file not found"
-    exit 1
+    echo "Warning: .env not found in workspace; continuing without it"
 fi
 
 if [ -f /etc/container.env ]; then
@@ -53,4 +58,4 @@ alias jsonvalidate='jq empty'
 alias jsonpretty='jq "."'
 
 # Export SHELL variable to ensure bash is used
-export SHELL=/bin/bash 
+export SHELL=/bin/bash

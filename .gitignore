@@ -8,10 +8,10 @@
 
 # Environment files
 .env
-.env.*
+# .env.*
 !.env.example
 .devcontainer/config/.env
-.devcontainer/.env
+# .devcontainer/.env
 
 # Devcontainer markers
 .devcontainer/.onCreateCommandMarker
@@ -66,9 +66,6 @@ wheels/
 .coverage
 htmlcov/
 
-# Ansible
-.ansible/
-
 # Virtual Environment
 venv/
 ENV/
@@ -96,3 +93,9 @@ env/
 .Trashes
 ehthumbs.db
 Thumbs.db 
+
+# LM conversations
+lm_conversations/
+
+# Vendored Ansible collections (downloaded via galaxy install)
+src/collections/ansible_collections/
