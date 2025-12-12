@@ -129,7 +129,7 @@ src/
 
 Key conventions:
 
-- Manage Galaxy dependencies via `src/requirements.yml`. The devcontainer’s post-create hook will automatically run `ansible-galaxy collection install -r src/requirements.yml --force` and `ansible-galaxy role install -r src/requirements.yml --force` (with a couple of automatic retries) if the file exists, keeping `src/collections` and `src/roles` in sync.
+- Manage Galaxy dependencies via `src/requirements.yml`. The devcontainer’s post-create hook will automatically run `ansible-galaxy collection install -r src/requirements.yml --force` and `ansible-galaxy role install -r src/requirements.yml --force` (with a couple of automatic retries) if the file exists, keeping `src/collections` and `src/roles` in sync. To bump collection versions, edit `src/requirements.yml` and adjust the `<N` portion for the major version you want to track, then run `ansible-galaxy collection install -r src/requirements.yml --force`.
 - Use the provided sample inventory/playbook as a smoke test: `ansible-playbook src/playbooks/sample.yml -i src/inventory/hosts.ini`.
 - `ansible-lint` and `yamllint` are preinstalled; the VS Code Ansible extension surfaces diagnostics automatically, or run them manually:
 

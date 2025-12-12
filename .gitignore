@@ -96,6 +96,7 @@ Thumbs.db
 
 # LM conversations
 lm_conversations/
+!lm_conversations/.gitkeep
 
 # Vendored Ansible collections (downloaded via galaxy install)
 src/collections/ansible_collections/
