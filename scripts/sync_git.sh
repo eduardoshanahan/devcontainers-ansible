@@ -134,6 +134,19 @@ sync_remote() {
     fi
 }
 
+ensure_upstream_tracking() {
+    local remote="$1"
+    local branch="$2"
+    if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
+        return
+    fi
+    if remote_has_branch "$remote" "$branch"; then
+        info "Setting upstream of $branch to $remote/$branch"
+        git branch --set-upstream-to="$remote/$branch" "$branch" >/dev/null 2>&1 || \
+            git branch -u "$remote/$branch" "$branch"
+    fi
+}
+
 main() {
     cd "$PROJECT_DIR" || { error "Project directory not found!"; exit 1; }
     info "Working in directory: $PROJECT_DIR"
@@ -168,6 +181,8 @@ main() {
             sync_remote "$remote" "$target_branch" "normal"
         fi
     done
+
+    ensure_upstream_tracking "$primary_remote" "$target_branch"
 
     if [ "${#push_targets[@]}" -gt 0 ]; then
         for remote in "${push_targets[@]}"; do
