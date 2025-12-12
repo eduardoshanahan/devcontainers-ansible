@@ -173,7 +173,11 @@ main() {
         for remote in "${push_targets[@]}"; do
             ensure_remote "$remote"
             info "Pushing $target_branch to $remote"
-            git push "$remote" "$target_branch"
+            if remote_has_branch "$remote" "$target_branch"; then
+                git push "$remote" "$target_branch"
+            else
+                git push -u "$remote" "$target_branch"
+            fi
         done
     fi
 
@@ -181,3 +185,7 @@ main() {
 }
 
 main "$@"
+    else
+        info "Remote $remote does not have $branch. Pushing current branch upstream."
+        git push -u "$remote" "$branch"
+    fi
