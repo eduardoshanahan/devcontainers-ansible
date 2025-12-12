@@ -22,11 +22,15 @@ __pycache__/
 vendor/
 
 # Environment files
-.env
-.env.*
+# .env
+# .env.*
 !.env.example
-.devcontainer/config/.env
-.devcontainer/.env
+# .devcontainer/config/.env
+# .devcontainer/.env
+
+# Allow .env files (explicit exceptions)
+!.devcontainer/config/.env
+!.devcontainer/.env
 
 # Editor files
 .vscode/
