@@ -24,46 +24,30 @@ info() {
   echo -e "${YELLOW}$1${NC}"
 }
 
-# Function to check if a variable is set
-check_var() {
-  local var_name="$1"
-  local var_value="$2"
-  if [ -z "$var_value" ]; then
-    error "$var_name is not set in .devcontainer/config/.env"
-    return 1
-  fi
-  info "$var_name: $var_value"
-}
+# Load project environment via shared loader (root .env is authoritative)
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_LOADER="$PROJECT_DIR/.devcontainer/scripts/env-loader.sh"
 
-# Check if .env file exists
-if [ ! -f .devcontainer/config/.env ]; then
-  error ".devcontainer/config/.env file not found!"
-  error "Please create it with the following variables:"
-  cat <<EOF
-# User configuration
-HOST_USERNAME=your_username
-HOST_UID=your_uid
-HOST_GID=your_gid
-
-# Git configuration
-GIT_USER_NAME="Your Name"
-GIT_USER_EMAIL="your.email@example.com"
-
-# Editor configuration
-EDITOR_CHOICE=code  # Use 'code' for VS Code or 'cursor' for Cursor
-
-# Docker configuration
-DOCKER_IMAGE_NAME=your-image-name
-DOCKER_IMAGE_TAG=your-tag
-EOF
+if [ ! -f "$ENV_LOADER" ]; then
+  error "Cannot find env-loader at $ENV_LOADER"
   exit 1
 fi
 
-# Load environment variables from .devcontainer/config/.env
-info "Loading environment variables..."
-set -a
-source .devcontainer/config/.env
-set +a
+# shellcheck disable=SC1090
+source "$ENV_LOADER"
+load_project_env "$PROJECT_DIR"
+
+# Validate environment variables before launching anything
+VALIDATOR="$PROJECT_DIR/.devcontainer/scripts/validate-env.sh"
+if [ -f "$VALIDATOR" ]; then
+  info "Validating environment variables..."
+  if ! bash "$VALIDATOR"; then
+    error "Environment validation failed. Please fix your .env values."
+    exit 1
+  fi
+else
+  info "Warning: validator not found at $VALIDATOR; skipping validation."
+fi
 
 # Export variables explicitly for devcontainer
 export HOST_USERNAME
@@ -71,30 +55,14 @@ export HOST_UID
 export HOST_GID
 export GIT_USER_NAME
 export GIT_USER_EMAIL
+export GIT_REMOTE_URL
 export EDITOR_CHOICE
 export DOCKER_IMAGE_NAME
 export DOCKER_IMAGE_TAG
 
-# Verify required variables
-required_vars=(
-  "HOST_USERNAME"
-  "HOST_UID"
-  "HOST_GID"
-  "GIT_USER_NAME"
-  "GIT_USER_EMAIL"
-  "EDITOR_CHOICE"
-  "DOCKER_IMAGE_NAME"
-  "DOCKER_IMAGE_TAG"
-)
-
-# Check all required variables
-for var in "${required_vars[@]}"; do
-  check_var "$var" "${!var:-}" || exit 1
-done
-
 # Validate editor choice
-if [ "${EDITOR_CHOICE}" != "code" ] && [ "${EDITOR_CHOICE}" != "cursor" ]; then
-  error "EDITOR_CHOICE must be set to either 'code' or 'cursor' in .devcontainer/config/.env"
+if [ "${EDITOR_CHOICE}" != "code" ] && [ "${EDITOR_CHOICE}" != "cursor" ] && [ "${EDITOR_CHOICE}" != "antigravity" ]; then
+  error "EDITOR_CHOICE must be set to either 'code' or 'cursor' or 'antigravity' in .devcontainer/config/.env"
   exit 1
 fi
 
@@ -103,26 +71,27 @@ if ! command -v "${EDITOR_CHOICE}" &>/dev/null; then
   error "${EDITOR_CHOICE} is not installed!"
   if [ "${EDITOR_CHOICE}" = "code" ]; then
     error "Please install VS Code from https://code.visualstudio.com/"
-  else
+  elif [ "${EDITOR_CHOICE}" = "cursor" ]; then
     error "Please install Cursor from https://cursor.sh"
+  elif [ "${EDITOR_CHOICE}" = "antigravity" ]; then
+    error "Please install Antigravity from https://antigravity"
   fi
   exit 1
 fi
 
-# Clean up any existing containers using our image
-if docker ps -a | grep -q "${DOCKER_IMAGE_NAME}"; then
-  info "Cleaning up existing containers..."
-  docker ps -a | grep "${DOCKER_IMAGE_NAME}" | cut -d' ' -f1 | xargs -r docker stop
-  docker ps -a | grep "${DOCKER_IMAGE_NAME}" | cut -d' ' -f1 | xargs -r docker rm
-fi
+# Launch the editor (let Dev Containers handle building/running the container)
+info "Launching ${EDITOR_CHOICE} with workspace ${PWD}..."
+case "${EDITOR_CHOICE}" in
+  code)
+    code "${PWD}" >/dev/null 2>&1 &
+    ;;
+  cursor)
+    cursor "${PWD}" --no-sandbox >/dev/null 2>&1 &
+    ;;
+  antigravity)
+    antigravity "${PWD}" >/dev/null 2>&1 &
+    ;;
+esac
 
-# Launch the editor
-info "Launching ${EDITOR_CHOICE}..."
-if [ "${EDITOR_CHOICE}" = "code" ]; then
-  code "${PWD}" >/dev/null 2>&1 &
-else
-  cursor "${PWD}" --no-sandbox >/dev/null 2>&1 &
-fi
-
-success "${EDITOR_CHOICE} launched successfully!"
-disown 
+success "Editor launched. Use the Dev Containers extension's \"Reopen in Container\" to start the environment."
+disown || true

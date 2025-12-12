@@ -23,7 +23,7 @@ Defines color variables for terminal output:
 - Utility colors (COLOR_RESET, COLOR_BOLD, COLOR_DIM)
 - Used by other scripts for consistent colored output
 
-### `launch.sh`
+### `init-devcontainer.sh`
 
 Main initialization script that:
 
@@ -76,10 +76,10 @@ If you need to run any script manually:
 
 ```bash
 # Make the script executable
-chmod +x /workspace/.devcontainer/scripts/script-name.sh
+chmod +x /workspace/.devcontainer/scripts/init-devcontainer.sh
 
 # Run the script
-source /workspace/.devcontainer/scripts/script-name.sh
+/workspace/.devcontainer/scripts/init-devcontainer.sh
 ```
 
 ### Dependencies
@@ -118,3 +118,46 @@ The scripts implement security best practices:
 - Environment variable validation
 - Safe shell options
 - Input validation
+
+## Verification: SSH & Git
+
+A helper script is provided to validate SSH agent forwarding and common Git configuration inside the container:
+
+- Ensure helper scripts are executable (one-time, on host or in container):
+
+```bash
+# Option A: run the fixer (recommended)
+chmod +x .devcontainer/scripts/fix-permissions.sh
+.devcontainer/scripts/fix-permissions.sh
+
+# Option B: make the verifier executable directly
+chmod +x .devcontainer/scripts/verify-git-ssh.sh
+```
+
+- Run the verifier:
+
+```bash
+# Default target: git@github.com
+.devcontainer/scripts/verify-git-ssh.sh
+
+# Or target a different git host
+.devcontainer/scripts/verify-git-ssh.sh git@gitlab.com
+```
+
+- What it checks:
+  - SSH_AUTH_SOCK presence and that the socket exists
+  - Loaded identities via `ssh-add -l`
+  - Non-interactive SSH test to the Git host (e.g., `git@github.com`)
+  - `git config --list --show-origin`, remotes and `git status -s`
+
+- Debugging env-loader interactions:
+  - To see which env variables the loader set, enable debug when invoking load_project_env:
+    - export ENV_LOADER_DEBUG=1 before init (or pass `1` as second arg to the loader when sourcing manually).
+  - Example (inside container):
+
+    ```bash
+    source /workspace/.devcontainer/scripts/env-loader.sh
+    load_project_env /workspace 1
+    ```
+
+This verifier is intended to quickly validate that SSH agent forwarding and Git configuration are working as expected in the devcontainer.

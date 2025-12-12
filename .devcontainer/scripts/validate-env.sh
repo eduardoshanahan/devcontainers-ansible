@@ -1,19 +1,24 @@
 #!/bin/bash
+set -euo pipefail
 
 # Required variables with their descriptions and validation rules
 declare -A required_vars=(
-    ["HOST_USERNAME"]="System username|^[a-z_][a-z0-9_-]*[$]?$"
+    ["HOST_USERNAME"]="System username|^[a-z_][a-z0-9_-]*$"
     ["HOST_UID"]="User ID|^[0-9]+$"
     ["HOST_GID"]="Group ID|^[0-9]+$"
+    ["GIT_USER_NAME"]="Git author name|^[a-zA-Z0-9 ._-]+$"
+    ["GIT_USER_EMAIL"]="Git author email|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+    ["GIT_REMOTE_URL"]="Git remote URL|^(https://|git@).+"
+    ["EDITOR_CHOICE"]="Editor selection|^(code|cursor|antigravity)$"
 )
 
 # Optional variables with default values and validation rules
 declare -A optional_vars=(
-    ["CONTAINER_HOSTNAME"]="dev|^[a-zA-Z][a-zA-Z0-9-]*$"
-    ["EDITOR_CHOICE"]="cursor|^(code|cursor)$"
-    ["GIT_USER_NAME"]="Dev User|^[a-zA-Z0-9 ._-]+$"
-    ["GIT_USER_EMAIL"]="dev@example.com|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-    ["DOCKER_IMAGE_NAME"]="dev-container|^[a-z0-9][a-z0-9._-]+$"
+    ["CONTAINER_HOSTNAME"]="devcontainers-git-${EDITOR_CHOICE:-code}|^[a-zA-Z][a-zA-Z0-9-]*$"
+    ["CONTAINER_MEMORY"]="4g|^[0-9]+[gGmM]$"
+    ["CONTAINER_CPUS"]="2|^[0-9]+(\\.[0-9]+)?$"
+    ["CONTAINER_SHM_SIZE"]="2g|^[0-9]+[gGmM]$"
+    ["DOCKER_IMAGE_NAME"]="devcontainer-git-${EDITOR_CHOICE:-code}|^[a-z0-9][a-z0-9._-]+$"
     ["DOCKER_IMAGE_TAG"]="latest|^[a-zA-Z0-9][a-zA-Z0-9._-]+$"
 )
 
@@ -33,7 +38,6 @@ validate_var() {
     return 0
 }
 
-# Check required variables
 errors=0
 echo "Validating required variables..."
 for var in "${!required_vars[@]}"; do
@@ -48,7 +52,6 @@ for var in "${!required_vars[@]}"; do
     fi
 done
 
-# Check optional variables
 echo -e "\nValidating optional variables..."
 for var in "${!optional_vars[@]}"; do
     IFS="|" read -r default pattern <<< "${optional_vars[$var]}"
@@ -61,4 +64,4 @@ if [ $errors -gt 0 ]; then
     exit 1
 else
     echo -e "\nAll environment variables are valid!"
-fi 
+fi

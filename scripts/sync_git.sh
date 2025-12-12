@@ -18,163 +18,166 @@ error() { echo -e "${RED} $1${NC}" >&2; }
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
-# Load environment variables if .env file exists
-if [ -f "$PROJECT_DIR/.devcontainer/config/.env" ]; then
-    source "$PROJECT_DIR/.devcontainer/config/.env"
+# Load environment variables using the shared loader (project root .env is authoritative)
+ENV_LOADER="$PROJECT_DIR/.devcontainer/scripts/env-loader.sh"
+if [ ! -f "$ENV_LOADER" ]; then
+    error "env-loader.sh not found at $ENV_LOADER"
+    exit 1
 fi
+# shellcheck disable=SC1090
+source "$ENV_LOADER"
+load_project_env "$PROJECT_DIR"
 
-# Configuration with defaults
-BRANCH="${BRANCH:-main}"
+BRANCH="${BRANCH:-}"
 FORCE_PULL="${FORCE_PULL:-false}"
 GIT_REMOTE_URL="${GIT_REMOTE_URL:-}"
+GIT_SYNC_REMOTES="${GIT_SYNC_REMOTES:-origin}"
+GIT_SYNC_PUSH_REMOTES="${GIT_SYNC_PUSH_REMOTES:-}"
 
-# Function to backup local changes
-backup_local_changes() {
-    local backup_dir="$PROJECT_DIR/backup_$(date +%Y%m%d_%H%M%S)"
-    info "Creating backup in $backup_dir..."
-    mkdir -p "$backup_dir"
-    git diff > "$backup_dir/local_changes.patch"
-    git status --porcelain | while read -r status file; do
-        if [[ $status == "??" ]]; then
-            cp --parents "$file" "$backup_dir/"
+normalize_list() {
+    local raw="$1"
+    raw="${raw//,/ }"
+    local result=()
+    for item in $raw; do
+        [ -z "$item" ] && continue
+        local exists=false
+        for seen in "${result[@]}"; do
+            if [ "$seen" = "$item" ]; then
+                exists=true
+                break
+            fi
+        done
+        if [ "$exists" = false ]; then
+            result+=("$item")
         fi
     done
-    success "Backup created in $backup_dir"
+    if [ "${#result[@]}" -gt 0 ]; then
+        printf '%s\n' "${result[@]}"
+    fi
 }
 
-# Function to configure Git user if not already set
-configure_git_user() {
-    if [ -n "${GIT_USER_NAME:-}" ] && [ -n "${GIT_USER_EMAIL:-}" ]; then
-        if [ "$(git config --global user.name 2>/dev/null)" != "$GIT_USER_NAME" ]; then
-            git config --global user.name "$GIT_USER_NAME"
-            info "Git user name set to: $GIT_USER_NAME"
+mapfile -t remote_list < <(normalize_list "$GIT_SYNC_REMOTES")
+if [ "${#remote_list[@]}" -eq 0 ]; then
+    remote_list=("origin")
+fi
+primary_remote="${remote_list[0]}"
+
+mapfile -t push_targets < <(normalize_list "$GIT_SYNC_PUSH_REMOTES")
+
+remote_env_key() {
+    echo "$1" | tr '[:lower:]' '[:upper:]' | sed 's/[^A-Z0-9]/_/g'
+}
+
+remote_has_branch() {
+    local remote="$1"
+    local branch="$2"
+    git ls-remote --heads "$remote" "$branch" | grep -q "$branch"
+}
+
+ensure_remote() {
+    local remote="$1"
+    if git remote get-url "$remote" >/dev/null 2>&1; then
+        return
+    fi
+
+    local env_suffix
+    env_suffix="$(remote_env_key "$remote")"
+    local remote_url_var="GIT_REMOTE_URL_${env_suffix}"
+    local remote_url="${!remote_url_var:-}"
+
+    if [ -z "$remote_url" ] && [ "$remote" = "$primary_remote" ]; then
+        remote_url="$GIT_REMOTE_URL"
+    fi
+
+    if [ -z "$remote_url" ]; then
+        error "Remote '$remote' is not configured. Set $remote_url_var (or GIT_REMOTE_URL for the primary remote) in .env."
+        exit 1
+    fi
+
+    git remote add "$remote" "$remote_url"
+    info "Added remote '$remote': $remote_url"
+}
+
+ensure_branch_checked_out() {
+    local branch="$1"
+    if git rev-parse --verify --quiet "refs/heads/$branch" >/dev/null; then
+        git checkout "$branch" >/dev/null 2>&1 || git checkout "$branch"
+    else
+        info "Creating local branch $branch"
+        git checkout -b "$branch"
+    fi
+}
+
+sync_remote() {
+    local remote="$1"
+    local branch="$2"
+    local mode="${3:-normal}"
+
+    if [ "$mode" = "force" ]; then
+        info "Force syncing from $remote/$branch"
+        if remote_has_branch "$remote" "$branch"; then
+            git fetch "$remote" "$branch"
+            git reset --hard "$remote/$branch"
+            git clean -fd
+        else
+            info "Remote $remote does not have $branch. Pushing current branch upstream."
+            git push -u "$remote" "$branch"
         fi
-        if [ "$(git config --global user.email 2>/dev/null)" != "$GIT_USER_EMAIL" ]; then
-            git config --global user.email "$GIT_USER_EMAIL"
-            info "Git user email set to: $GIT_USER_EMAIL"
+    else
+        if remote_has_branch "$remote" "$branch"; then
+            info "Rebasing onto $remote/$branch"
+            git pull --rebase "$remote" "$branch"
+        else
+            info "Remote $remote does not have $branch. Pushing current branch upstream."
+            git push -u "$remote" "$branch"
         fi
     fi
 }
 
-# Main script
 main() {
     cd "$PROJECT_DIR" || { error "Project directory not found!"; exit 1; }
     info "Working in directory: $PROJECT_DIR"
 
-    # Check if .git exists
-    if [ ! -d ".git" ]; then
-        info "No .git folder found. Initializing git repository..."
-        
-        # Check if remote URL is provided
-        if [ -z "$GIT_REMOTE_URL" ]; then
-            error "No GIT_REMOTE_URL environment variable set. Please set it in your .env file."
-            exit 1
-        fi
-
-        # Initialize git repository
-        git init
-
-        # Configure Git user
-        configure_git_user
-
-        # Add remote
-        git remote add origin "$GIT_REMOTE_URL"
-        
-        # If files exist, add them to git
-        if [ -n "$(ls -A .)" ]; then
-            info "Existing files detected. Adding them to git..."
-            git add .
-            git commit -m "Initial commit of existing files"
-        fi
-
-        # Handle remote branch logic properly
-        info "Fetching from remote and setting up branch $BRANCH..."
-        git fetch origin
-        
-        if git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
-            # Remote branch exists - pull it and merge with local changes
-            info "Remote branch $BRANCH exists. Pulling and merging..."
-            if [ -n "$(git log --oneline 2>/dev/null)" ]; then
-                # We have local commits, need to merge with remote
-                git pull origin "$BRANCH" --allow-unrelated-histories
-            else
-                # No local commits, just checkout the remote branch
-                git checkout -b "$BRANCH" "origin/$BRANCH"
-            fi
-        else
-            # Remote branch doesn't exist, create it
-            info "Remote branch $BRANCH doesn't exist. Creating it..."
-            # Check if we're already on the main branch
-            if git branch --show-current 2>/dev/null | grep -q "^$BRANCH$"; then
-                info "Already on $BRANCH branch, pushing to remote..."
-            else
-                git checkout -b "$BRANCH"
-            fi
-            git push -u origin "$BRANCH"
-        fi
-        
-        success "Git repository initialized and synced with remote."
-        exit 0
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        error "This directory is not a git repository. Initialize it first."
+        exit 1
     fi
 
-    # Get current remote URL
-    REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+    for remote in "${remote_list[@]}"; do
+        ensure_remote "$remote"
+    done
 
-    if [ -z "$REMOTE_URL" ]; then
-        if [ -n "$GIT_REMOTE_URL" ]; then
-            info "Adding remote URL from environment variable..."
-            git remote add origin "$GIT_REMOTE_URL"
-            REMOTE_URL="$GIT_REMOTE_URL"
-        else
-            error "No remote URL configured. Please set GIT_REMOTE_URL in your .env file."
-            exit 1
-        fi
+    current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+    if [ "$current_branch" = "HEAD" ] || [ -z "$current_branch" ]; then
+        current_branch="main"
+    fi
+    target_branch="${BRANCH:-$current_branch}"
+
+    if [ "$FORCE_PULL" != "true" ] && ! git diff --quiet --ignore-submodules HEAD --; then
+        error "Local changes detected. Commit/stash them or run FORCE_PULL=true ./scripts/sync_git.sh"
+        exit 1
     fi
 
-    success "Git repository found with remote: $REMOTE_URL"
+    ensure_branch_checked_out "$target_branch"
+    info "Syncing branch $target_branch"
 
-    # Configure Git user
-    configure_git_user
-
-    # Check if we're in detached HEAD state
-    if ! git symbolic-ref HEAD &>/dev/null; then
-        info "Detached HEAD state detected. Checking out $BRANCH..."
-        git checkout "$BRANCH" || git checkout -b "$BRANCH"
-    fi
-
-    info "Syncing with remote repository..."
-
-    if [ "$FORCE_PULL" = true ]; then
-        info "Force pulling and overwriting local changes..."
-        backup_local_changes
-        git fetch origin
-        git reset --hard "origin/$BRANCH"
-        git clean -fd  # Remove untracked files and directories
-    else
-        # Check if we have any commits
-        if ! git rev-parse HEAD &>/dev/null; then
-            info "No commits found. Initializing repository..."
-            if [ -n "$(ls -A .)" ]; then
-                git add .
-                git commit -m "Initial commit"
-            fi
-            git pull origin "$BRANCH" || {
-                info "No remote branch found. Creating new branch..."
-                git push -u origin "$BRANCH"
-            }
+    for remote in "${remote_list[@]}"; do
+        if [ "$remote" = "$primary_remote" ] && [ "$FORCE_PULL" = "true" ]; then
+            sync_remote "$remote" "$target_branch" "force"
         else
-            # Check for local changes
-            if ! git diff-index --quiet HEAD --; then
-                error "Local changes detected. Please commit or stash them first."
-                error "Or set FORCE_PULL to overwrite local changes -> FORCE_PULL=true ./scripts/sync_git.sh"
-                exit 1
-            fi
-            git pull origin "$BRANCH"
+            sync_remote "$remote" "$target_branch" "normal"
         fi
+    done
+
+    if [ "${#push_targets[@]}" -gt 0 ]; then
+        for remote in "${push_targets[@]}"; do
+            ensure_remote "$remote"
+            info "Pushing $target_branch to $remote"
+            git push "$remote" "$target_branch"
+        done
     fi
 
     success "Git sync complete!"
 }
 
-# Run main function
 main "$@"
