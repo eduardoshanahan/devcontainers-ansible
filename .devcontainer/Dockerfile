@@ -12,10 +12,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     openssh-client \
     python3 \
     python3-pip \
-    python3-venv \
     sshpass \
     wget \
-    ansible-core \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
@@ -24,9 +22,12 @@ ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
-# Install linting helpers via pip (keep image lean by using --no-cache)
+# Install Ansible tooling via pip so the CLI and python packages stay in sync
 RUN python3 -m pip install --no-cache-dir --upgrade pip \
-    && python3 -m pip install --no-cache-dir ansible-lint yamllint
+    && python3 -m pip install --no-cache-dir \
+        "ansible-core==2.17.*" \
+        "ansible-lint==25.12.1" \
+        "yamllint==1.35.*"
 
 # Install Starship
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes
