@@ -6,9 +6,13 @@
         "args": {
             "USERNAME": "${localEnv:HOST_USERNAME}",
             "USER_UID": "${localEnv:HOST_UID}",
-            "USER_GID": "${localEnv:HOST_GID}"
+            "USER_GID": "${localEnv:HOST_GID}",
+            "ANSIBLE_VERSION": "${localEnv:ANSIBLE_VERSION}",
+            "ANSIBLE_LINT_VERSION": "${localEnv:ANSIBLE_LINT_VERSION}",
+            "YAMLLINT_VERSION": "${localEnv:YAMLLINT_VERSION}"
         }
     },
+    "image": "${localEnv:DOCKER_IMAGE_NAME}:${localEnv:DOCKER_IMAGE_TAG}",
     "customizations": {
         "vscode": {
             "settings": {

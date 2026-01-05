@@ -3,23 +3,27 @@ set -euo pipefail
 
 # Required variables with their descriptions and validation rules
 declare -A required_vars=(
+    ["PROJECT_NAME"]="Project name|^[a-z0-9][a-z0-9-]*$"
     ["HOST_USERNAME"]="System username|^[a-z_][a-z0-9_-]*$"
     ["HOST_UID"]="User ID|^[0-9]+$"
     ["HOST_GID"]="Group ID|^[0-9]+$"
+    ["CONTAINER_HOSTNAME"]="Container hostname|^[a-zA-Z][a-zA-Z0-9-]*$"
+    ["CONTAINER_MEMORY"]="Container memory limit|^[0-9]+[gGmM]$"
+    ["CONTAINER_CPUS"]="Container CPU limit|^[0-9]+(\\.[0-9]+)?$"
+    ["CONTAINER_SHM_SIZE"]="Container shared memory size|^[0-9]+[gGmM]$"
     ["GIT_USER_NAME"]="Git author name|^[a-zA-Z0-9 ._-]+$"
     ["GIT_USER_EMAIL"]="Git author email|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-    ["GIT_REMOTE_URL"]="Git remote URL|^(https://|git@).+"
     ["EDITOR_CHOICE"]="Editor selection|^(code|cursor|antigravity)$"
+    ["DOCKER_IMAGE_NAME"]="Docker image name|^[a-z0-9][a-z0-9._-]+$"
+    ["DOCKER_IMAGE_TAG"]="Docker image tag|^[a-zA-Z0-9][a-zA-Z0-9._-]+$"
+    ["ANSIBLE_VERSION"]="Ansible core version|^[0-9]+(\\.[0-9]+)*(\\.\\*)?$"
+    ["ANSIBLE_LINT_VERSION"]="Ansible-lint version|^[0-9]+(\\.[0-9]+)*(\\.\\*)?$"
+    ["YAMLLINT_VERSION"]="Yamllint version|^[0-9]+(\\.[0-9]+)*(\\.\\*)?$"
 )
 
 # Optional variables with default values and validation rules
 declare -A optional_vars=(
-    ["CONTAINER_HOSTNAME"]="devcontainers-git-${EDITOR_CHOICE:-code}|^[a-zA-Z][a-zA-Z0-9-]*$"
-    ["CONTAINER_MEMORY"]="4g|^[0-9]+[gGmM]$"
-    ["CONTAINER_CPUS"]="2|^[0-9]+(\\.[0-9]+)?$"
-    ["CONTAINER_SHM_SIZE"]="2g|^[0-9]+[gGmM]$"
-    ["DOCKER_IMAGE_NAME"]="devcontainer-git-${EDITOR_CHOICE:-code}|^[a-z0-9][a-z0-9._-]+$"
-    ["DOCKER_IMAGE_TAG"]="latest|^[a-zA-Z0-9][a-zA-Z0-9._-]+$"
+    ["GIT_REMOTE_URL"]="|^(https://|git@).+"
 )
 
 validate_var() {
@@ -56,7 +60,9 @@ echo -e "\nValidating optional variables..."
 for var in "${!optional_vars[@]}"; do
     IFS="|" read -r default pattern <<< "${optional_vars[$var]}"
     value=${!var:-$default}
-    validate_var "$var" "$value" "$pattern" "Default: $default" || ((errors++))
+    if [ -n "$value" ]; then
+        validate_var "$var" "$value" "$pattern" "Default: $default" || ((errors++))
+    fi
 done
 
 if [ $errors -gt 0 ]; then

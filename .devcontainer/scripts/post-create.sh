@@ -87,6 +87,36 @@ if ! grep -q "source.*ssh-agent-setup.sh" ~/.bashrc; then
     echo 'source /workspace/.devcontainer/scripts/ssh-agent-setup.sh' >> ~/.bashrc
 fi
 
+# Add Claude Code to PATH if not already present
+if ! grep -q '.local/bin' ~/.bashrc; then
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+    echo "Added ~/.local/bin to PATH in .bashrc"
+fi
+
+# Install Claude Code (optional)
+echo "Installing Claude Code..."
+# Always export PATH for this session
+export PATH="$HOME/.local/bin:$PATH"
+
+if [ "${SKIP_CLAUDE_INSTALL:-}" = "1" ] || [ "${SKIP_CLAUDE_INSTALL:-}" = "true" ]; then
+    echo "Skipping Claude Code install (SKIP_CLAUDE_INSTALL is set)"
+elif ! command -v claude &> /dev/null; then
+    if command -v timeout >/dev/null 2>&1; then
+        timeout 300s bash -c 'curl -fsSL https://claude.ai/install.sh | bash' || {
+            echo "Claude Code install timed out or failed; re-run post-create to try again."
+        }
+    else
+        curl -fsSL https://claude.ai/install.sh | bash || {
+            echo "Claude Code install failed; re-run post-create to try again."
+        }
+    fi
+    if command -v claude &> /dev/null; then
+        echo "Claude Code installed successfully!"
+    fi
+else
+    echo "Claude Code already installed ($(claude --version 2>/dev/null || echo 'version unknown'))"
+fi
+
 # Ensure login shells also inherit the alias setup by sourcing .bashrc
 ensure_profile_sources_bashrc() {
     local profile_file="$1"

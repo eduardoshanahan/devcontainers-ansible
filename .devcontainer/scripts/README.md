@@ -28,7 +28,6 @@ Defines color variables for terminal output:
 Main initialization script that:
 
 - Sources color definitions and environment variables
-- Validates environment configuration
 - Configures Git user information
 - Makes scripts executable
 - Sets up bashrc to source required scripts
@@ -38,11 +37,12 @@ Main initialization script that:
 
 Runs after container creation to:
 
-- Source and validate environment variables
+- Source environment variables
 - Configure Git user information
 - Make scripts executable
 - Set up bashrc with required script sources
 - Ensures proper initialization of the development environment
+- Optionally installs Claude Code (set `SKIP_CLAUDE_INSTALL=1` to skip)
 
 ### `ssh-agent-setup.sh`
 
@@ -60,8 +60,8 @@ Manages SSH agent configuration:
 
 Validates environment variables:
 
-- Checks required variables (HOST_USERNAME, HOST_UID, HOST_GID)
-- Validates optional variables with defaults
+- Checks required variables (PROJECT_NAME, HOST_USERNAME, HOST_UID, HOST_GID, CONTAINER_HOSTNAME, CONTAINER_MEMORY, CONTAINER_CPUS, CONTAINER_SHM_SIZE, GIT_USER_NAME, GIT_USER_EMAIL, EDITOR_CHOICE, DOCKER_IMAGE_NAME, DOCKER_IMAGE_TAG, ANSIBLE_VERSION, ANSIBLE_LINT_VERSION, YAMLLINT_VERSION)
+- Validates optional variables (GIT_REMOTE_URL)
 - Uses regex patterns for validation
 - Provides detailed error messages
 - Returns non-zero exit code on validation failure
@@ -87,7 +87,7 @@ chmod +x /workspace/.devcontainer/scripts/init-devcontainer.sh
 The scripts have the following dependencies:
 
 - `colors.sh` is sourced by other scripts for colored output
-- `validate-env.sh` is called by `launch.sh` and `post-create.sh`
+- `validate-env.sh` is called by `launch.sh`, `devcontainer_launch.sh`, and `claude_launch.sh`
 - `bash-prompt.sh` and `ssh-agent-setup.sh` are sourced in bashrc
 
 ## Customization
