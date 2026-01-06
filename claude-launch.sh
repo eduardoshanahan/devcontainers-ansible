@@ -51,7 +51,17 @@ fi
 if ! command -v devcontainer &>/dev/null; then
   error "devcontainer CLI is not installed!"
   info "Please install it with: npm install -g @devcontainers/cli"
-  info "Or use ./launch.sh to work with VS Code/Cursor instead."
+  info "Or use ./editor-launch.sh to work with VS Code/Cursor instead."
+  exit 1
+fi
+
+# Check if Docker is installed and running
+if ! command -v docker &>/dev/null; then
+  error "Docker is not installed!"
+  exit 1
+fi
+if ! docker info >/dev/null 2>&1; then
+  error "Docker does not appear to be running. Start the Docker daemon and try again."
   exit 1
 fi
 

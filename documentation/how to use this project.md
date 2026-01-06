@@ -16,9 +16,9 @@ Ansible template. Update it as you add roles, inventories, or new tooling.
    editor choice, Docker naming, resource limits, and Ansible tool versions).
 
 3. Launch the devcontainer:
-   - `./launch.sh` for VS Code/Cursor/Antigravity.
-   - `./devcontainer_launch.sh` for a CLI shell.
-   - `./claude_launch.sh` to start Claude Code inside the container.
+   - `./editor-launch.sh` for VS Code/Cursor/Antigravity.
+   - `./devcontainer-launch.sh` for a CLI shell.
+   - `./claude-launch.sh` to start Claude Code inside the container.
 
 The launch scripts load `.env` and run `.devcontainer/scripts/validate-env.sh`
 before starting the container.
