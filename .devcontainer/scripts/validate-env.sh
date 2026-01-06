@@ -41,13 +41,13 @@ CONTAINER_MEMORY|Container memory limit|^[0-9]+[gGmM]$
 CONTAINER_CPUS|Container CPU limit|^[0-9]+(\\.[0-9]+)?$
 CONTAINER_SHM_SIZE|Container shared memory size|^[0-9]+[gGmM]$
 GIT_USER_NAME|Git author name|^[a-zA-Z0-9 ._-]+$
-GIT_USER_EMAIL|Git author email|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$
+GIT_USER_EMAIL|Git author email|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
 EDITOR_CHOICE|Editor selection|^(code|cursor|antigravity)$
 DOCKER_IMAGE_NAME|Docker image name|^[a-z0-9][a-z0-9._-]+$
 DOCKER_IMAGE_TAG|Docker image tag|^[a-zA-Z0-9][a-zA-Z0-9._-]+$
-ANSIBLE_VERSION|Ansible core version|^[0-9]+(\\.[0-9]+)*(\\.\\*)?$
-ANSIBLE_LINT_VERSION|Ansible-lint version|^[0-9]+(\\.[0-9]+)*(\\.\\*)?$
-YAMLLINT_VERSION|Yamllint version|^[0-9]+(\\.[0-9]+)*(\\.\\*)?$
+ANSIBLE_VERSION|Ansible core version|^[0-9]+(\.[0-9]+)*(\.\*)?$
+ANSIBLE_LINT_VERSION|Ansible-lint version|^[0-9]+(\.[0-9]+)*(\.\*)?$
+YAMLLINT_VERSION|Yamllint version|^[0-9]+(\.[0-9]+)*(\.\*)?$
 EOF
 
 printf '\nValidating optional variables...\n'

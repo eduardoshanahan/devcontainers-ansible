@@ -1,7 +1,7 @@
 # Working with environment variables (TL;DR)
 
 1. **Copy the template:** `cp .env.example .env` (only needs to happen once per project).
-2. **Fill in the values:** edit `.env` so that `PROJECT_NAME`, `HOST_USERNAME`, `HOST_UID`, `HOST_GID`, `GIT_USER_NAME`, `GIT_USER_EMAIL`, `EDITOR_CHOICE` (code/cursor/antigravity), `CONTAINER_HOSTNAME`, `DOCKER_IMAGE_NAME`, resource limits, and `ANSIBLE_VERSION`/`ANSIBLE_LINT_VERSION`/`YAMLLINT_VERSION` match your machine. `GIT_REMOTE_URL` is optional. This file is the single source of truth.
+2. **Fill in the values:** edit `.env` so that `PROJECT_NAME`, `HOST_USERNAME`, `HOST_UID`, `HOST_GID`, `GIT_USER_NAME`, `GIT_USER_EMAIL`, `EDITOR_CHOICE` (code/cursor/antigravity), `CONTAINER_HOSTNAME`, `DOCKER_IMAGE_NAME`, resource limits, and `ANSIBLE_CORE_VERSION`/`ANSIBLE_LINT_VERSION`/`YAMLLINT_VERSION` match your machine. `GIT_REMOTE_URL` is optional. This file is the single source of truth.
 3. **No fallback defaults:** the project root `.env` is the only source of configuration, so every required value must be present there.
 4. **Validate & launch:** always start your session with `./editor-launch.sh` for editor workflows, or use `./devcontainer-launch.sh` / `./claude-launch.sh` for CLI workflows. These load `.env`, run `.devcontainer/scripts/validate-env.sh`, and only launch after the check passes. If something is wrong, the script exits with the list of fixes so you don’t waste time booting the devcontainer.
 5. **Inside the container:** every helper script sources `.devcontainer/scripts/env-loader.sh`, so anything defined in `.env` automatically shows up in init/post-create hooks and in your shell.
