@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
 # Simple verify script for SSH agent forwarding and git config
 # Usage: ./verify-git-ssh.sh [git-host]
@@ -41,7 +41,7 @@ info "Attempting SSH connection test to $GIT_HOST (non-interactive)..."
 SSH_OUTPUT="$(ssh -o BatchMode=yes -o ConnectTimeout=5 -T "$GIT_HOST" 2>&1 || true)"
 echo "$SSH_OUTPUT"
 # Heuristic: GitHub / Git providers print "successfully authenticated" or similar
-if printf '%s\n' "$SSH_OUTPUT" | grep -i -qE 'successfully authenticated|you(\'|’)ve successfully authenticated|welcome'; then
+if printf '%s\n' "$SSH_OUTPUT" | grep -i -qE "successfully authenticated|you've successfully authenticated|welcome"; then
     ok "SSH connection test indicates successful authentication."
 else
     # Some providers return different messages; still treat typical failure patterns

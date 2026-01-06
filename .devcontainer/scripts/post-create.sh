@@ -1,20 +1,20 @@
-#!/bin/bash
+#!/bin/sh
 
 # Load environment variables via shared loader (project root .env is authoritative)
 if [ -f "/workspace/.devcontainer/scripts/env-loader.sh" ]; then
     # shellcheck disable=SC1090
-    source "/workspace/.devcontainer/scripts/env-loader.sh"
+    . "/workspace/.devcontainer/scripts/env-loader.sh"
     load_project_env "/workspace"
 elif [ -f "$HOME/.devcontainer/scripts/env-loader.sh" ]; then
     # shellcheck disable=SC1090
-    source "$HOME/.devcontainer/scripts/env-loader.sh"
+    . "$HOME/.devcontainer/scripts/env-loader.sh"
     load_project_env "/workspace"
 else
     echo "Warning: env-loader.sh not found; skipping environment load"
 fi
 
 # Configure Git if variables are set
-if [ -n "$GIT_USER_NAME" ] && [ -n "$GIT_USER_EMAIL" ]; then
+if [ -n "${GIT_USER_NAME:-}" ] && [ -n "${GIT_USER_EMAIL:-}" ]; then
     REPO_DIR="/workspace"
     if [ -d "$REPO_DIR/.git" ]; then
         echo "Configuring repo-local Git identity:"
@@ -43,10 +43,10 @@ ANSIBLE_ROOT="/workspace/src"
 ANSIBLE_REQUIREMENTS_FILE="${ANSIBLE_ROOT}/requirements.yml"
 
 retry_galaxy_install() {
-    local description="$1"
+    description="$1"
     shift
-    local max_attempts=3
-    local attempt=1
+    max_attempts=3
+    attempt=1
     until "$@"; do
         if [ "$attempt" -ge "$max_attempts" ]; then
             echo "Warning: ${description} failed after ${max_attempts} attempts." >&2
@@ -100,7 +100,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 if [ "${SKIP_CLAUDE_INSTALL:-}" = "1" ] || [ "${SKIP_CLAUDE_INSTALL:-}" = "true" ]; then
     echo "Skipping Claude Code install (SKIP_CLAUDE_INSTALL is set)"
-elif ! command -v claude &> /dev/null; then
+elif ! command -v claude >/dev/null 2>&1; then
     if command -v timeout >/dev/null 2>&1; then
         timeout 300s bash -c 'curl -fsSL https://claude.ai/install.sh | bash' || {
             echo "Claude Code install timed out or failed; re-run post-create to try again."
@@ -110,7 +110,7 @@ elif ! command -v claude &> /dev/null; then
             echo "Claude Code install failed; re-run post-create to try again."
         }
     fi
-    if command -v claude &> /dev/null; then
+    if command -v claude >/dev/null 2>&1; then
         echo "Claude Code installed successfully!"
     fi
 else
@@ -119,7 +119,7 @@ fi
 
 # Ensure login shells also inherit the alias setup by sourcing .bashrc
 ensure_profile_sources_bashrc() {
-    local profile_file="$1"
+    profile_file="$1"
     [ -f "$profile_file" ] || touch "$profile_file"
     if ! grep -q "source ~/.bashrc" "$profile_file"; then
         cat <<'EOF' >> "$profile_file"

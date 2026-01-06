@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-# Set strict bash options
-set -euo pipefail
+# Set strict shell options
+set -eu
 
 # Colors for output
 RED='\033[0;31m'
@@ -11,21 +11,21 @@ NC='\033[0m' # No Color
 
 # Function to print error messages
 error() {
-  echo -e "${RED}ERROR: $1${NC}" >&2
+  printf '%b\n' "${RED}ERROR: $1${NC}" >&2
 }
 
 # Function to print success messages
 success() {
-  echo -e "${GREEN}$1${NC}"
+  printf '%b\n' "${GREEN}$1${NC}"
 }
 
 # Function to print info messages
 info() {
-  echo -e "${YELLOW}$1${NC}"
+  printf '%b\n' "${YELLOW}$1${NC}"
 }
 
 # Load project environment
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 ENV_LOADER="$PROJECT_DIR/.devcontainer/scripts/env-loader.sh"
 
 if [ ! -f "$ENV_LOADER" ]; then
@@ -34,21 +34,21 @@ if [ ! -f "$ENV_LOADER" ]; then
 fi
 
 # shellcheck disable=SC1090
-source "$ENV_LOADER"
+. "$ENV_LOADER"
 load_project_env "$PROJECT_DIR"
 
 # Validate environment
 VALIDATOR="$PROJECT_DIR/.devcontainer/scripts/validate-env.sh"
 if [ -f "$VALIDATOR" ]; then
   info "Validating environment variables..."
-  if ! bash "$VALIDATOR"; then
+  if ! sh "$VALIDATOR"; then
     error "Environment validation failed. Please fix your .env values."
     exit 1
   fi
 fi
 
 # Check if devcontainer CLI is installed
-if ! command -v devcontainer &>/dev/null; then
+if ! command -v devcontainer >/dev/null 2>&1; then
   error "devcontainer CLI is not installed!"
   info "Please install it with: npm install -g @devcontainers/cli"
   info "Or use ./editor-launch.sh to work with VS Code/Cursor instead."
@@ -56,7 +56,7 @@ if ! command -v devcontainer &>/dev/null; then
 fi
 
 # Check if Docker is installed and running
-if ! command -v docker &>/dev/null; then
+if ! command -v docker >/dev/null 2>&1; then
   error "Docker is not installed!"
   exit 1
 fi
@@ -79,7 +79,7 @@ export DOCKER_IMAGE_TAG
 BASE_CONTAINER_NAME="${PROJECT_NAME:-devcontainers-ansible}"
 DEFAULT_CONTAINER_NAME="${PROJECT_NAME:-devcontainers-ansible}-${EDITOR_CHOICE:-code}"
 if [ -z "${DOCKER_IMAGE_NAME:-}" ] || [ "$DOCKER_IMAGE_NAME" = "$DEFAULT_CONTAINER_NAME" ]; then
-  UNIQUE_SUFFIX="$(date +%s)-$RANDOM"
+  UNIQUE_SUFFIX="$(date +%s)-$$"
   export DOCKER_IMAGE_NAME="${BASE_CONTAINER_NAME}-${UNIQUE_SUFFIX}"
   export CONTAINER_HOSTNAME="${DOCKER_IMAGE_NAME}"
 fi

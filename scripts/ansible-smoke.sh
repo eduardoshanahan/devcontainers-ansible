@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-set -euo pipefail
+set -eu
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 ANSIBLE_ROOT="${REPO_ROOT}/src"
 ANSIBLE_CFG="${ANSIBLE_ROOT}/ansible.cfg"
 INVENTORY_DIR="${ANSIBLE_ROOT}/inventory"

@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
 SCRIPTS_DIR="${1:-$(pwd)/.devcontainer/scripts}"
 

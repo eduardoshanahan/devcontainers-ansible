@@ -87,7 +87,7 @@ chmod +x /workspace/.devcontainer/scripts/init-devcontainer.sh
 The scripts have the following dependencies:
 
 - `colors.sh` is sourced by other scripts for colored output
-- `validate-env.sh` is called by `launch.sh`, `devcontainer_launch.sh`, and `claude_launch.sh`
+- `validate-env.sh` is called by `editor-launch.sh`, `devcontainer-launch.sh`, and `claude-launch.sh`
 - `bash-prompt.sh` and `ssh-agent-setup.sh` are sourced in bashrc
 
 ## Customization
