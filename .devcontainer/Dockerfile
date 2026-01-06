@@ -7,6 +7,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ca-certificates \
     curl \
     git \
+    git-filter-repo \
+    ripgrep \
     jq \
     locales \
     openssh-client \
@@ -28,9 +30,9 @@ ARG ANSIBLE_LINT_VERSION
 ARG YAMLLINT_VERSION
 RUN python3 -m pip install --no-cache-dir --upgrade pip \
     && python3 -m pip install --no-cache-dir \
-        "ansible-core==${ANSIBLE_VERSION}" \
-        "ansible-lint==${ANSIBLE_LINT_VERSION}" \
-        "yamllint==${YAMLLINT_VERSION}"
+    "ansible-core==${ANSIBLE_VERSION}" \
+    "ansible-lint==${ANSIBLE_LINT_VERSION}" \
+    "yamllint==${YAMLLINT_VERSION}"
 
 # Install Starship
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes
