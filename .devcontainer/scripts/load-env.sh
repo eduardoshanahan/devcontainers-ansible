@@ -10,7 +10,7 @@ if [ ! -f "$ENV_LOADER" ]; then
     exit 1
 fi
 
-# Load variables: project root .env is authoritative, .devcontainer/config/.env supplies defaults
+# Load variables: project root .env is authoritative
 # shellcheck disable=SC1090
 source "$ENV_LOADER"
 load_project_env "$PROJECT_DIR"
