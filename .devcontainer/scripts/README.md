@@ -137,8 +137,8 @@ chmod +x .devcontainer/scripts/verify-git-ssh.sh
 - Run the verifier:
 
 ```bash
-# Default target: git@github.com
-.devcontainer/scripts/verify-git-ssh.sh
+# Target required: set GIT_SSH_HOST or pass an explicit host
+GIT_SSH_HOST=git@github.com .devcontainer/scripts/verify-git-ssh.sh
 
 # Or target a different git host
 .devcontainer/scripts/verify-git-ssh.sh git@gitlab.com
@@ -156,8 +156,8 @@ chmod +x .devcontainer/scripts/verify-git-ssh.sh
   - Example (inside container):
 
     ```bash
-    source /workspace/.devcontainer/scripts/env-loader.sh
-    load_project_env /workspace 1
+    source "$WORKSPACE_FOLDER/.devcontainer/scripts/env-loader.sh"
+    load_project_env "$WORKSPACE_FOLDER" 1
     ```
 
 This verifier is intended to quickly validate that SSH agent forwarding and Git configuration are working as expected in the devcontainer.

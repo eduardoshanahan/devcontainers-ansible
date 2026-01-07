@@ -13,6 +13,44 @@ else
     echo "Warning: env-loader.sh not found; skipping environment load"
 fi
 
+# Fail fast if SSH agent forwarding is unavailable.
+if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK}" ]; then
+    echo "Error: SSH_AUTH_SOCK is not set to a valid socket. Ensure host agent forwarding is enabled." >&2
+    exit 1
+fi
+
+# Required environment validation
+require_env_vars() {
+    missing=false
+    for var in "$@"; do
+        # shellcheck disable=SC2086
+        val=$(eval "printf '%s' \"\${$var:-}\"")
+        if [ -z "$val" ]; then
+            echo "Error: Required environment variable is missing or empty: $var" >&2
+            missing=true
+        fi
+    done
+    if [ "$missing" = true ]; then
+        exit 1
+    fi
+}
+
+require_env_vars \
+    GIT_USER_NAME \
+    GIT_USER_EMAIL \
+    ANSIBLE_CONFIG \
+    ANSIBLE_INVENTORY \
+    ANSIBLE_COLLECTIONS_PATH \
+    ANSIBLE_ROLES_PATH \
+    PROJECT_NAME \
+    WORKSPACE_FOLDER \
+    DOCKER_IMAGE_NAME \
+    DOCKER_IMAGE_TAG \
+    CONTAINER_HOSTNAME \
+    CONTAINER_MEMORY \
+    CONTAINER_CPUS \
+    CONTAINER_SHM_SIZE
+
 # Configure Git if variables are set
 if [ -n "${GIT_USER_NAME:-}" ] && [ -n "${GIT_USER_EMAIL:-}" ]; then
     REPO_DIR="/workspace"

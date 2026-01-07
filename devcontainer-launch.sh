@@ -75,11 +75,11 @@ export EDITOR_CHOICE
 export DOCKER_IMAGE_TAG
 
 # Use a unique container name for CLI sessions to avoid conflicts
-BASE_CONTAINER_NAME="${PROJECT_NAME:-devcontainers-ansible}"
-DEFAULT_CONTAINER_NAME="${PROJECT_NAME:-devcontainers-ansible}-${EDITOR_CHOICE:-code}"
+BASE_CONTAINER_NAME="${PROJECT_NAME}"
+DEFAULT_CONTAINER_NAME="${PROJECT_NAME}-cli"
 if [ -z "${DOCKER_IMAGE_NAME:-}" ] || [ "$DOCKER_IMAGE_NAME" = "$DEFAULT_CONTAINER_NAME" ]; then
   UNIQUE_SUFFIX="$(date +%s)-$$"
-  export DOCKER_IMAGE_NAME="${BASE_CONTAINER_NAME}-${UNIQUE_SUFFIX}"
+  export DOCKER_IMAGE_NAME="${BASE_CONTAINER_NAME}-cli-${UNIQUE_SUFFIX}"
   export CONTAINER_HOSTNAME="${DOCKER_IMAGE_NAME}"
 fi
 

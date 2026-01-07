@@ -8,12 +8,22 @@
 #   - Set ENV_LOADER_DEBUG=1 (exported) or pass second param as 1 to load_project_env to print newly loaded vars.
 
 load_project_env() {
-    workspace_dir="${1:-/workspace}"
+    workspace_dir="${1:-${WORKSPACE_FOLDER:-}}"
     debug="${2:-${ENV_LOADER_DEBUG:-0}}"
+    if [ -z "$workspace_dir" ]; then
+        printf 'env-loader: workspace directory not provided; pass as arg or set WORKSPACE_FOLDER\n' >&2
+        return 1
+    fi
     project_env="$workspace_dir/.env"
     if [ ! -f "$project_env" ]; then
         printf 'env-loader: required .env not found at %s\n' "$project_env" >&2
         return 1
+    fi
+    # Preserve a valid SSH_AUTH_SOCK from the caller (e.g., /ssh-agent in container).
+    original_ssh_auth_sock="${SSH_AUTH_SOCK:-}"
+    original_ssh_auth_sock_valid=false
+    if [ -n "$original_ssh_auth_sock" ] && [ -S "$original_ssh_auth_sock" ]; then
+        original_ssh_auth_sock_valid=true
     fi
     # Capture current variables
     before_file="$(mktemp)"
@@ -24,6 +34,10 @@ load_project_env() {
     # shellcheck disable=SC1090
     . "$project_env"
     set +a
+
+    if [ "$original_ssh_auth_sock_valid" = true ]; then
+        export SSH_AUTH_SOCK="$original_ssh_auth_sock"
+    fi
 
     # Capture after state and compute newly added variables
     after_file="$(mktemp)"
