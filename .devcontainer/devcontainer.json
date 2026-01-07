@@ -12,7 +12,6 @@
             "YAMLLINT_VERSION": "${localEnv:YAMLLINT_VERSION}"
         }
     },
-    "image": "${localEnv:DOCKER_IMAGE_NAME}:${localEnv:DOCKER_IMAGE_TAG}",
     "customizations": {
         "vscode": {
             "settings": {
@@ -55,11 +54,7 @@
         "source=${localWorkspaceFolder}/.devcontainer,target=/home/${localEnv:HOST_USERNAME}/.devcontainer,type=bind,consistency=cached",
         "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:HOST_USERNAME}/.ssh,type=bind,consistency=cached"
     ],
-    "runEnvFile": [
-        "${localWorkspaceFolder}/.env"
-    ],
     "postCreateCommand": "chmod +x ~/.devcontainer/scripts/post-create.sh && ~/.devcontainer/scripts/post-create.sh",
-    "initializeCommand": "export CONTAINER_MEMORY=${localEnv:CONTAINER_MEMORY} && export CONTAINER_CPUS=${localEnv:CONTAINER_CPUS} && export CONTAINER_SHM_SIZE=${localEnv:CONTAINER_SHM_SIZE} && export CONTAINER_HOSTNAME=${localEnv:CONTAINER_HOSTNAME}",
     "containerEnv": {
         "USERNAME": "${localEnv:HOST_USERNAME}",
         "USER_UID": "${localEnv:HOST_UID}",
@@ -76,6 +71,7 @@
         "ANSIBLE_ROLES_PATH": "/workspace/src/roles"
     },
     "runArgs": [
+        "--env-file=${localWorkspaceFolder}/.env",
         "--name=${localEnv:DOCKER_IMAGE_NAME}",
         "--hostname=${localEnv:CONTAINER_HOSTNAME}",
         "--env=SSH_AUTH_SOCK=${localEnv:SSH_AUTH_SOCK}",
