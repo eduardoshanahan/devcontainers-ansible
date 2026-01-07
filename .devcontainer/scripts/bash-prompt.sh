@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Ensure nounset doesn't break VS Code shell integration in interactive shells.
+set +u
+
 # Enable Starship prompt first
 if command -v starship >/dev/null 2>&1; then
     if [ -f "/workspace/.devcontainer/config/starship.toml" ]; then
