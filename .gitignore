@@ -95,9 +95,5 @@ env/
 ehthumbs.db
 Thumbs.db 
 
-# LM conversations (keep folder tracked but ignore note files)
-lm_conversations/*
-!lm_conversations/.gitkeep
-
 # Vendored Ansible collections (downloaded via galaxy install)
 src/collections/ansible_collections/
