@@ -37,6 +37,6 @@ playbooks, inventory, and roles.
 
 ## Notes
 
-- All Ansible code lives under `src/`; the container sets `ANSIBLE_CONFIG` to `src/ansible.cfg`.
+- Ansible paths are host-driven; set `ANSIBLE_CONFIG`, `ANSIBLE_INVENTORY`, `ANSIBLE_COLLECTIONS_PATH`, and `ANSIBLE_ROLES_PATH` in your host environment (commonly pointing at `src/`).
 - Environment values come from `.env` and are validated before launch.
 - Galaxy dependencies are defined in `src/requirements.yml` and installed in post-create.

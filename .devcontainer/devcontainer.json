@@ -48,8 +48,8 @@
     },
     "remoteUser": "${localEnv:HOST_USERNAME}",
     "updateRemoteUserUID": true,
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=${localEnv:WORKSPACE_FOLDER},type=bind,consistency=cached",
+    "workspaceFolder": "${localEnv:WORKSPACE_FOLDER}",
     "mounts": [
         "source=${localWorkspaceFolder}/.devcontainer,target=/home/${localEnv:HOST_USERNAME}/.devcontainer,type=bind,consistency=cached",
         "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:HOST_USERNAME}/.ssh,type=bind,consistency=cached"
@@ -65,10 +65,10 @@
         "GIT_REMOTE_URL": "${localEnv:GIT_REMOTE_URL}",
         "DOCKER_IMAGE_NAME": "${localEnv:DOCKER_IMAGE_NAME}",
         "DOCKER_IMAGE_TAG": "${localEnv:DOCKER_IMAGE_TAG}",
-        "ANSIBLE_CONFIG": "/workspace/src/ansible.cfg",
-        "ANSIBLE_INVENTORY": "/workspace/src/inventory",
-        "ANSIBLE_COLLECTIONS_PATH": "/workspace/src/collections:/home/${localEnv:HOST_USERNAME}/.ansible/collections",
-        "ANSIBLE_ROLES_PATH": "/workspace/src/roles"
+        "ANSIBLE_CONFIG": "${localEnv:ANSIBLE_CONFIG}",
+        "ANSIBLE_INVENTORY": "${localEnv:ANSIBLE_INVENTORY}",
+        "ANSIBLE_COLLECTIONS_PATH": "${localEnv:ANSIBLE_COLLECTIONS_PATH}",
+        "ANSIBLE_ROLES_PATH": "${localEnv:ANSIBLE_ROLES_PATH}"
     },
     "runArgs": [
         "--env-file=${localWorkspaceFolder}/.env",
