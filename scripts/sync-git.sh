@@ -31,7 +31,7 @@ load_project_env "$PROJECT_DIR"
 BRANCH="${BRANCH:-}"
 FORCE_PULL="${FORCE_PULL:-false}"
 GIT_REMOTE_URL="${GIT_REMOTE_URL:-}"
-GIT_SYNC_REMOTES="${GIT_SYNC_REMOTES:-origin}"
+GIT_SYNC_REMOTES="${GIT_SYNC_REMOTES:-}"
 GIT_SYNC_PUSH_REMOTES="${GIT_SYNC_PUSH_REMOTES:-}"
 
 normalize_list() {
@@ -44,7 +44,8 @@ normalize_list() {
 
 remote_list=$(normalize_list "$GIT_SYNC_REMOTES")
 if [ -z "$remote_list" ]; then
-    remote_list="origin"
+    error "GIT_SYNC_REMOTES is required. Set it in .env (space or comma separated)."
+    exit 1
 fi
 set -- $remote_list
 primary_remote="$1"

@@ -7,6 +7,7 @@ conflicts from external file sync tools.
 
 Required:
 
+- `.env` must exist at the project root.
 - `GIT_SYNC_REMOTES` list (space or comma separated).
 
 Optional:

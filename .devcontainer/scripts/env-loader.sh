@@ -11,17 +11,19 @@ load_project_env() {
     workspace_dir="${1:-/workspace}"
     debug="${2:-${ENV_LOADER_DEBUG:-0}}"
     project_env="$workspace_dir/.env"
+    if [ ! -f "$project_env" ]; then
+        printf 'env-loader: required .env not found at %s\n' "$project_env" >&2
+        return 1
+    fi
     # Capture current variables
     before_file="$(mktemp)"
     env | sort > "$before_file"
 
     # Load project root .env first (authoritative); preserve quoting
-    if [ -f "$project_env" ]; then
-        set -a
-        # shellcheck disable=SC1090
-        . "$project_env"
-        set +a
-    fi
+    set -a
+    # shellcheck disable=SC1090
+    . "$project_env"
+    set +a
 
     # Capture after state and compute newly added variables
     after_file="$(mktemp)"
