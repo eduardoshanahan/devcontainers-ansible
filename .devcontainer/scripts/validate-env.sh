@@ -45,7 +45,7 @@ GIT_USER_EMAIL|Git author email|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
 EDITOR_CHOICE|Editor selection|^(code|cursor|antigravity)$
 DOCKER_IMAGE_NAME|Docker image name|^[a-z0-9][a-z0-9._-]+$
 DOCKER_IMAGE_TAG|Docker image tag|^[a-zA-Z0-9][a-zA-Z0-9._-]+$
-ANSIBLE_VERSION|Ansible core version|^[0-9]+(\.[0-9]+)*(\.\*)?$
+ANSIBLE_CORE_VERSION|Ansible core version|^[0-9]+(\.[0-9]+)*(\.\*)?$
 ANSIBLE_LINT_VERSION|Ansible-lint version|^[0-9]+(\.[0-9]+)*(\.\*)?$
 YAMLLINT_VERSION|Yamllint version|^[0-9]+(\.[0-9]+)*(\.\*)?$
 EOF

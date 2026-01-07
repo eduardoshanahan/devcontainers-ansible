@@ -25,12 +25,12 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
 
 # Install Ansible tooling via pip so the CLI and python packages stay in sync
-ARG ANSIBLE_VERSION
+ARG ANSIBLE_CORE_VERSION
 ARG ANSIBLE_LINT_VERSION
 ARG YAMLLINT_VERSION
 RUN python3 -m pip install --no-cache-dir --upgrade pip \
     && python3 -m pip install --no-cache-dir \
-    "ansible-core==${ANSIBLE_VERSION}" \
+    "ansible-core==${ANSIBLE_CORE_VERSION}" \
     "ansible-lint==${ANSIBLE_LINT_VERSION}" \
     "yamllint==${YAMLLINT_VERSION}"
 

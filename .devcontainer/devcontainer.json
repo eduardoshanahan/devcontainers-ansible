@@ -7,7 +7,7 @@
             "USERNAME": "${localEnv:HOST_USERNAME}",
             "USER_UID": "${localEnv:HOST_UID}",
             "USER_GID": "${localEnv:HOST_GID}",
-            "ANSIBLE_VERSION": "${localEnv:ANSIBLE_VERSION}",
+            "ANSIBLE_CORE_VERSION": "${localEnv:ANSIBLE_CORE_VERSION}",
             "ANSIBLE_LINT_VERSION": "${localEnv:ANSIBLE_LINT_VERSION}",
             "YAMLLINT_VERSION": "${localEnv:YAMLLINT_VERSION}"
         }
