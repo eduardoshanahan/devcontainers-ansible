@@ -2,6 +2,7 @@
 FROM ubuntu:22.04
 
 # Install basic dependencies + Ansible toolchain prerequisites
+ARG LOCALE
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
     ca-certificates \
@@ -16,23 +17,24 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     python3-pip \
     sshpass \
     wget \
-    && locale-gen en_US.UTF-8 \
-    && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
-ENV LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8
+# Configure locale (must be defined via build args)
+RUN test -n "$LOCALE" \
+    && grep -Eq "^[# ]*$LOCALE[[:space:]]+UTF-8" /etc/locale.gen \
+    && sed -i "s/^# *$LOCALE[[:space:]]\\+UTF-8/$LOCALE UTF-8/" /etc/locale.gen \
+    && locale-gen
+
+ENV LANG="${LOCALE}" \
+    LANGUAGE="${LOCALE}" \
+    LC_ALL="${LOCALE}"
 
 # Install Ansible tooling via pip so the CLI and python packages stay in sync
-ARG ANSIBLE_CORE_VERSION
-ARG ANSIBLE_LINT_VERSION
-ARG YAMLLINT_VERSION
 RUN python3 -m pip install --no-cache-dir --upgrade pip \
     && python3 -m pip install --no-cache-dir \
-    "ansible-core==${ANSIBLE_CORE_VERSION}" \
-    "ansible-lint==${ANSIBLE_LINT_VERSION}" \
-    "yamllint==${YAMLLINT_VERSION}"
+    ansible-core \
+    ansible-lint \
+    yamllint
 
 # Install Starship
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes
@@ -66,5 +68,11 @@ RUN printf '%s\n' '#!/bin/sh' \
     > /etc/profile.d/devcontainer-prompt.sh \
     && chmod 0644 /etc/profile.d/devcontainer-prompt.sh
 
+# Entry point to run post-stop logic on container shutdown
+COPY scripts/devcontainer-entrypoint.sh /usr/local/bin/devcontainer-entrypoint.sh
+RUN chmod 0755 /usr/local/bin/devcontainer-entrypoint.sh
+
 # Set ownership of workspace
 RUN chown $USERNAME:$USERNAME /workspace
+
+ENTRYPOINT ["/usr/local/bin/devcontainer-entrypoint.sh"]

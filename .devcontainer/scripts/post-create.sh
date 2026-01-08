@@ -157,23 +157,75 @@ echo "Installing Claude Code..."
 # Always export PATH for this session
 export PATH="$HOME/.local/bin:$PATH"
 
+install_failed=0
 if [ "${SKIP_CLAUDE_INSTALL:-}" = "1" ] || [ "${SKIP_CLAUDE_INSTALL:-}" = "true" ]; then
     echo "Skipping Claude Code install (SKIP_CLAUDE_INSTALL is set)"
 elif ! command -v claude >/dev/null 2>&1; then
-    if command -v timeout >/dev/null 2>&1; then
-        timeout 300s bash -c 'curl -fsSL https://claude.ai/install.sh | bash' || {
-            echo "Claude Code install timed out or failed; re-run post-create to try again."
-        }
+    if ! command -v bash >/dev/null 2>&1; then
+        echo "Warning: bash is not available; skipping Claude Code install."
+        install_failed=1
     else
-        curl -fsSL https://claude.ai/install.sh | bash || {
-            echo "Claude Code install failed; re-run post-create to try again."
+        INSTALL_URL="https://claude.ai/install.sh"
+        INSTALL_TMP="$(mktemp)"
+        verify_sha256() {
+            expected="$1"
+            file="$2"
+            if command -v sha256sum >/dev/null 2>&1; then
+                echo "${expected}  ${file}" | sha256sum -c - >/dev/null 2>&1
+            elif command -v shasum >/dev/null 2>&1; then
+                echo "${expected}  ${file}" | shasum -a 256 -c - >/dev/null 2>&1
+            else
+                echo "Warning: sha256sum/shasum not found; skipping checksum verification."
+                return 0
+            fi
         }
-    fi
-    if command -v claude >/dev/null 2>&1; then
-        echo "Claude Code installed successfully!"
+
+        if command -v timeout >/dev/null 2>&1; then
+            timeout 300s curl -fsSL "$INSTALL_URL" -o "$INSTALL_TMP" || {
+                echo "Claude Code download timed out or failed; re-run post-create to try again."
+                rm -f "$INSTALL_TMP"
+                install_failed=1
+            }
+        else
+            curl -fsSL "$INSTALL_URL" -o "$INSTALL_TMP" || {
+                echo "Claude Code download failed; re-run post-create to try again."
+                rm -f "$INSTALL_TMP"
+                install_failed=1
+            }
+        fi
+
+        if [ "$install_failed" -eq 0 ]; then
+            if [ -n "${CLAUDE_INSTALL_SHA256:-}" ]; then
+                if verify_sha256 "$CLAUDE_INSTALL_SHA256" "$INSTALL_TMP"; then
+                    echo "Claude Code installer checksum verified."
+                else
+                    echo "Claude Code installer checksum verification failed."
+                    rm -f "$INSTALL_TMP"
+                    install_failed=1
+                fi
+            else
+                echo "Warning: CLAUDE_INSTALL_SHA256 not set; skipping checksum verification."
+            fi
+        fi
+
+        if [ "$install_failed" -eq 0 ]; then
+            bash "$INSTALL_TMP" || {
+                echo "Claude Code install failed; re-run post-create to try again."
+                install_failed=1
+            }
+        fi
+
+        rm -f "$INSTALL_TMP"
+        if [ "$install_failed" -eq 0 ] && command -v claude >/dev/null 2>&1; then
+            echo "Claude Code installed successfully!"
+        fi
     fi
 else
     echo "Claude Code already installed ($(claude --version 2>/dev/null || echo 'version unknown'))"
+fi
+
+if [ "$install_failed" -ne 0 ]; then
+    echo "Warning: Claude Code install failed; continuing without it."
 fi
 
 # Ensure login shells also inherit the alias setup by sourcing .bashrc

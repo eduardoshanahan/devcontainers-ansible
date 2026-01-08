@@ -36,9 +36,10 @@ PROJECT_NAME|Project name|^[a-z0-9][a-z0-9-]*$
 HOST_USERNAME|System username|^[a-z_][a-z0-9_-]*$
 HOST_UID|User ID|^[0-9]+$
 HOST_GID|Group ID|^[0-9]+$
+LOCALE|Locale|^[A-Za-z]{2}_[A-Za-z]{2}\.UTF-8$
 CONTAINER_HOSTNAME|Container hostname|^[a-zA-Z][a-zA-Z0-9-]*$
 CONTAINER_MEMORY|Container memory limit|^[0-9]+[gGmM]$
-CONTAINER_CPUS|Container CPU limit|^[0-9]+(\\.[0-9]+)?$
+CONTAINER_CPUS|Container CPU limit|^[0-9]+(\.[0-9]+)?$
 CONTAINER_SHM_SIZE|Container shared memory size|^[0-9]+[gGmM]$
 GIT_USER_NAME|Git author name|^[a-zA-Z0-9 ._-]+$
 GIT_USER_EMAIL|Git author email|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
@@ -61,7 +62,17 @@ while IFS='|' read -r var description pattern; do
     fi
 done <<'EOF'
 GIT_REMOTE_URL|Git remote URL|^(https://|git@).+
+CLAUDE_INSTALL_SHA256|Claude Code installer checksum|^[A-Fa-f0-9]{64}$
 EOF
+
+printf '\nValidating SSH agent forwarding...\n'
+if [ -z "${SSH_AUTH_SOCK:-}" ]; then
+    echo "Error: SSH_AUTH_SOCK is not set. Start an SSH agent before running launch.sh."
+    errors=$((errors + 1))
+elif [ ! -S "${SSH_AUTH_SOCK}" ]; then
+    echo "Error: SSH_AUTH_SOCK is set but is not a valid socket: ${SSH_AUTH_SOCK}"
+    errors=$((errors + 1))
+fi
 
 if [ "$errors" -gt 0 ]; then
     printf '\nFound %s error(s). Please fix them and try again.\n' "$errors"
