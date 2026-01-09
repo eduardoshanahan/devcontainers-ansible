@@ -22,9 +22,9 @@ playbooks, inventory, and roles.
 - Claude Code: [how to use claude.md](documentation/how%20to%20use%20claude.md)
 - Image cleanup: [how to clean devcontainer images.md](documentation/how%20to%20clean%20devcontainer%20images.md)
 - File sync and ownership: [file sync and ownership.md](documentation/file%20sync%20and%20ownership.md)
-- Daily timeline + summaries: [lm/recaps](lm/recaps)
-- Current state: [lm/state](lm/state)
-- Roadmap and decisions: [lm/plans](lm/plans)
+- Daily timeline + summaries: [documentation/daily/recaps](documentation/daily/recaps)
+- Current state: [documentation/daily/state](documentation/daily/state)
+- Roadmap and decisions: [documentation/daily/plans](documentation/daily/plans)
 
 ## Helpful Scripts
 

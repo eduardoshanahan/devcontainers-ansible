@@ -231,7 +231,7 @@ If a required environment variable is missing:
   - failure conditions
 - Prefer concise, factual documentation
 - No marketing language
-- Keep `lm/` state, plan, and recap files updated when code or documentation changes.
+- Keep `documentation/daily/` state, plan, and recap files updated when code or documentation changes.
 
 ---
 
