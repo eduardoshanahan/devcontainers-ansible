@@ -12,6 +12,8 @@
 !.env.example
 .devcontainer/config/.env
 # .devcontainer/.env
+references/.devcontainer/config/starship.toml
+Dockerfile
 
 # Devcontainer markers
 .devcontainer/.onCreateCommandMarker
