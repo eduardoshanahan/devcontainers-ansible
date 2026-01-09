@@ -153,6 +153,7 @@ GIT_SSH_HOST=git@github.com .devcontainer/scripts/verify-git-ssh.sh
 - Debugging env-loader interactions:
   - To see which env variables the loader set, enable debug when invoking load_project_env:
     - export ENV_LOADER_DEBUG=1 before init (or pass `1` as second arg to the loader when sourcing manually).
+  - To also print values (may expose secrets), set `ENV_LOADER_DEBUG_VALUES=1` (or pass `1` as a third arg).
   - Example (inside container):
 
     ```bash

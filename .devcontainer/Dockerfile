@@ -3,6 +3,9 @@ FROM ubuntu:22.04
 
 # Install basic dependencies + Ansible toolchain prerequisites
 ARG LOCALE
+ARG ANSIBLE_CORE_VERSION
+ARG ANSIBLE_LINT_VERSION
+ARG YAMLLINT_VERSION
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
     ca-certificates \
@@ -32,9 +35,9 @@ ENV LANG="${LOCALE}" \
 # Install Ansible tooling via pip so the CLI and python packages stay in sync
 RUN python3 -m pip install --no-cache-dir --upgrade pip \
     && python3 -m pip install --no-cache-dir \
-    ansible-core \
-    ansible-lint \
-    yamllint
+    "ansible-core==${ANSIBLE_CORE_VERSION}" \
+    "ansible-lint==${ANSIBLE_LINT_VERSION}" \
+    "yamllint==${YAMLLINT_VERSION}"
 
 # Install Starship
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes

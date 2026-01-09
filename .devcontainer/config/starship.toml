@@ -3,7 +3,7 @@
 
 # Use custom format
 format = """
-[╭─](bold blue)$env_var$directory$git_branch$git_status$nodejs$python$docker_context$line_break[╰─](bold blue)$character"""
+[╭─](bold blue)$env_var$directory -> $git_branch$git_status$nodejs$python$docker_context$line_break[╰─](bold blue)$character"""
 
 # Disable the package module, hiding it from the prompt
 [package]
@@ -28,6 +28,11 @@ format = " [$path]($style)"
 format = " [$env_value]($style)"
 style = "bold cyan"
 
+# Show the container hostname when provided via containerEnv
+[env_var.CONTAINER_HOSTNAME]
+format = "[@$env_value]($style)"
+style = "bold blue"
+
 [line_break]
 disabled = false
 
@@ -35,7 +40,7 @@ disabled = false
 [git_branch]
 symbol = ""
 style = "bold purple"
-format = "[ -> $branch]($style)"
+format = "[$branch]($style)"
 
 # Git status format
 [git_status]

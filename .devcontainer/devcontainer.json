@@ -7,7 +7,10 @@
             "USERNAME": "${localEnv:HOST_USERNAME}",
             "USER_UID": "${localEnv:HOST_UID}",
             "USER_GID": "${localEnv:HOST_GID}",
-            "LOCALE": "${localEnv:LOCALE}"
+            "LOCALE": "${localEnv:LOCALE}",
+            "ANSIBLE_CORE_VERSION": "${localEnv:ANSIBLE_CORE_VERSION}",
+            "ANSIBLE_LINT_VERSION": "${localEnv:ANSIBLE_LINT_VERSION}",
+            "YAMLLINT_VERSION": "${localEnv:YAMLLINT_VERSION}"
         }
     },
     "image": "${localEnv:DOCKER_IMAGE_NAME}:${localEnv:DOCKER_IMAGE_TAG}",
