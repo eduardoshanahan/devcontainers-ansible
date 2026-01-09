@@ -13,7 +13,6 @@
             "YAMLLINT_VERSION": "${localEnv:YAMLLINT_VERSION}"
         }
     },
-    "image": "${localEnv:DOCKER_IMAGE_NAME}:${localEnv:DOCKER_IMAGE_TAG}",
     "customizations": {
         "vscode": {
             "settings": {
@@ -77,7 +76,6 @@
         "ANSIBLE_ROLES_PATH": "${localEnv:ANSIBLE_ROLES_PATH}"
     },
     "runArgs": [
-        "--env-file=${localWorkspaceFolder}/.env",
         "--name=${localEnv:DOCKER_IMAGE_NAME}",
         "--hostname=${localEnv:CONTAINER_HOSTNAME}",
         "--env=SSH_AUTH_SOCK=/ssh-agent",
