@@ -3,10 +3,18 @@
 # Ensure nounset doesn't break VS Code shell integration in interactive shells.
 set +u
 
+if [ -z "${WORKSPACE_FOLDER:-}" ]; then
+    printf '%s\n' "Warning: WORKSPACE_FOLDER is not set; devcontainer prompt setup is disabled." >&2
+    printf '%s\n' "Hint: start the devcontainer via ./devcontainer-launch.sh or ./editor-launch.sh." >&2
+    return 0
+fi
+
+workspace_dir="$WORKSPACE_FOLDER"
+
 # Enable Starship prompt first
 if command -v starship >/dev/null 2>&1; then
-    if [ -f "/workspace/.devcontainer/config/starship.toml" ]; then
-        export STARSHIP_CONFIG="/workspace/.devcontainer/config/starship.toml"
+    if [ -f "${workspace_dir}/.devcontainer/config/starship.toml" ]; then
+        export STARSHIP_CONFIG="${workspace_dir}/.devcontainer/config/starship.toml"
         mkdir -p "$HOME/.config"
         cp "$STARSHIP_CONFIG" "$HOME/.config/starship.toml"
     fi
@@ -14,16 +22,16 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 # Load environment variables using shared loader (try workspace first)
-if [ -f "/workspace/.devcontainer/scripts/env-loader.sh" ]; then
+if [ -f "${workspace_dir}/.devcontainer/scripts/env-loader.sh" ]; then
     # shellcheck disable=SC1090
-    . "/workspace/.devcontainer/scripts/env-loader.sh"
-    load_project_env "/workspace"
-elif [ -f "/workspace/.env" ]; then
+    . "${workspace_dir}/.devcontainer/scripts/env-loader.sh"
+    load_project_env "$workspace_dir"
+elif [ -f "${workspace_dir}/.env" ]; then
     # simple fallback
     # shellcheck disable=SC1090
-    . "/workspace/.env"
+    . "${workspace_dir}/.env"
 else
-    echo "Warning: .env not found in workspace; continuing without it"
+    printf '%s\n' "Warning: .env not found in workspace; continuing without it" >&2
 fi
 
 if [ -f /etc/container.env ]; then
@@ -39,13 +47,13 @@ fi
 if [ -f "$HOME/.devcontainer/scripts/colors.sh" ]; then
     . "$HOME/.devcontainer/scripts/colors.sh"
 else
-    echo "Warning: colors.sh not found, using default colors"
+    printf '%s\n' "Warning: colors.sh not found, using default colors" >&2
 fi
 
 # Only set up prompt in interactive shells
 case $- in
     *i*) ;;
-    *) return;;
+    *) return ;;
 esac
 
 # Git aliases

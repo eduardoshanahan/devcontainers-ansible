@@ -1,10 +1,26 @@
-# Working with environment variables (TL;DR)
+# Working with environment variables
+
+## TL;DR
 
 1. **Copy the template:** `cp .env.example .env` (only needs to happen once per project).
-2. **Fill in the values:** edit `.env` so that `PROJECT_NAME`, `HOST_USERNAME`, `HOST_UID`, `HOST_GID`, `WORKSPACE_FOLDER`, `GIT_USER_NAME`, `GIT_USER_EMAIL`, `GIT_SSH_HOST`, `EDITOR_CHOICE` (code/cursor/antigravity), `CONTAINER_HOSTNAME`, `DOCKER_IMAGE_NAME`, resource limits, and `ANSIBLE_CORE_VERSION`/`ANSIBLE_LINT_VERSION`/`YAMLLINT_VERSION` match your machine. `GIT_REMOTE_URL` is optional. This file is the single source of truth.
-3. **No fallback defaults:** the project root `.env` is the only source of configuration, so every required value must be present there.
-4. **Validate & launch:** always start your session with `./editor-launch.sh` for editor workflows, or use `./devcontainer-launch.sh` / `./claude-launch.sh` for CLI workflows. These load `.env`, run `.devcontainer/scripts/validate-env.sh`, and only launch after the check passes. If something is wrong, the script exits with the list of fixes so you don’t waste time booting the devcontainer.
-5. **Inside the container:** helper scripts source `.devcontainer/scripts/env-loader.sh`, and it requires `WORKSPACE_FOLDER` (or an explicit path argument) to locate the project `.env`.
-6. **Adding new variables:** document them in `.env.example`, consume them via `env-loader.sh`, and (if they’re required) add a rule to `.devcontainer/scripts/validate-env.sh`. No other script needs to change. For multiple git remotes, set `GIT_SYNC_REMOTES`, `GIT_SYNC_PUSH_REMOTES`, and matching `GIT_REMOTE_URL_<REMOTE>` entries here as well. Optional cleanup knobs like `DEVCONTAINER_IMAGE_RETENTION_DAYS` live here too.
+2. **Fill in the values:** edit `.env` so that `PROJECT_NAME`, `HOST_USERNAME`, `HOST_UID`, `HOST_GID`, `WORKSPACE_FOLDER`, `LOCALE`, Git identity, `EDITOR_CHOICE`, resource limits, and `ANSIBLE_CORE_VERSION`/`ANSIBLE_LINT_VERSION`/`YAMLLINT_VERSION` match your machine. This file is the single source of truth.
+3. **Single source of truth:** the project-root `.env` is the only supported configuration source for the devcontainer.
+4. **Validate & launch:** start with `./editor-launch.sh` (GUI), `./devcontainer-launch.sh` (CLI shell), or `./claude-launch.sh` (Claude Code). Each loads `.env`, sets launcher defaults, and runs `./scripts/validate-env.sh [editor|devcontainer|claude]` (which calls the internal validator `.devcontainer/scripts/validate-env.sh`) and exits early if something is wrong.
+5. **Inside the container:** helper scripts source `.devcontainer/scripts/env-loader.sh`, so anything defined in `.env` shows up in init/post-create hooks and in your shell.
+6. **Adding new variables:** document them in `.env.example`, load them via `env-loader.sh`, and (if they’re required) add a rule to the internal validator `.devcontainer/scripts/validate-env.sh` (the host entrypoint is `./scripts/validate-env.sh [editor|devcontainer|claude]`). For multiple git remotes, set `GIT_SYNC_REMOTES`, `GIT_SYNC_PUSH_REMOTES`, and matching `GIT_REMOTE_URL_<REMOTE>` entries here as well. Optional cleanup knobs like `DEVCONTAINER_IMAGE_RETENTION_DAYS` live here too.
+
+## Naming conventions
+
+- Image/container names (defaults): `${PROJECT_NAME}-editor`, `${PROJECT_NAME}-devcontainer`, `${PROJECT_NAME}-claude`
+- Devcontainer session labels (CLI workflows): `devcontainer.session=${PROJECT_NAME}-cli` and `devcontainer.session=${PROJECT_NAME}-claude`
+
+## Optional launcher flags (common)
+
+- `KEEP_CONTAINER_EDITOR=true` / `KEEP_CONTAINER_DEVCONTAINER=true` / `KEEP_CONTAINER_CLAUDE=true` to keep the corresponding container after exit.
+- `FORCE_REBUILD=true` to force `devcontainer build` even if the tagged image already exists.
+- `INSTALL_CLAUDE=true` to install the Claude CLI during devcontainer image build (the Claude launcher forces this on).
+- `CLAUDE_INSTALL_SHA256=<sha256>` to verify the Claude installer download.
+- `ENV_LOADER_DEBUG=true` to print which variables were added by the env loader.
+- `ENV_LOADER_DEBUG_VALUES=true` to print variable values too (may expose secrets).
 
 Keep `.env` out of version control (already covered by `.gitignore`) so each machine can store its own user-specific values without conflicts.

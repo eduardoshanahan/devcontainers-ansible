@@ -23,6 +23,12 @@ ansible-lint src/playbooks/sample.yml
 yamllint src
 ```
 
+Or use the helper script:
+
+```bash
+./scripts/ansible-lint.sh src/playbooks/sample.yml
+```
+
 ## 3. Manual Playbook Run
 
 ```bash

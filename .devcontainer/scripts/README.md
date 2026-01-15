@@ -42,7 +42,7 @@ Runs after container creation to:
 - Make scripts executable
 - Set up bashrc with required script sources
 - Ensures proper initialization of the development environment
-- Optionally installs Claude Code (set `SKIP_CLAUDE_INSTALL=1` to skip)
+- Optionally installs Claude Code (set `SKIP_CLAUDE_INSTALL=true` to skip)
 
 ### `ssh-agent-setup.sh`
 
@@ -76,10 +76,10 @@ If you need to run any script manually:
 
 ```bash
 # Make the script executable
-chmod +x /workspace/.devcontainer/scripts/init-devcontainer.sh
+chmod +x "${WORKSPACE_FOLDER}/.devcontainer/scripts/init-devcontainer.sh"
 
 # Run the script
-/workspace/.devcontainer/scripts/init-devcontainer.sh
+"${WORKSPACE_FOLDER}/.devcontainer/scripts/init-devcontainer.sh"
 ```
 
 ### Dependencies
@@ -152,13 +152,13 @@ GIT_SSH_HOST=git@github.com .devcontainer/scripts/verify-git-ssh.sh
 
 - Debugging env-loader interactions:
   - To see which env variables the loader set, enable debug when invoking load_project_env:
-    - export ENV_LOADER_DEBUG=1 before init (or pass `1` as second arg to the loader when sourcing manually).
-  - To also print values (may expose secrets), set `ENV_LOADER_DEBUG_VALUES=1` (or pass `1` as a third arg).
+    - export ENV_LOADER_DEBUG=true before init (or pass `true` as second arg to the loader when sourcing manually).
+  - To also print values (may expose secrets), set `ENV_LOADER_DEBUG_VALUES=true` (or pass `true` as a third arg).
   - Example (inside container):
 
     ```bash
     source "$WORKSPACE_FOLDER/.devcontainer/scripts/env-loader.sh"
-    load_project_env "$WORKSPACE_FOLDER" 1
+    load_project_env "$WORKSPACE_FOLDER" true
     ```
 
 This verifier is intended to quickly validate that SSH agent forwarding and Git configuration are working as expected in the devcontainer.

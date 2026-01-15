@@ -15,8 +15,8 @@ success() { printf '%b\n' "${GREEN} $1${NC}"; }
 error() { printf '%b\n' "${RED} $1${NC}" >&2; }
 
 # Get the actual project directory (parent of scripts directory)
-SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-PROJECT_DIR=$(dirname "$SCRIPT_DIR")
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Load environment variables using the shared loader (project root .env is authoritative)
 ENV_LOADER="$PROJECT_DIR/.devcontainer/scripts/env-loader.sh"
@@ -34,15 +34,25 @@ GIT_REMOTE_URL="${GIT_REMOTE_URL:-}"
 GIT_SYNC_REMOTES="${GIT_SYNC_REMOTES:-}"
 GIT_SYNC_PUSH_REMOTES="${GIT_SYNC_PUSH_REMOTES:-}"
 
+case "$FORCE_PULL" in
+    true|false) ;;
+    *)
+        error "FORCE_PULL must be true or false (got: ${FORCE_PULL})"
+        exit 1
+        ;;
+esac
+
 normalize_list() {
+    # Normalize a comma/space-separated list to unique tokens, one per line.
+    # Empty input => empty output.
     raw="$1"
     if [ -z "$raw" ]; then
         return 0
     fi
-    printf '%s\n' "$raw" | tr ',' ' ' | tr ' ' '\n' | awk 'NF && !seen[$0]++ { out = out $0 " " } END { sub(/[ ]$/, "", out); print out }'
+    printf '%s\n' "$raw" | tr ',' ' ' | tr -s ' ' '\n' | awk 'NF && !seen[$0]++'
 }
 
-remote_list=$(normalize_list "$GIT_SYNC_REMOTES")
+remote_list="$(normalize_list "$GIT_SYNC_REMOTES" || true)"
 if [ -z "$remote_list" ]; then
     error "GIT_SYNC_REMOTES is required. Set it in .env (space or comma separated)."
     exit 1
@@ -50,7 +60,7 @@ fi
 set -- $remote_list
 primary_remote="$1"
 
-push_targets=$(normalize_list "$GIT_SYNC_PUSH_REMOTES")
+push_targets="$(normalize_list "$GIT_SYNC_PUSH_REMOTES" || true)"
 
 remote_env_key() {
     echo "$1" | tr '[:lower:]' '[:upper:]' | sed 's/[^A-Z0-9]/_/g'
@@ -68,8 +78,9 @@ ensure_remote() {
         return
     fi
 
-    env_suffix=$(remote_env_key "$remote")
+    env_suffix="$(remote_env_key "$remote")"
     remote_url_var="GIT_REMOTE_URL_${env_suffix}"
+    remote_url=""
     eval "remote_url=\${$remote_url_var:-}"
 
     if [ -z "$remote_url" ] && [ "$remote" = "$primary_remote" ]; then
@@ -147,13 +158,13 @@ main() {
         ensure_remote "$remote"
     done
 
-    current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+    current_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || printf '')"
     if [ "$current_branch" = "HEAD" ] || [ -z "$current_branch" ]; then
         current_branch="main"
     fi
     target_branch="${BRANCH:-$current_branch}"
 
-    if [ "$FORCE_PULL" != "true" ] && ! git diff --quiet --ignore-submodules HEAD --; then
+    if [ "$FORCE_PULL" != "true" ] && [ -n "$(git status --porcelain)" ]; then
         error "Local changes detected. Commit/stash them or run FORCE_PULL=true ./scripts/sync-git.sh"
         exit 1
     fi
@@ -187,3 +198,4 @@ main() {
 }
 
 main "$@"
+

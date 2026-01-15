@@ -1,41 +1,48 @@
 #!/bin/sh
 set -eu
 
+get_env_value() {
+    var_name="$1"
+    eval "printf '%s' \"\${$var_name-}\""
+}
+
 validate_var() {
-    var_name=$1
-    var_value=$2
-    pattern=$3
-    description=$4
+    var_name="$1"
+    var_value="$2"
+    pattern="$3"
+    description="$4"
 
     if ! printf '%s' "$var_value" | grep -Eq "$pattern"; then
-        echo "Error: $var_name is invalid"
-        echo "Description: $description"
-        echo "Pattern: $pattern"
-        echo "Current value: $var_value"
+        printf '%s\n' "Error: $var_name is invalid"
+        printf '%s\n' "Description: $description"
+        printf '%s\n' "Pattern: $pattern"
+        printf '%s\n' "Current value: $var_value"
         return 1
     fi
     return 0
 }
 
 errors=0
-echo "Validating required variables..."
+printf '%s\n' "Validating required variables..."
+
 while IFS='|' read -r var description pattern; do
     [ -z "$var" ] && continue
-    eval "value=\${$var:-}"
+    value="$(get_env_value "$var")"
     if [ -z "$value" ]; then
-        echo "Error: Required variable $var is not set"
-        echo "Description: $description"
+        printf '%s\n' "Error: Required variable $var is not set"
+        printf '%s\n' "Description: $description"
         errors=$((errors + 1))
-    else
-        if ! validate_var "$var" "$value" "$pattern" "$description"; then
-            errors=$((errors + 1))
-        fi
+        continue
+    fi
+    if ! validate_var "$var" "$value" "$pattern" "$description"; then
+        errors=$((errors + 1))
     fi
 done <<'EOF'
 PROJECT_NAME|Project name|^[a-z0-9][a-z0-9-]*$
 HOST_USERNAME|System username|^[a-z_][a-z0-9_-]*$
 HOST_UID|User ID|^[0-9]+$
 HOST_GID|Group ID|^[0-9]+$
+WORKSPACE_FOLDER|Workspace folder inside the container|^/[^[:space:]]*$
 LOCALE|Locale|^[A-Za-z]{2}_[A-Za-z]{2}\.UTF-8$
 CONTAINER_HOSTNAME|Container hostname|^[a-zA-Z][a-zA-Z0-9-]*$
 CONTAINER_MEMORY|Container memory limit|^[0-9]+[gGmM]$
@@ -54,7 +61,7 @@ EOF
 printf '\nValidating optional variables...\n'
 while IFS='|' read -r var description pattern; do
     [ -z "$var" ] && continue
-    eval "value=\${$var:-}"
+    value="$(get_env_value "$var")"
     if [ -n "$value" ]; then
         if ! validate_var "$var" "$value" "$pattern" "$description"; then
             errors=$((errors + 1))
@@ -63,14 +70,29 @@ while IFS='|' read -r var description pattern; do
 done <<'EOF'
 GIT_REMOTE_URL|Git remote URL|^(https://|git@).+
 CLAUDE_INSTALL_SHA256|Claude Code installer checksum|^[A-Fa-f0-9]{64}$
+KEEP_CONTAINER|Keep devcontainer containers after exit (legacy)|^(true|false)$
+KEEP_CONTAINER_EDITOR|Keep editor-started container after exit|^(true|false)$
+KEEP_CONTAINER_DEVCONTAINER|Keep devcontainer CLI container after exit|^(true|false)$
+KEEP_CONTAINER_CLAUDE|Keep Claude container after exit|^(true|false)$
+INSTALL_CLAUDE|Install Claude CLI during devcontainer build|^(true|false)$
+FORCE_REBUILD|Force devcontainer image rebuild in launchers|^(true|false)$
+FORCE_PULL|Force sync-git pull over local changes|^(true|false)$
+ENV_LOADER_DEBUG|Env loader debug output|^(true|false)$
+ENV_LOADER_DEBUG_VALUES|Env loader debug values output|^(true|false)$
+WORKSPACE_ALLOW_IN_CONTAINER|Allow workspace.sh inside container (not recommended)|^(true|false)$
+WORKSPACE_TMUX_SESSION|tmux session name for workspace.sh|^[^[:space:]]+$
+CONTAINER_HOSTNAME_EDITOR|Editor container hostname|^[a-zA-Z][a-zA-Z0-9-]*$
+CONTAINER_HOSTNAME_DEVCONTAINER|CLI container hostname|^[a-zA-Z][a-zA-Z0-9-]*$
+CONTAINER_HOSTNAME_CLAUDE|Claude container hostname|^[a-zA-Z][a-zA-Z0-9-]*$
+DEVCONTAINER_CONTEXT|Prompt context label|^[a-zA-Z0-9][a-zA-Z0-9-]*$
 EOF
 
 printf '\nValidating SSH agent forwarding...\n'
 if [ -z "${SSH_AUTH_SOCK:-}" ]; then
-    echo "Error: SSH_AUTH_SOCK is not set. Start an SSH agent before running launch.sh."
+    printf '%s\n' "Error: SSH_AUTH_SOCK is not set. Start an SSH agent and export SSH_AUTH_SOCK before running the launcher."
     errors=$((errors + 1))
 elif [ ! -S "${SSH_AUTH_SOCK}" ]; then
-    echo "Error: SSH_AUTH_SOCK is set but is not a valid socket: ${SSH_AUTH_SOCK}"
+    printf '%s\n' "Error: SSH_AUTH_SOCK is set but is not a valid socket: ${SSH_AUTH_SOCK}"
     errors=$((errors + 1))
 fi
 
